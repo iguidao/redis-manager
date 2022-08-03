@@ -29,10 +29,12 @@ web/dist/
 web/npm-debug.log*
 web/yarn-debug.log*
 web/yarn-error.log*
+web/**/*.log
 web/test/unit/coverage/
 web/test/e2e/reports/
 web/selenium-debug.log
 web/tests/**/coverage/
+web/tests/e2e/reports
 # Editor directories and files
 web/.idea
 web/.vscode
@@ -40,4 +42,7 @@ web/*.suo
 web/*.ntvs*
 web/*.njsproj
 web/*.sln
+web/*.local
+web/package-lock.json
+web/yarn.lock
 

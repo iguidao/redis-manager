@@ -34,7 +34,7 @@ func Connect(dsn string) {
 
 // Migrate the db schema
 func Migrate() {
-	logger.Info("start check data table  exists...")
+	logger.Info("start check data table exists...")
 	if !DB.Migrator().HasTable(&User{}) {
 		logger.Info("start create data table user migrate data schemas...")
 		DB.AutoMigrate(&User{})
