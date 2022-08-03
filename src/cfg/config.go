@@ -16,6 +16,12 @@ func Get_Local(get_local string) string {
 	case "addr":
 		local_addr := viper.GetString("local.addr")
 		return local_addr
+	case "logapipath":
+		local_logapipath := viper.GetString("local.logapipath")
+		return local_logapipath
+	case "logapppath":
+		local_logapppath := viper.GetString("local.logapppath")
+		return local_logapppath
 	default:
 		return "noconfig"
 	}

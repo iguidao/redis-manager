@@ -1,21 +1,25 @@
-package http
+package rhttp
 
 import (
-	v1 "github.com/iguidao/redis-web-manager/src/http/v1"
+	"io"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/iguidao/redis-web-manager/src/cfg"
+	v1 "github.com/iguidao/redis-web-manager/src/rhttp/v1"
 )
 
 // NewServer return a configured http server of gin
 func NewServer() *gin.Engine {
 	// 存储日志文件代码
+	logpath := cfg.Get_Local("logapipath")
 	gin.DisableConsoleColor()
-	// f, _ := os.Create("./logs/app.log")
-	// gin.DefaultWriter = io.MultiWriter(f)
+	f, _ := os.Create(logpath)
+	gin.DefaultWriter = io.MultiWriter(f)
 	r := gin.Default()
 
-	r.LoadHTMLGlob("../website/html/*")
-	r.Static("/static", "../website/static")
+	// r.LoadHTMLGlob("../website/html/*")
+	// r.Static("/static", "../website/static")
 
 	base := r.Group("/redis-web-manager/base/v1")
 	{

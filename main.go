@@ -1,31 +1,26 @@
 package main
 
 import (
-	"flag"
-
-	"github.com/iguidao/redis-web-manager/server/src/cfg"
-	"github.com/iguidao/redis-web-manager/server/src/http"
-	"github.com/iguidao/redis-web-manager/server/src/middleware/mysql"
+	"github.com/iguidao/redis-web-manager/src/cfg"
+	"github.com/iguidao/redis-web-manager/src/middleware/logger"
+	"github.com/iguidao/redis-web-manager/src/middleware/mysql"
+	"github.com/iguidao/redis-web-manager/src/rhttp"
 )
-
-var migrate = flag.Bool("m", false, "migrate the database schemas.")
 
 func init() {
 	if err := cfg.Init(""); err != nil {
 		panic(err)
 	}
+	logger.SetupLogger()
 	mysql.Connect(cfg.Get_Info("MYSQL"))
+	mysql.Migrate()
+
 }
 
 func main() {
-	flag.Parse()
-	if *migrate {
-		mysql.Migrate()
-		return
-	}
 	listen := cfg.Get_Local("addr")
 	if listen == "" {
 		listen = ":8000"
 	}
-	http.NewServer().Run(listen)
+	rhttp.NewServer().Run(listen)
 }

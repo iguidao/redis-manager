@@ -2,7 +2,9 @@ local:
     addr: 0.0.0.0:8000
     runmode: debug
     pagesize: 10
-
+    logapipath: "./logs/api.log"
+    logapppath: "./logs/app.log"
+    
 mysql:
     name: redis_web_manager
     addr: 127.0.0.1:3308

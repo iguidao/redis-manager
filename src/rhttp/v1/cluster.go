@@ -11,7 +11,8 @@ import (
 
 func ClusterList(c *gin.Context) {
 	code := hsc.SUCCESS
-	result := mysql.GetAllCluster()
+
+	result := mysql.DB.GetAllCluster()
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  hsc.GetMsg(code),

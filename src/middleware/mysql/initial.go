@@ -1,8 +1,7 @@
 package mysql
 
 import (
-	"log"
-
+	"github.com/iguidao/redis-web-manager/src/middleware/logger"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -27,7 +26,7 @@ func Connect(dsn string) {
 		SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
 	}), &gorm.Config{})
 	if err != nil {
-		log.Println("Cannot open mysql database: ", err.Error())
+		logger.Error("Cannot open mysql database: ", err.Error())
 		panic(err)
 	}
 	DB = MySQL{db}
@@ -35,11 +34,26 @@ func Connect(dsn string) {
 
 // Migrate the db schema
 func Migrate() {
-	log.Println("start to auto migrate data schemas...")
-	DB.Debug().AutoMigrate(&User{})
-	DB.Debug().AutoMigrate(&ClusterInfo{})
-	DB.Debug().AutoMigrate(&RedisNodes{})
-	DB.Debug().AutoMigrate(&UserGroup{})
-	DB.Debug().AutoMigrate(&OpHistory{})
-	log.Println("auto migrate data schemas done.")
+	logger.Info("start check data table  exists...")
+	if !DB.Migrator().HasTable(&User{}) {
+		logger.Info("start create data table user migrate data schemas...")
+		DB.AutoMigrate(&User{})
+	}
+	if !DB.Migrator().HasTable(&ClusterInfo{}) {
+		logger.Info("start create data table cluster_info migrate data schemas...")
+		DB.AutoMigrate(&ClusterInfo{})
+	}
+	if !DB.Migrator().HasTable(&RedisNode{}) {
+		logger.Info("start create data table redis_node migrate data schemas...")
+		DB.AutoMigrate(&RedisNode{})
+	}
+	if !DB.Migrator().HasTable(&UserGroup{}) {
+		logger.Info("start create data table user_group migrate data schemas...")
+		DB.AutoMigrate(&UserGroup{})
+	}
+	if !DB.Migrator().HasTable(&OpHistory{}) {
+		logger.Info("start create data table ophistory migrate data schemas...")
+		DB.AutoMigrate(&OpHistory{})
+	}
+	logger.Info("auto check data table done.")
 }

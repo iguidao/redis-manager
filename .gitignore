@@ -16,7 +16,7 @@
 # vendor/
 
 # server file
-logs/app.log
+logs
 yaml/config.yaml
 redis-web-manager
 
