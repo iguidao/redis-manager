@@ -1,0 +1,43 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+.DS_Store
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# server file
+logs/app.log
+yaml/config.yaml
+redis-web-manager
+
+
+# fronend file
+/website
+web/.DS_Store
+web/node_modules/
+web/dist/
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+web/test/unit/coverage/
+web/test/e2e/reports/
+web/selenium-debug.log
+web/tests/**/coverage/
+# Editor directories and files
+web/.idea
+web/.vscode
+web/*.suo
+web/*.ntvs*
+web/*.njsproj
+web/*.sln
+

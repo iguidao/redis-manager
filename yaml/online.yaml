@@ -1,0 +1,15 @@
+local:
+    addr: 0.0.0.0:8000
+    runmode: debug
+    pagesize: 10
+
+mysql:
+    name: redis_web_manager
+    addr: 127.0.0.1:3308
+    username: root
+    password: 123456
+
+redis:
+    addr: 127.0.0.1:6379
+    password: password
+    db: 0
