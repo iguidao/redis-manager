@@ -38,7 +38,7 @@ module.exports = [
     }
   },
   {
-    url: '/redis-web-manager/v1/redis/list',
+    url: '/redis-manager/v1/redis/list',
     type: 'get',
     response: config => {
       return {

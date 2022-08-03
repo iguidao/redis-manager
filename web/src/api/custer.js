@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function addCluster(data) {
   return request({
-    url: '/redis-web-manager/v1/cluster/add',
+    url: '/redis-manager/v1/cluster/add',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function addCluster(data) {
 
 export function getList(query) {
   return request({
-    url: '/redis-web-manager/v1/cluster/list',
+    url: '/redis-manager/v1/cluster/list',
     method: 'get',
     params: { query }
   })

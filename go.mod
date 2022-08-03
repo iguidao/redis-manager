@@ -1,4 +1,4 @@
-module github.com/iguidao/redis-web-manager
+module github.com/iguidao/redis-manager
 
 go 1.17
 

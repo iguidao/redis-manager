@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/iguidao/redis-web-manager/src/cfg"
-	"github.com/iguidao/redis-web-manager/src/middleware/logger"
-	"github.com/iguidao/redis-web-manager/src/middleware/mysql"
-	"github.com/iguidao/redis-web-manager/src/rhttp"
+	"github.com/iguidao/redis-manager/src/cfg"
+	"github.com/iguidao/redis-manager/src/middleware/logger"
+	"github.com/iguidao/redis-manager/src/middleware/mysql"
+	"github.com/iguidao/redis-manager/src/rhttp"
 )
 
 func init() {

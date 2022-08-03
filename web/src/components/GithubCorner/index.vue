@@ -1,5 +1,5 @@
 <template>
-  <a href="https://github.com/iguidao/redis-web-manager" target="_blank" class="github-corner" aria-label="View source on Github">
+  <a href="https://github.com/iguidao/redis-manager" target="_blank" class="github-corner" aria-label="View source on Github">
     <svg
       width="80"
       height="80"

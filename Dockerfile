@@ -5,6 +5,6 @@ ENV TZ Asia/Shanghai
 
 WORKDIR /data
 
-COPY  ./redis-web-manager .
+COPY  ./redis-manager .
 COPY ./yaml ./yaml
-CMD ["/data/redis-web-manager"]
+CMD ["/data/redis-manager"]

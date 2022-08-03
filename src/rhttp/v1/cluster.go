@@ -3,8 +3,8 @@ package v1
 import (
 	"net/http"
 
-	"github.com/iguidao/redis-web-manager/src/hsc"
-	"github.com/iguidao/redis-web-manager/src/middleware/mysql"
+	"github.com/iguidao/redis-manager/src/hsc"
+	"github.com/iguidao/redis-manager/src/middleware/mysql"
 
 	"github.com/gin-gonic/gin"
 )

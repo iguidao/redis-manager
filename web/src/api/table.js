@@ -10,7 +10,7 @@ export function getList(params) {
 
 export function transactionList(query) {
   return request({
-    url: '/redis-web-manager/v1/redis/list',
+    url: '/redis-manager/v1/redis/list',
     method: 'get',
     params: { query }
   })

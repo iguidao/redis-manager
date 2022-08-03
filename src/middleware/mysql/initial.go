@@ -1,7 +1,7 @@
 package mysql
 
 import (
-	"github.com/iguidao/redis-web-manager/src/middleware/logger"
+	"github.com/iguidao/redis-manager/src/middleware/logger"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

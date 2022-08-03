@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/iguidao/redis-web-manager/src/cfg"
+	"github.com/iguidao/redis-manager/src/cfg"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

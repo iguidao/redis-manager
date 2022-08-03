@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iguidao/redis-web-manager/src/cfg"
-	v1 "github.com/iguidao/redis-web-manager/src/rhttp/v1"
+	"github.com/iguidao/redis-manager/src/cfg"
+	v1 "github.com/iguidao/redis-manager/src/rhttp/v1"
 )
 
 // NewServer return a configured http server of gin
@@ -21,11 +21,11 @@ func NewServer() *gin.Engine {
 	// r.LoadHTMLGlob("../website/html/*")
 	// r.Static("/static", "../website/static")
 
-	base := r.Group("/redis-web-manager/base/v1")
+	base := r.Group("/redis-manager/base/v1")
 	{
 		base.GET("/health", v1.HealthCheck)
 	}
-	redis := r.Group("/redis-web-manager/v1/cluster")
+	redis := r.Group("/redis-manager/v1/cluster")
 	{
 		redis.GET("/list", v1.ClusterList)
 	}

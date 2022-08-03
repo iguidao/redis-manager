@@ -18,7 +18,7 @@
 # server file
 logs
 yaml/config.yaml
-redis-web-manager
+redis-manager
 
 
 # fronend file
