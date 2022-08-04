@@ -16,7 +16,7 @@ type Base struct {
 }
 
 //用户
-type User struct {
+type UserInfo struct {
 	Base
 	UserName string `gorm:"not null;index"`
 	Password string `gorm:"not null"`
@@ -85,4 +85,31 @@ type OpHistory struct {
 	UserId   int    `gorm:"not null;index"`
 	OpInfo   string `gorm:"type:varchar(100)"` // 操作动作
 	OpParams string `gorm:"type:text"`         //操作参数属组或者对象
+}
+type Tabler interface {
+	TableName() string
+}
+
+func (UserInfo) TableName() string {
+	return "user_info"
+}
+
+func (UserGroup) TableName() string {
+	return "user_group"
+}
+
+func (GroupContain) TableName() string {
+	return "group_contain"
+}
+
+func (ClusterInfo) TableName() string {
+	return "cluster_info"
+}
+
+func (RedisNode) TableName() string {
+	return "redis_node"
+}
+
+func (OpHistory) TableName() string {
+	return "op_history"
 }

@@ -24,6 +24,7 @@ func Connect(dsn string) {
 		DontSupportRenameIndex:    true,  // 重命名索引时采用删除并新建的方式，MySQL 5.7 之前的数据库和 MariaDB 不支持重命名索引
 		DontSupportRenameColumn:   true,  // 用 `change` 重命名列，MySQL 8 之前的数据库和 MariaDB 不支持重命名列
 		SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
+
 	}), &gorm.Config{})
 	if err != nil {
 		logger.Error("Cannot open mysql database: ", err.Error())
@@ -36,9 +37,17 @@ func Connect(dsn string) {
 // Migrate the db schema
 func Migrate() {
 	logger.Info("start check data table  exists...")
-	if !DB.Migrator().HasTable(&User{}) {
+	if !DB.Migrator().HasTable(&UserInfo{}) {
 		logger.Info("start create data table user migrate data schemas...")
-		DB.AutoMigrate(&User{})
+		DB.AutoMigrate(&UserInfo{})
+	}
+	if !DB.Migrator().HasTable(&UserGroup{}) {
+		logger.Info("start create data table user_group migrate data schemas...")
+		DB.AutoMigrate(&UserGroup{})
+	}
+	if !DB.Migrator().HasTable(&GroupContain{}) {
+		logger.Info("start create data table group_contain migrate data schemas...")
+		DB.AutoMigrate(&GroupContain{})
 	}
 	if !DB.Migrator().HasTable(&ClusterInfo{}) {
 		logger.Info("start create data table cluster_info migrate data schemas...")
@@ -47,10 +56,6 @@ func Migrate() {
 	if !DB.Migrator().HasTable(&RedisNode{}) {
 		logger.Info("start create data table redis_node migrate data schemas...")
 		DB.AutoMigrate(&RedisNode{})
-	}
-	if !DB.Migrator().HasTable(&UserGroup{}) {
-		logger.Info("start create data table user_group migrate data schemas...")
-		DB.AutoMigrate(&UserGroup{})
 	}
 	if !DB.Migrator().HasTable(&OpHistory{}) {
 		logger.Info("start create data table ophistory migrate data schemas...")
