@@ -14,17 +14,23 @@ func (m *MySQL) GetAllCluster() []ClusterInfo {
 // }
 
 // add cluster
-func (m *MySQL) AddCluster(ArticleTitle string, ArticleContent string, AuthorId string) (uint, bool) {
+func (m *MySQL) AddCluster(ArticleTitle string, ArticleContent string, AuthorId string) (int, bool) {
 	addcluster := &ClusterInfo{
-		ClusterName:    "",
-		ClusterMode:    "", // 集群(Cluster)；单点(Single)；哨兵(Sentinel)
-		ClusterVersion: "",
-		NodesAll:       0,
-		NodesMaster:    0,
-		NodesSlave:     0,
-		RedisPassword:  "",
-		Environment:    "", // 主机 Machine；容器 Container
-		From:           "", //导入Import；平台创建Self
+		GroupId:              0,
+		UserId:               0,
+		ClusterName:          "",
+		Nodes:                "",
+		ClusterMode:          "", // 集群(Cluster)；单点(Single)；哨兵(Sentinel)
+		ClusterOs:            "",
+		ClusterVersion:       "",
+		Initialized:          true,
+		Clusterstate:         "",
+		ClusterSlotsAssigned: 0,
+		ClusterSlotsOk:       0,
+		ClusterNodes:         0,
+		RedisPassword:        "",
+		Environment:          "", // 主机 Machine；容器 Container
+		From:                 "", //导入Import；平台创建Self
 	}
 	result := m.Create(&addcluster)
 	if result.Error != nil {

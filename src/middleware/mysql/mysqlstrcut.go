@@ -6,60 +6,83 @@ import (
 	"gorm.io/gorm"
 )
 
-// cluster
+// base
 type Base struct {
-	ID        uint      `gorm:"primary_key"`
+	ID        int       `gorm:"primary_key"`
 	CreatedAt time.Time `gorm:"not null"`
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 	//创建索引`sql:"index"`
 }
 
-type ClusterInfo struct {
-	Base
-	ClusterName    string `gorm:"not null;index"`
-	ClusterMode    string // 集群(Cluster)；单点(Single)；哨兵(Sentinel)
-	ClusterVersion string
-	NodesAll       int
-	NodesMaster    int
-	NodesSlave     int
-	RedisPassword  string
-	Environment    string // 主机 Machine；容器 Container
-	From           string //导入Import；平台创建Self
-}
-
-// redis cluster node
-type RedisNode struct {
-	Base
-	CluserId   uint   `gorm:"not null;index"`
-	NodeId     string `gorm:"type:varchar(50)"`
-	MasterId   string `gorm:"type:varchar(50)"`
-	Identity   string `gorm:"type:varchar(50)"`
-	Ip         string `gorm:"type:varchar(50)"`
-	Port       int
-	SlotNumber int
-	Name       string `gorm:"not null;index"`
-}
-
-//user
+//用户
 type User struct {
+	Base
 	UserName string `gorm:"not null;index"`
 	Password string `gorm:"not null"`
 	Email    string `gorm:"type:varchar(255)"`
-	Mobile   string `gorm:"type:varchar(255)"`
-	GroupId  uint   `gorm:"not null;index"`
-	UserType string `gorm:"not null;index"` //admin 管理员；visitor 访客；staff 员工
+	Mobile   string `gorm:"type:varchar(20)"`
+	UserType string `gorm:"not null;index;type:varchar(50)"` //admin 管理员；visitor 访客；staff 员工
 }
 
+//用户组
 type UserGroup struct {
-	Name string `gorm:"not null;type:varchar(255);index"`
-	Info string `gorm:"type:varchar(255)"`
+	Base
+	GroupName     string `gorm:"not null;index"`
+	GroupDescribe string `gorm:"type:varchar(255)"`
+	GroupType     string `gorm:"not null;index;type:varchar(50)"` //admin 管理组；visitor 访客组；staff 员工组
 }
 
-//history
+//组与用户的关系
+type GroupContain struct {
+	Base
+	GroupId int `gorm:"not null;index"`
+	UserId  int `gorm:"not null;index"`
+}
+
+//集群信息
+type ClusterInfo struct {
+	Base
+	GroupId              int    `gorm:"not null;index"`
+	UserId               int    `gorm:"not null;index"`
+	ClusterName          string `gorm:"not null;index"`
+	Nodes                string `gorm:"type:varchar(255)"`
+	ClusterMode          string `gorm:"type:varchar(25)"` // 集群(Cluster)；单点(Single)；哨兵(Sentinel)
+	ClusterOs            string `gorm:"type:varchar(255)"`
+	ClusterVersion       string `gorm:"type:varchar(25)"`
+	Initialized          bool
+	Clusterstate         string `gorm:"type:varchar(50)"`
+	ClusterSlotsAssigned int
+	ClusterSlotsOk       int
+	ClusterNodes         int
+	RedisPassword        string `gorm:"type:varchar(255)"`
+	Environment          string `gorm:"type:varchar(50)"` // 主机 Machine；容器 Container
+	From                 string `gorm:"type:varchar(50)"` //导入Import；平台创建Self
+}
+
+// node信息
+type RedisNode struct {
+	Base
+	CluserId   int    `gorm:"not null;index"`
+	NodeId     string `gorm:"type:varchar(50);index""`
+	MasterId   string `gorm:"type:varchar(50)"`
+	Host       string `gorm:"type:varchar(50);index""`
+	Port       int
+	NodeRole   string `gorm:"type:varchar(50)"`
+	Flags      string `gorm:"type:varchar(50)"`
+	LinkState  string `gorm:"type:varchar(50)"`
+	Identity   string `gorm:"type:varchar(50)"`
+	InCluster  bool
+	RunStatus  bool
+	SlotRange  string `gorm:"type:varchar(50)"`
+	SlotNumber int
+}
+
+//操作历史
 type OpHistory struct {
 	Base
-	UserId   uint
-	OpInfo   string `gorm:"type:varchar(50)"` // 操作动作
-	OpParams string `gorm:"type:text"`        //操作参数属组或者对象
+	GroupId  int    `gorm:"not null;index"`
+	UserId   int    `gorm:"not null;index"`
+	OpInfo   string `gorm:"type:varchar(100)"` // 操作动作
+	OpParams string `gorm:"type:text"`         //操作参数属组或者对象
 }
