@@ -46,7 +46,8 @@ type ClusterInfo struct {
 	GroupId              int    `gorm:"not null;index"`
 	UserId               int    `gorm:"not null;index"`
 	ClusterName          string `gorm:"not null;index"`
-	Nodes                string `gorm:"type:varchar(255)"`
+	RedisNodes           string `gorm:"type:varchar(255)"`
+	ClusterNotes         string `gorm:"type:varchar(255)"`
 	ClusterMode          string `gorm:"type:varchar(25)"` // 集群(Cluster)；单点(Single)；哨兵(Sentinel)
 	ClusterOs            string `gorm:"type:varchar(255)"`
 	ClusterVersion       string `gorm:"type:varchar(25)"`

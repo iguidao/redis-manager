@@ -25,13 +25,14 @@ func NewServer() *gin.Engine {
 	{
 		base.GET("/health", v1.HealthCheck)
 	}
-	redis := r.Group("/redis-manager/v1/cluster")
+	cluster := r.Group("/redis-manager/cluster/v1")
 	{
-		redis.GET("/list", v1.ClusterList)
+		cluster.GET("/list", v1.ClusterList)
+		cluster.POST("/add", v1.ClusterAdd)
 	}
-	home := r.Group("/")
-	{
-		home.GET("", v1.Home)
-	}
+	// home := r.Group("/")
+	// {
+	// 	home.GET("", v1.Home)
+	// }
 	return r
 }

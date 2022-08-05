@@ -19,7 +19,7 @@ func (m *MySQL) AddCluster(ArticleTitle string, ArticleContent string, AuthorId 
 		GroupId:              0,
 		UserId:               0,
 		ClusterName:          "",
-		Nodes:                "",
+		RedisNodes:           "",
 		ClusterMode:          "", // 集群(Cluster)；单点(Single)；哨兵(Sentinel)
 		ClusterOs:            "",
 		ClusterVersion:       "",
