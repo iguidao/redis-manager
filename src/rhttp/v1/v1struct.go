@@ -9,3 +9,8 @@ type AddCluster struct {
 	Environment   string `json:"environment"`
 	ClusterNotes  string `json:"cluster_notes"`
 }
+
+type CliQuery struct {
+	ClusterName string `json:"cluster_name"`
+	KeyName     string `json:"key_name"`
+}
