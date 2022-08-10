@@ -13,4 +13,5 @@ type AddCluster struct {
 type CliQuery struct {
 	ClusterName string `json:"cluster_name"`
 	KeyName     string `json:"key_name"`
+	GroupName   string `json:"group_name"`
 }

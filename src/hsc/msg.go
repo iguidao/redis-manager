@@ -11,6 +11,8 @@ var MsgFlags = map[int]string{
 	ERROR_AUTH_CHECK_TOKEN_TIMEOUT: "Token Timeout",
 	ERROR_AUTH_TOKEN:               "Token Create Fail",
 	ERROR_AUTH:                     "Token Error",
+
+	NO_CONNECT_CODIS: "Connect Codis Fail",
 }
 
 func GetMsg(code int) string {

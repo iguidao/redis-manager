@@ -4,7 +4,9 @@ local:
     pagesize: 10
     logapipath: "./logs/api.log"
     logapppath: "./logs/app.log"
-    
+    codisurl: "http://codis.online.com"
+    allkeyfornum: 10
+
 mysql:
     name: redis_manager
     addr: 127.0.0.1:3308

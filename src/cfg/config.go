@@ -22,8 +22,21 @@ func Get_Local(get_local string) string {
 	case "logapppath":
 		local_logapppath := viper.GetString("local.logapppath")
 		return local_logapppath
+	case "codisurl":
+		local_codisurl := viper.GetString("local.codisurl")
+		return local_codisurl
 	default:
 		return "noconfig"
+	}
+}
+
+func Get_Info_Int(get_type string) int {
+	switch get_type {
+	case "allkeyfornum":
+		local_allkeyfornum := viper.GetInt("local.allkeyfornum")
+		return local_allkeyfornum
+	default:
+		return 0
 	}
 }
 

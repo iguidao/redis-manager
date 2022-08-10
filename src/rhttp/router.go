@@ -30,6 +30,10 @@ func NewServer() *gin.Engine {
 		cluster.GET("/list", v1.ClusterList)
 		cluster.POST("/add", v1.ClusterAdd)
 	}
+	history := r.Group("/redis-manager/ophistory/v1")
+	{
+		history.GET("/list", v1.OpHistory)
+	}
 	cli := r.Group("/redis-manager/cli/v1")
 	{
 		cli.GET("/querykey", v1.QueryKey) //查key
@@ -37,6 +41,11 @@ func NewServer() *gin.Engine {
 		cli.GET("/hotkey", v1.HotKey)     //热key
 		cli.GET("/allkey", v1.AllKey)     //所有key
 		cli.GET("/slowkey", v1.SlowKey)   //慢key
+	}
+	codis := r.Group("/redis-manager/codis/v1")
+	{
+		codis.GET("/list", v1.CodisList)
+		codis.GET("/group", v1.CodisGroup)
 	}
 	// home := r.Group("/")
 	// {

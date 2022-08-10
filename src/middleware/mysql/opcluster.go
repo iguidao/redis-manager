@@ -6,6 +6,11 @@ func (m *MySQL) GetAllCluster() []ClusterInfo {
 	m.Find(&clusters)
 	return clusters
 }
+func (m *MySQL) GetAllHistory() []OpHistory {
+	var ophistory []OpHistory
+	m.Find(&ophistory)
+	return ophistory
+}
 
 // func (m *MySQL) GetCluster(page int, size int, status int) (clusterinfo []ClusterInfo) {
 // 	// m.Where(maps).Offset(page).Limit(size).Find(&clusterinfo)
