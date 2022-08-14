@@ -44,3 +44,17 @@ func (m *MySQL) AddCluster(ArticleTitle string, ArticleContent string, AuthorId 
 	return addcluster.ID, true
 	// return gdarticle.ID.String(), true
 }
+
+// add cluster
+func (m *MySQL) AddHistory(name string, opinfo string, opparams string) (int, bool) {
+	addcluster := &OpHistory{
+		OpInfo:   opinfo,
+		OpParams: opparams,
+	}
+	result := m.Create(&addcluster)
+	if result.Error != nil {
+		return 0, false
+	}
+	return addcluster.ID, true
+	// return gdarticle.ID.String(), true
+}

@@ -8,15 +8,15 @@ import (
 
 func AllKey() []string {
 	var keylist []string
-	val, num, slowlogok := GetAllKey(0)
-	if !slowlogok {
+	val, num, scanok := GetScanKey(0, 1000)
+	if !scanok {
 		return nil
 	}
 	keylist = append(keylist, val...)
 	var fornum = 1
 	for {
-		val, num, slowlogok = GetAllKey(num)
-		if !slowlogok {
+		val, num, scanok = GetScanKey(num, 1000)
+		if !scanok {
 			sort.Strings(keylist)
 			return keylist
 		}

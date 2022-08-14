@@ -6,6 +6,7 @@ require (
 	github.com/fsnotify/fsnotify v1.5.4
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
+	github.com/reiver/go-telnet v0.0.0-20180421082511-9ff0b2ab096e
 	github.com/spf13/viper v1.12.0
 	go.uber.org/zap v1.21.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
@@ -34,6 +35,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
+	github.com/reiver/go-oi v1.0.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
