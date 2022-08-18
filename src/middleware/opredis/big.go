@@ -12,6 +12,7 @@ var (
 	setkeymap    map[string]int64
 	zsetkeymap   map[string]int64
 	wg           sync.WaitGroup
+	lock         sync.Mutex
 )
 
 func BigKey() map[string]interface{} {
@@ -127,10 +128,12 @@ func Countkey(keylist []string) {
 }
 
 func AppendMap(result, val map[string]int64) map[string]int64 {
+	lock.Lock()
 	for i, v := range val {
 		if i != "" || v != 0 {
 			result[i] = v
 		}
 	}
+	lock.Unlock()
 	return result
 }
