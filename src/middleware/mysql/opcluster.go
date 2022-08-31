@@ -46,7 +46,7 @@ func (m *MySQL) AddCluster(ArticleTitle string, ArticleContent string, AuthorId 
 }
 
 // add cluster
-func (m *MySQL) AddHistory(name string, opinfo string, opparams string) (int, bool) {
+func (m *MySQL) AddHistory(opinfo string, opparams string) (int, bool) {
 	addcluster := &OpHistory{
 		OpInfo:   opinfo,
 		OpParams: opparams,

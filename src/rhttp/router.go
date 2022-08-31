@@ -41,6 +41,7 @@ func NewServer() *gin.Engine {
 		cli.GET("/hotkey", v1.HotKey)     //热key
 		cli.GET("/allkey", v1.AllKey)     //所有key
 		cli.GET("/slowkey", v1.SlowKey)   //慢key
+		cli.POST("/delkey", v1.DelKey)    //删key
 	}
 	codis := r.Group("/redis-manager/codis/v1")
 	{

@@ -69,6 +69,15 @@ func DebugKey(keyname string) (string, bool) {
 	return val, true
 }
 
+func DelKey(keyname string) (int64, bool) {
+	val, err := RD.Del(ctx, keyname).Result()
+	if err != nil {
+		logger.Error("Redis Del key: ", keyname, " Error: ", err)
+		return -1, false
+	}
+	return val, true
+}
+
 // String key op
 func GetStringKey(keyname string) (string, bool) {
 	val, err := RD.Get(ctx, keyname).Result()

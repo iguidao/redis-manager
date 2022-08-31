@@ -16,8 +16,8 @@ import (
 func QueryKey(c *gin.Context) {
 	var cliquery CliQuery
 	var result opredis.QueryResult
-	code := hsc.SUCCESS
-	username, _ := c.Get("UserName")
+	code := hsc.NO_CONNECT_CODIS
+
 	// staff_id, err := strconv.Atoi(UserId)
 	err := c.BindJSON(&cliquery)
 	if err != nil {
@@ -25,11 +25,12 @@ func QueryKey(c *gin.Context) {
 		code = hsc.INVALID_PARAMS
 	} else {
 		jsonBody, _ := json.Marshal(cliquery)
-		go mysql.DB.AddHistory(username.(string), "QueryKey", string(jsonBody))
+		go mysql.DB.AddHistory("QueryKey", string(jsonBody))
 		proxylist := codisapi.GetProxy(cliquery.ClusterName)
 		for _, v := range proxylist {
 			if opredis.ConnectRedis(v) {
 				result = opredis.QueryKey(cliquery.KeyName)
+				code = hsc.SUCCESS
 				break
 			}
 		}
@@ -44,8 +45,7 @@ func QueryKey(c *gin.Context) {
 func BigKey(c *gin.Context) {
 	var cliquery CliQuery
 	var result map[string]interface{}
-	code := hsc.SUCCESS
-	username, _ := c.Get("UserName")
+	code := hsc.NO_CONNECT_CODIS
 	// staff_id, err := strconv.Atoi(UserId)
 	err := c.BindJSON(&cliquery)
 	if err != nil {
@@ -53,10 +53,11 @@ func BigKey(c *gin.Context) {
 		code = hsc.INVALID_PARAMS
 	} else {
 		jsonBody, _ := json.Marshal(cliquery)
-		go mysql.DB.AddHistory(username.(string), "BigKey", string(jsonBody))
+		go mysql.DB.AddHistory("BigKey", string(jsonBody))
 		serverip := codisapi.GetSlave(cliquery.ClusterName, cliquery.GroupName)
 		if opredis.ConnectRedis(serverip) {
 			result = opredis.BigKey()
+			code = hsc.SUCCESS
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -69,8 +70,7 @@ func BigKey(c *gin.Context) {
 func HotKey(c *gin.Context) {
 	var cliquery CliQuery
 	var result map[string]int
-	code := hsc.SUCCESS
-	username, _ := c.Get("UserName")
+	code := hsc.NO_CONNECT_CODIS
 	// staff_id, err := strconv.Atoi(UserId)
 	err := c.BindJSON(&cliquery)
 	if err != nil {
@@ -78,9 +78,10 @@ func HotKey(c *gin.Context) {
 		code = hsc.INVALID_PARAMS
 	} else {
 		jsonBody, _ := json.Marshal(cliquery)
-		go mysql.DB.AddHistory(username.(string), "HotKey", string(jsonBody))
+		go mysql.DB.AddHistory("HotKey", string(jsonBody))
 		serverip := codisapi.GetMaster(cliquery.ClusterName, cliquery.GroupName)
 		result = opredis.HotKey(serverip)
+		code = hsc.SUCCESS
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
@@ -92,8 +93,7 @@ func HotKey(c *gin.Context) {
 func AllKey(c *gin.Context) {
 	var cliquery CliQuery
 	var result []string
-	code := hsc.SUCCESS
-	username, _ := c.Get("UserName")
+	code := hsc.NO_CONNECT_CODIS
 	// staff_id, err := strconv.Atoi(UserId)
 	err := c.BindJSON(&cliquery)
 	if err != nil {
@@ -101,10 +101,11 @@ func AllKey(c *gin.Context) {
 		code = hsc.INVALID_PARAMS
 	} else {
 		jsonBody, _ := json.Marshal(cliquery)
-		go mysql.DB.AddHistory(username.(string), "AllKey", string(jsonBody))
+		go mysql.DB.AddHistory("AllKey", string(jsonBody))
 		serverip := codisapi.GetSlave(cliquery.ClusterName, cliquery.GroupName)
 		if opredis.ConnectRedis(serverip) {
 			result = opredis.AllKey()
+			code = hsc.SUCCESS
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -117,8 +118,7 @@ func AllKey(c *gin.Context) {
 func SlowKey(c *gin.Context) {
 	var cliquery CliQuery
 	var result []redis.SlowLog
-	code := hsc.SUCCESS
-	username, _ := c.Get("UserName")
+	code := hsc.NO_CONNECT_CODIS
 	// staff_id, err := strconv.Atoi(UserId)
 	err := c.BindJSON(&cliquery)
 	if err != nil {
@@ -126,15 +126,41 @@ func SlowKey(c *gin.Context) {
 		code = hsc.INVALID_PARAMS
 	} else {
 		jsonBody, _ := json.Marshal(cliquery)
-		go mysql.DB.AddHistory(username.(string), "SlowKey", string(jsonBody))
+		go mysql.DB.AddHistory("SlowKey", string(jsonBody))
 		serverip := codisapi.GetMaster(cliquery.ClusterName, cliquery.GroupName)
 		if opredis.ConnectRedis(serverip) {
 			result = opredis.SlowKey()
+			code = hsc.SUCCESS
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg":  hsc.GetMsg(code),
 		"data": result,
+	})
+}
+
+func DelKey(c *gin.Context) {
+	var cliquery CliQuery
+	var result string
+	code := hsc.NO_CONNECT_CODIS
+	// staff_id, err := strconv.Atoi(UserId)
+	err := c.BindJSON(&cliquery)
+	if err != nil {
+		logger.Error("Query Key Bind Json error: ", err)
+		code = hsc.INVALID_PARAMS
+	} else {
+		jsonBody, _ := json.Marshal(cliquery)
+		go mysql.DB.AddHistory("DelKey", string(jsonBody))
+		serverip := codisapi.GetSlave(cliquery.ClusterName, cliquery.GroupName)
+		if opredis.ConnectRedis(serverip) {
+			result = opredis.DeleteKey(cliquery.KeyName)
+			code = hsc.SUCCESS
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      result,
 	})
 }
