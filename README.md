@@ -19,7 +19,7 @@ POST |   /redis-manager/cli/v1/bigkey | 查大key
 POST |   /redis-manager/cli/v1/hotkey | 查热key
 POST |   /redis-manager/cli/v1/allkey | 查1万key
 POST |   /redis-manager/cli/v1/slowkey | 查慢key
-
+POST |   /redis-manager/cli/v1/delkey | 删key
 
 ### 联系方式
 mail: xiaohui920@sina.cn
