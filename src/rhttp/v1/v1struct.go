@@ -14,4 +14,10 @@ type CliQuery struct {
 	ClusterName string `json:"cluster_name"`
 	KeyName     string `json:"key_name"`
 	GroupName   string `json:"group_name"`
+	Env         string `json:"env"`
+}
+
+type CliRdb struct {
+	RdbName  string `json:"rdbname"`
+	ServerIp string `json:"serverip"`
 }

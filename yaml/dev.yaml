@@ -6,7 +6,13 @@ local:
     logapppath: "./logs/app.log"
     codisurl: "http://codis.dev.com"
     allkeyfornum: 10
-        
+    cosaccesskey:  "xxx"
+	cosaccesskeyid: "xxx"
+	cosendpointpub: "xxx"
+    locktime: 60
+    biglocktime: 600
+    checksize: 4000
+
 mysql:
     name: dev_redis_manager
     addr: 127.0.0.1:3308

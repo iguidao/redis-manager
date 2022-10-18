@@ -36,17 +36,19 @@ func NewServer() *gin.Engine {
 	}
 	cli := r.Group("/redis-manager/cli/v1")
 	{
-		cli.GET("/querykey", v1.QueryKey) //查key
-		cli.GET("/bigkey", v1.BigKey)     //大key
-		cli.GET("/hotkey", v1.HotKey)     //热key
-		cli.GET("/allkey", v1.AllKey)     //所有key
-		cli.GET("/slowkey", v1.SlowKey)   //慢key
-		cli.POST("/delkey", v1.DelKey)    //删key
+		cli.POST("/querykey", v1.QueryKey) //查key
+		cli.POST("/bigkey", v1.BigKey)     //大key
+		cli.POST("/hotkey", v1.HotKey)     //热key
+		cli.POST("/allkey", v1.AllKey)     //所有key
+		cli.POST("/slowkey", v1.SlowKey)   //慢key
+		cli.POST("/delkey", v1.DelKey)     //删key
+		cli.POST("/newbigkey", v1.NewBigkey)
 	}
 	codis := r.Group("/redis-manager/codis/v1")
 	{
 		codis.GET("/list", v1.CodisList)
 		codis.GET("/group", v1.CodisGroup)
+		codis.POST("/analysisrdb", v1.AnalysisRdb)
 	}
 	// home := r.Group("/")
 	// {

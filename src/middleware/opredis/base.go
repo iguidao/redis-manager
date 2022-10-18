@@ -21,6 +21,17 @@ func TypeKey(keyname string) (string, bool) {
 	}
 	return ok, true
 }
+func ExistsKey(keyname string) bool {
+	ok, err := RD.Exists(ctx, keyname).Result()
+	if err != nil {
+		logger.Error("Redis Exists key: ", keyname, " Error: ", err)
+		return false
+	}
+	if ok == 0 {
+		return false
+	}
+	return true
+}
 
 func TtlKey(keyname string) (time.Duration, bool) {
 	val, err := RD.TTL(ctx, keyname).Result()
@@ -78,6 +89,15 @@ func DelKey(keyname string) (int64, bool) {
 	return val, true
 }
 
+func ExpireKey(keyname string, keytime int) bool {
+	val, err := RD.Expire(ctx, keyname, time.Duration(keytime)*time.Second).Result()
+	if err != nil {
+		logger.Error("Redis Expire key: ", keyname, " Error: ", err)
+		return false
+	}
+	return val
+}
+
 // String key op
 func GetStringKey(keyname string) (string, bool) {
 	val, err := RD.Get(ctx, keyname).Result()
@@ -92,6 +112,24 @@ func SizeStringKey(keyname string) (int64, bool) {
 	val, err := RD.StrLen(ctx, keyname).Result()
 	if err != nil {
 		logger.Error("Redis Strlen key: ", keyname, " Error: ", err)
+		return 0, false
+	}
+	return val, true
+}
+
+func SetStringKey(keyname, keyvalue string) (string, bool) {
+	val, err := RD.Set(ctx, keyname, keyvalue, 0).Result()
+	if err != nil {
+		logger.Error("Redis Get key: ", keyname, " Error: ", err)
+		return "", false
+	}
+	return val, true
+}
+
+func IncrStringKey(keyname string) (int64, bool) {
+	val, err := RD.Incr(ctx, keyname).Result()
+	if err != nil {
+		logger.Error("Redis Incr key: ", keyname, " Error: ", err)
 		return 0, false
 	}
 	return val, true
@@ -186,4 +224,32 @@ func SizeZsetKey(keyname string) (int64, bool) {
 		return 0, false
 	}
 	return val, true
+}
+
+// lock
+func LockOp(lockkeyname string, timekey time.Duration) bool {
+	var lockKey = lockkeyname
+	// lock
+	resp := RD.SetNX(ctx, lockKey, 1, timekey)
+	lockSuccess, err := resp.Result()
+	// logger.Debug(lockSuccess, err)
+	if err != nil || !lockSuccess {
+		logger.Error(err, "lock result: ", lockSuccess)
+		return false
+	}
+	return lockSuccess
+}
+
+func UnLockOp(lockkeyname string) bool {
+	var lockKey = lockkeyname
+	delResp := RD.Del(ctx, lockKey)
+	unlockSuccess, err := delResp.Result()
+	// logger.Debug(unlockSuccess, err)
+	if err == nil && unlockSuccess > 0 {
+		// logger.Info("unlock success!")
+		return true
+	} else {
+		logger.Error("unlock failed error: ", err)
+		return false
+	}
 }

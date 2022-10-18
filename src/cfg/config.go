@@ -25,6 +25,15 @@ func Get_Local(get_local string) string {
 	case "codisurl":
 		local_codisurl := viper.GetString("local.codisurl")
 		return local_codisurl
+	case "cosaccesskey":
+		local_cosaccesskey := viper.GetString("local.cosaccesskey")
+		return local_cosaccesskey
+	case "cosaccesskeyid":
+		local_cosaccesskeyid := viper.GetString("local.cosaccesskeyid")
+		return local_cosaccesskeyid
+	case "cosendpointpub":
+		local_cosendpointpub := viper.GetString("local.cosendpointpub")
+		return local_cosendpointpub
 	default:
 		return "noconfig"
 	}

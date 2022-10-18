@@ -13,6 +13,8 @@ var MsgFlags = map[int]string{
 	ERROR_AUTH:                     "Token Error",
 
 	NO_CONNECT_CODIS: "Connect Codis Fail",
+	NO_USE:           "功能会造成慢查询，暂时下线",
+	CLICK_REPEATEDLY: "兄弟，你点的太快了，上一个还没结束，等一下哈！",
 }
 
 func GetMsg(code int) string {
