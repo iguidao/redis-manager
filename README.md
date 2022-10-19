@@ -1,6 +1,6 @@
 # redis-manager
 这是一个可以操作redis集群/codis的web管理平台
-注：该功能还在开发中
+该功能还在开发中
 
 ### 功能列表
 1. 支持进行[string/list/hash/set/zset]类型的key的查询
