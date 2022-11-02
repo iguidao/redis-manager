@@ -6,11 +6,6 @@ import (
 	"strings"
 )
 
-// type kv struct {
-// 	Key   string
-// 	Value int
-// }
-
 func HotKey(serverip string) map[string]int {
 	keydic := make(map[string]int)
 	monitor, knowtime := TelnetCommond(serverip, "monitor")
@@ -29,24 +24,10 @@ func HotKey(serverip string) map[string]int {
 			vstring = strings.Replace(vstring, "\\", "", -1)
 			if _, ok := keydic[vstring]; ok {
 				keydic[vstring] = keydic[vstring] + 1
+			} else {
+				keydic[vstring] = 1
 			}
-			keydic[vstring] = 1
 		}
 	}
-	// var ss []kv
-	// for k, v := range keydic {
-	// 	ss = append(ss, kv{k, v})
-	// }
-	// sort.Slice(ss, func(i, j int) bool {
-	// 	return ss[i].Value > ss[j].Value
-	// })
-	// for _, v := range ss {
-	// 	fmt.Printf("%s, %d\n", v.Key, v.Value)
-	// }
-
-	// for i, v := range keydic {
-	// 	log.Println("key:", i, "value:", v)
-	// }
-	// log.Println("wanle", knowtime+1)
 	return keydic
 }

@@ -79,6 +79,13 @@ type RedisNode struct {
 	SlotNumber int
 }
 
+// codis信息
+type CodisInfo struct {
+	Base
+	Curl  string `gorm:"not null;index"`
+	Cname string `gorm:"type:varchar(50)"`
+}
+
 //操作历史
 type OpHistory struct {
 	Base

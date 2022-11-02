@@ -12,47 +12,45 @@ import (
 // NewServer return a configured http server of gin
 func NewServer() *gin.Engine {
 	// 存储日志文件代码
-	logpath := cfg.Get_Local("logapipath")
+	logpath := cfg.Get_Info_String("logapipath")
 	gin.DisableConsoleColor()
 	f, _ := os.Create(logpath)
 	gin.DefaultWriter = io.MultiWriter(f)
 	r := gin.Default()
 
-	// r.LoadHTMLGlob("../website/html/*")
-	// r.Static("/static", "../website/static")
+	r.Static("/static", "./public/static")
+	r.LoadHTMLFiles("./public/index.html")
+	home := r.Group("")
+	{
+		home.GET("/", v1.Home)
+	}
 
 	base := r.Group("/redis-manager/base/v1")
 	{
 		base.GET("/health", v1.HealthCheck)
 	}
-	cluster := r.Group("/redis-manager/cluster/v1")
-	{
-		cluster.GET("/list", v1.ClusterList)
-		cluster.POST("/add", v1.ClusterAdd)
-	}
+
 	history := r.Group("/redis-manager/ophistory/v1")
 	{
-		history.GET("/list", v1.OpHistory)
+		history.GET("/list", v1.OpHistory) //查看历史操作记录
 	}
+
 	cli := r.Group("/redis-manager/cli/v1")
 	{
-		cli.POST("/querykey", v1.QueryKey) //查key
-		cli.POST("/bigkey", v1.BigKey)     //大key
-		cli.POST("/hotkey", v1.HotKey)     //热key
-		cli.POST("/allkey", v1.AllKey)     //所有key
-		cli.POST("/slowkey", v1.SlowKey)   //慢key
-		cli.POST("/delkey", v1.DelKey)     //删key
-		cli.POST("/newbigkey", v1.NewBigkey)
+		cli.POST("/opkey", v1.OpKey)             //对key进行操作
+		cli.POST("/analysisrdb", v1.AnalysisRdb) //分析dump文件
 	}
 	codis := r.Group("/redis-manager/codis/v1")
 	{
-		codis.GET("/list", v1.CodisList)
-		codis.GET("/group", v1.CodisGroup)
-		codis.POST("/analysisrdb", v1.AnalysisRdb)
+		codis.POST("/add", v1.CodisAdd)            //添加codis的平台地址
+		codis.GET("/list", v1.CodisList)           // 列出有哪些平台地址
+		codis.GET("/cluster", v1.CodisClusterList) //列出该平台地址有多少个集群
+		codis.GET("/group", v1.CodisGroup)         //列出该集群有多少个group
 	}
-	// home := r.Group("/")
-	// {
-	// 	home.GET("", v1.Home)
-	// }
+	cluster := r.Group("/redis-manager/redis/v1")
+	{
+		cluster.GET("/list", v1.RedisList)
+		cluster.POST("/add", v1.RedisAdd)
+	}
 	return r
 }

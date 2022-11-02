@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ClusterList(c *gin.Context) {
+func RedisList(c *gin.Context) {
 	code := hsc.SUCCESS
 	result := mysql.DB.GetAllCluster()
 	c.JSON(http.StatusOK, gin.H{
@@ -22,7 +22,7 @@ func ClusterList(c *gin.Context) {
 	// c.JSON(http.StatusOK, gin.H{"ok": true})
 }
 
-func ClusterAdd(c *gin.Context) {
+func RedisAdd(c *gin.Context) {
 	var clusterinfo AddCluster
 	// staff_id, err := strconv.Atoi(UserId)
 	err := c.BindJSON(&clusterinfo)

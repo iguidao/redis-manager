@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/garyburd/redigo/redis"
+	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/logger"
 )
 
@@ -16,12 +17,13 @@ func RedisSave(serverip string) bool {
 	}
 	defer c.Close()
 
-	_, err = redis.String(c.Do("KSBGSAVE"))
+	_, err = redis.String(c.Do("BGSAVE"))
 	if err != nil {
-		logger.Debug("ip: "+serverip+" 执行redis的KSBGSAVE操作失败：", err)
-		_, err = redis.String(c.Do("BGSAVE"))
+		logger.Debug("ip: "+serverip+" 执行redis的BGSAVE操作失败：", err)
+		youbgsave := cfg.Get_Info_String("redisbgsave")
+		_, err = redis.String(c.Do(youbgsave))
 		if err != nil {
-			logger.Debug("ip: "+serverip+" 执行redis的BGSAVE操作失败：", err)
+			logger.Debug("ip: "+serverip+" 执行redis的"+youbgsave+"操作失败：", err)
 			return false
 		}
 		go savebigkey(knowtime, serverip)

@@ -12,11 +12,11 @@ type ClientConnect struct {
 
 var RD ClientConnect
 
-func ConnectRedis(addr string) bool {
+func ConnectRedis(addr, password string) bool {
 	rd := redis.NewClient(&redis.Options{
-		Addr: addr,
-		// Password: "", // no password set
-		// DB:       0,  // use default DB
+		Addr:     addr,
+		Password: password, // no password set
+		// DB:       0,        // use default DB
 	})
 	RD = ClientConnect{rd}
 	_, err := RD.Ping(ctx).Result()

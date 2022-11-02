@@ -12,13 +12,13 @@ func init() {
 		panic(err)
 	}
 	logger.SetupLogger()
-	mysql.Connect(cfg.Get_Info("MYSQL"))
+	mysql.Connect(cfg.Get_Info_String("MYSQL"))
 	mysql.Migrate()
 
 }
 
 func main() {
-	listen := cfg.Get_Local("addr")
+	listen := cfg.Get_Info_String("addr")
 	if listen == "" {
 		listen = ":8000"
 	}

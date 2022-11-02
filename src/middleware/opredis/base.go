@@ -21,6 +21,7 @@ func TypeKey(keyname string) (string, bool) {
 	}
 	return ok, true
 }
+
 func ExistsKey(keyname string) bool {
 	ok, err := RD.Exists(ctx, keyname).Result()
 	if err != nil {
@@ -33,13 +34,13 @@ func ExistsKey(keyname string) bool {
 	return true
 }
 
-func TtlKey(keyname string) (time.Duration, bool) {
+func TtlKey(keyname string) (string, bool) {
 	val, err := RD.TTL(ctx, keyname).Result()
 	if err != nil {
 		logger.Error("Redis Get key: ", keyname, " Error: ", err)
-		return 0, false
+		return "", false
 	}
-	return val, true
+	return val.String(), true
 }
 
 func GetSlowLog() ([]redis.SlowLog, bool) {
@@ -71,7 +72,6 @@ func BgsaveKey() (string, bool) {
 }
 
 func DebugKey(keyname string) (string, bool) {
-
 	val, err := RD.DebugObject(ctx, keyname).Result()
 	if err != nil {
 		logger.Error("Redis Debug Key:", keyname, "  Error: ", err)
@@ -142,9 +142,9 @@ func GetListKey(keyname string) ([]string, bool) {
 		logger.Error("Redis LLEN key: ", keyname, " Error: ", err)
 		return nil, false
 	}
-	if lnum > 100 {
-		lnum = 100
-	}
+	// if lnum > 100 {
+	// 	lnum = 100
+	// }
 	val, err := RD.LRange(ctx, keyname, 0, lnum).Result()
 	if err != nil {
 		logger.Error("Redis LRANGE key: ", keyname, " Error: ", err)
@@ -206,9 +206,9 @@ func GetZsetKey(keyname string) ([]string, bool) {
 		logger.Error("Redis ZCARD key: ", keyname, " Error: ", err)
 		return nil, false
 	}
-	if znum > 100 {
-		znum = 100
-	}
+	// if znum > 100 {
+	// 	znum = 100
+	// }
 	val, err := RD.ZRange(ctx, keyname, 0, znum).Result()
 	if err != nil {
 		logger.Error("Redis ZRANGE key: ", keyname, " Error: ", err)

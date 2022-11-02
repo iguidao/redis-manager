@@ -11,45 +11,26 @@ type Config struct {
 	Name string
 }
 
-func Get_Local(get_local string) string {
-	switch get_local {
-	case "addr":
-		local_addr := viper.GetString("local.addr")
-		return local_addr
-	case "logapipath":
-		local_logapipath := viper.GetString("local.logapipath")
-		return local_logapipath
-	case "logapppath":
-		local_logapppath := viper.GetString("local.logapppath")
-		return local_logapppath
-	case "codisurl":
-		local_codisurl := viper.GetString("local.codisurl")
-		return local_codisurl
-	case "cosaccesskey":
-		local_cosaccesskey := viper.GetString("local.cosaccesskey")
-		return local_cosaccesskey
-	case "cosaccesskeyid":
-		local_cosaccesskeyid := viper.GetString("local.cosaccesskeyid")
-		return local_cosaccesskeyid
-	case "cosendpointpub":
-		local_cosendpointpub := viper.GetString("local.cosendpointpub")
-		return local_cosendpointpub
-	default:
-		return "noconfig"
-	}
-}
-
 func Get_Info_Int(get_type string) int {
 	switch get_type {
 	case "allkeyfornum":
-		local_allkeyfornum := viper.GetInt("local.allkeyfornum")
-		return local_allkeyfornum
+		rediscfg_allkeyfornum := viper.GetInt("rediscfg.allkeyfornum")
+		return rediscfg_allkeyfornum
+	case "locktime":
+		rediscfg_locktime := viper.GetInt("rediscfg.locktime")
+		return rediscfg_locktime
+	case "biglocktime":
+		rediscfg_biglocktime := viper.GetInt("rediscfg.biglocktime")
+		return rediscfg_biglocktime
+	case "checksize":
+		rediscfg_checksize := viper.GetInt("rediscfg.checksize")
+		return rediscfg_checksize
 	default:
 		return 0
 	}
 }
 
-func Get_Info(get_type string) string {
+func Get_Info_String(get_type string) string {
 	switch get_type {
 	case "MYSQL":
 		mysql_name := viper.GetString("mysql.name")
@@ -63,6 +44,30 @@ func Get_Info(get_type string) string {
 		redis_port := viper.GetString("redis.port")
 		redis_url := fmt.Sprintf("%s:%s", redis_addr, redis_port)
 		return redis_url
+	case "redispw":
+		local_redispw := viper.GetString("redis.password")
+		return local_redispw
+	case "addr":
+		local_addr := viper.GetString("local.addr")
+		return local_addr
+	case "logapipath":
+		local_logapipath := viper.GetString("local.logapipath")
+		return local_logapipath
+	case "logapppath":
+		local_logapppath := viper.GetString("local.logapppath")
+		return local_logapppath
+	case "cosaccesskey":
+		cos_cosaccesskey := viper.GetString("cos.cosaccesskey")
+		return cos_cosaccesskey
+	case "cosaccesskeyid":
+		cos_cosaccesskeyid := viper.GetString("cos.cosaccesskeyid")
+		return cos_cosaccesskeyid
+	case "cosendpointpub":
+		cos_cosendpointpub := viper.GetString("cos.cosendpointpub")
+		return cos_cosendpointpub
+	case "redisbgsave":
+		rediscfg_redisbgsave := viper.GetString("rediscfg.redisbgsave")
+		return rediscfg_redisbgsave
 	default:
 		return "noconfig"
 	}

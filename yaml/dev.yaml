@@ -4,11 +4,15 @@ local:
     pagesize: 10
     logapipath: "./logs/api.log"
     logapppath: "./logs/app.log"
-    codisurl: "http://codis.dev.com"
+
+cos:
+    cosaccesskey: "asd"
+    cosaccesskeyid: "asd"
+    cosendpointpub: "asd"
+
+rediscfg:
+    redisbgsave: YOURBGSAVE
     allkeyfornum: 10
-    cosaccesskey:  "xxx"
-	cosaccesskeyid: "xxx"
-	cosendpointpub: "xxx"
     locktime: 60
     biglocktime: 600
     checksize: 4000
@@ -20,6 +24,7 @@ mysql:
     password: 123456
 
 redis:
-    addr: 127.0.0.1:6379
-    password: password
+    addr: 10.2.74.82
+    port: 6379
+    password: asdasdasd
     db: 0

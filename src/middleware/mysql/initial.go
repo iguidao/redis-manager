@@ -61,5 +61,10 @@ func Migrate() {
 		logger.Info("start create data table ophistory migrate data schemas...")
 		DB.AutoMigrate(&OpHistory{})
 	}
+	if !DB.Migrator().HasTable(&CodisInfo{}) {
+		logger.Info("start create data table CodisInfo migrate data schemas...")
+		DB.AutoMigrate(&CodisInfo{})
+	}
+
 	logger.Info("auto check data table done.")
 }

@@ -16,9 +16,9 @@ const (
 )
 
 func CosGet(srcname, dstname string) bool {
-	AccessKey := cfg.Get_Local("cosaccesskey")
-	AccessKeyID := cfg.Get_Local("cosaccesskeyid")
-	EndpointPub := cfg.Get_Local("cosendpointpub")
+	AccessKey := cfg.Get_Info_String("cosaccesskey")
+	AccessKeyID := cfg.Get_Info_String("cosaccesskeyid")
+	EndpointPub := cfg.Get_Info_String("cosendpointpub")
 	u, _ := url.Parse(EndpointPub)
 	b := &cos.BaseURL{BucketURL: u}
 

@@ -4,14 +4,13 @@ import (
 	"encoding/json"
 	"strconv"
 
-	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/httpapi"
 	"github.com/iguidao/redis-manager/src/middleware/logger"
 )
 
-func GetList() []string {
+func GeClusterList(curl string) []string {
 	var listresult []string
-	codisurl := cfg.Get_Local("codisurl") + "/list"
+	codisurl := curl + "/list"
 	UriData := map[string]string{}
 	httpCode, httpResult := httpapi.GetDefault(codisurl, UriData, nil)
 	if httpCode {
@@ -20,10 +19,10 @@ func GetList() []string {
 	return listresult
 }
 
-func GetProxy(ClusterName string) []string {
+func GetProxy(curl, ClusterName string) []string {
 	var resultforward ResultForward
 	var result []string
-	codisurl := cfg.Get_Local("codisurl") + "/topom"
+	codisurl := curl + "/topom"
 	UriData := map[string]string{
 		"forward": ClusterName,
 	}
@@ -40,10 +39,10 @@ func GetProxy(ClusterName string) []string {
 	return result
 }
 
-func GetGroup(ClusterName string) []string {
+func GetGroup(curl, ClusterName string) []string {
 	var resultforward ResultForward
 	var result []string
-	codisurl := cfg.Get_Local("codisurl") + "/topom"
+	codisurl := curl + "/topom"
 	UriData := map[string]string{
 		"forward": ClusterName,
 	}
@@ -54,6 +53,9 @@ func GetGroup(ClusterName string) []string {
 		logger.Error("codis connect fail: ", httpResult)
 		return result
 	}
+	if resultforward.Stats.Sentinels.Masters == nil {
+		return result
+	}
 	for i := range resultforward.Stats.Sentinels.Masters.(map[string]interface{}) {
 		// groupname := "Group" + i + "-" + v.(string)
 		result = append(result, i)
@@ -61,10 +63,10 @@ func GetGroup(ClusterName string) []string {
 	return result
 }
 
-func GetMaster(ClusterName string, id string) string {
+func GetMaster(curl, ClusterName string, id string) string {
 	var resultforward ResultForward
 	var result string
-	codisurl := cfg.Get_Local("codisurl") + "/topom"
+	codisurl := curl + "/topom"
 	UriData := map[string]string{
 		"forward": ClusterName,
 	}
@@ -73,6 +75,9 @@ func GetMaster(ClusterName string, id string) string {
 		json.Unmarshal([]byte(httpResult), &resultforward)
 	} else {
 		logger.Error("codis connect fail: ", httpResult)
+		return result
+	}
+	if resultforward.Stats.Sentinels.Masters == nil {
 		return result
 	}
 	for i, v := range resultforward.Stats.Sentinels.Masters.(map[string]interface{}) {
@@ -83,10 +88,11 @@ func GetMaster(ClusterName string, id string) string {
 	return result
 }
 
-func GetSlave(ClusterName string, id string) string {
+func GetSlave(curl, ClusterName string, id string) string {
 	var resultforward ResultForward
 	var result string
-	codisurl := cfg.Get_Local("codisurl") + "/topom"
+	var redis_list []string
+	codisurl := curl + "/topom"
 	UriData := map[string]string{
 		"forward": ClusterName,
 	}
@@ -100,10 +106,24 @@ func GetSlave(ClusterName string, id string) string {
 	for _, v := range resultforward.Stats.Group.Models {
 		if strconv.Itoa(v.Id) == id {
 			for _, server := range v.Servers {
-				if server.Action.State == "synced" {
-					result = server.Server
-				}
+				redis_list = append(redis_list, server.Server)
+				// if server.Action.State == "synced" {
+				// 	result = server.Server
+				// }
 			}
+		}
+	}
+	if resultforward.Stats.Sentinels.Masters == nil {
+		return result
+	}
+	for i, v := range resultforward.Stats.Sentinels.Masters.(map[string]interface{}) {
+		if i == id {
+			result = v.(string)
+		}
+	}
+	for _, v := range redis_list {
+		if v != result {
+			result = v
 		}
 	}
 	return result

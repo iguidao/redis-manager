@@ -9,6 +9,6 @@ import (
 // 首页
 func Home(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"head": "index_head",
+		"title": "Redis Manager",
 	})
 }

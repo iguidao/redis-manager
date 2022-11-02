@@ -1,9 +1,9 @@
 package opredis
 
-import "time"
-
 type QueryResult struct {
-	Ttl   time.Duration `json:"ttl"`
-	Type  string        `json:"type"`
-	Value interface{}   `json:"value"`
+	Ttl   string      `json:"ttl"`
+	Type  string      `json:"type"`
+	Value interface{} `json:"value"`
+	Len   int         `json:"len"`
+	// Debug string        `json:"debug"`
 }
