@@ -47,10 +47,10 @@ func NewServer() *gin.Engine {
 		codis.GET("/cluster", v1.CodisClusterList) //列出该平台地址有多少个集群
 		codis.GET("/group", v1.CodisGroup)         //列出该集群有多少个group
 	}
-	cluster := r.Group("/redis-manager/redis/v1")
+	redis := r.Group("/redis-manager/redis/v1")
 	{
-		cluster.GET("/list", v1.RedisList)
-		cluster.POST("/add", v1.RedisAdd)
+		redis.GET("/list", v1.RedisList)
+		redis.POST("/add", v1.RedisAdd)
 	}
 	return r
 }

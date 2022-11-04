@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/logger"
 
 	"github.com/go-redis/redis/v9"
@@ -252,4 +253,19 @@ func UnLockOp(lockkeyname string) bool {
 		logger.Error("unlock failed error: ", err)
 		return false
 	}
+}
+
+// SAVE
+func RedisSave(serverip string) bool {
+	_, err := RD.BgSave(ctx).Result()
+	if err != nil {
+		logger.Debug("ip: "+serverip+" 执行redis的 BGSAVE 操作失败：", err)
+		youbgsave := cfg.Get_Info_String("redisbgsave")
+		_, err := RD.Do(ctx, youbgsave).Result()
+		if err != nil {
+			logger.Debug("ip: "+serverip+" 执行redis的 "+youbgsave+" 操作失败：", err)
+			return false
+		}
+	}
+	return true
 }

@@ -4,7 +4,6 @@ go 1.17
 
 require (
 	github.com/fsnotify/fsnotify v1.5.4
-	github.com/garyburd/redigo v1.6.4
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/reiver/go-telnet v0.0.0-20180421082511-9ff0b2ab096e

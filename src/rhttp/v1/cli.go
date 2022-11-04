@@ -98,10 +98,12 @@ func CodisOp(cliquery CliQuery) (interface{}, bool) {
 			case 0:
 				result["友情提示"] = tips
 			case 1:
-				if opredis.RedisSave(serverip) {
-					result["友情提示"] = tips
-					opredis.ExpireKey(clickkeyname, cfg.Get_Info_Int("biglocktime"))
+				result["友情提示"] = tips
+				opredis.ExpireKey(clickkeyname, cfg.Get_Info_Int("biglocktime"))
+				if opredis.ConnectRedis(serverip, "") {
+					opredis.RedisSave(serverip)
 				}
+
 			case 2:
 				result["友情提示"] = tips
 			case 3:
