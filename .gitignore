@@ -23,26 +23,64 @@ redis-manager
 
 # fronend file
 /website
-web/.DS_Store
-web/node_modules/
-web/dist/
-web/npm-debug.log*
-web/yarn-debug.log*
-web/yarn-error.log*
-web/**/*.log
-web/test/unit/coverage/
-web/test/e2e/reports/
-web/selenium-debug.log
-web/tests/**/coverage/
-web/tests/e2e/reports
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Compiled output
+frontend/dist/
+frontend/tmp
+frontend/out-tsc
+frontend/bazel-out
+
+# Node
+frontend/node_modules/
+frontend/npm-debug.log
+frontend/yarn-error.log
+
+# IDEs and editors
+frontend/.idea/
+frontend/.project
+frontend/.classpath
+frontend/.c9/
+frontend/*.launch
+frontend/.settings/
+frontend/*.sublime-workspace
+
+# Visual Studio Code
+frontend/.vscode/*
+frontend/!.vscode/settings.json
+frontend/!.vscode/tasks.json
+frontend/!.vscode/launch.json
+frontend/!.vscode/extensions.json
+frontend/.history/*
+
+# Miscellaneous
+frontend/.angular/cache
+frontend/.sass-cache/
+frontend/connect.lock
+frontend/coverage
+frontend/libpeerconnection.log
+frontend/testem.log
+frontend/typings
+
+# System files
+frontend/.DS_Store
+frontend/Thumbs.db
+
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/**/*.log
+frontend/test/unit/coverage/
+frontend/test/e2e/reports/
+frontend/selenium-debug.log
+frontend/tests/**/coverage/
+frontend/tests/e2e/reports
 # Editor directories and files
-web/.idea
-web/.vscode
-web/*.suo
-web/*.ntvs*
-web/*.njsproj
-web/*.sln
-web/*.local
-web/package-lock.json
-web/yarn.lock
+frontend/*.suo
+frontend/*.ntvs*
+frontend/*.njsproj
+frontend/*.sln
+frontend/*.local
+frontend/package-lock.json
+frontend/yarn.lock
 

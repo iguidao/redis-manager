@@ -1,0 +1,19 @@
+<mat-toolbar class="mat-elevation-z6" color="primary">
+  <mat-toolbar-row>
+    <button mat-icon-button (click)="toggle()">
+       <mat-icon>menu</mat-icon> 
+    </button>
+
+    <span class="title">Redis Manager</span>
+    <span class="spacer"></span>
+    <span class="subtitle">{{ user ? user.data.NickName : '未登录'}}</span>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <a (click)="logout()" mat-menu-item>退出登录</a>
+    </mat-menu>
+
+  </mat-toolbar-row>
+</mat-toolbar>

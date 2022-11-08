@@ -1,0 +1,22 @@
+<mat-sidenav-container>
+    <mat-sidenav [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)"
+    class="mat-elevation-z1">
+    <app-select (onSelect)="selectApp($event)"></app-select>
+  </mat-sidenav>
+    <mat-sidenav-content fxLayout="row" fxLayoutGap="20px">
+      <div fxFlex="0 0 calc(160px)">
+        <!-- <application-steer> -->
+        <!-- </application-steer> -->
+      </div>
+      <div fxFlex="1 1" fxFlexFill *ngIf="appname == 'dashboard'">
+        <!-- {{ appname }} -->
+       <app-dashboard></app-dashboard>
+      </div>
+
+      <div fxFlex="1 1" fxFlexFill *ngIf="appname == 'article'">
+         <!-- {{ appname }} -->
+
+      </div>  
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  

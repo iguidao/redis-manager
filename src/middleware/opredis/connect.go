@@ -6,6 +6,7 @@ import (
 	"github.com/go-redis/redis/v9"
 )
 
+//单点和codis链接
 type ClientConnect struct {
 	*redis.Client
 }
@@ -24,5 +25,24 @@ func ConnectRedis(addr, password string) bool {
 		logger.Error("Redis Connect Error: ", err)
 		return false
 	}
+	return true
+}
+
+//集群链接
+type ClientClusterConnect struct {
+	*redis.ClusterClient
+}
+
+var CRD ClientClusterConnect
+
+func ConnectRedisCluster(addr []string, password string) bool {
+	rd := redis.NewClusterClient(&redis.ClusterOptions{
+		Addrs:    addr,
+		Password: password,
+		// DialTimeout:  200 * time.Microsecond,
+		// ReadTimeout:  200 * time.Microsecond,
+		// WriteTimeout: 200 * time.Microsecond,
+	})
+	CRD = ClientClusterConnect{rd}
 	return true
 }
