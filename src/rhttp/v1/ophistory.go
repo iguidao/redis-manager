@@ -13,9 +13,9 @@ func OpHistory(c *gin.Context) {
 	code := hsc.SUCCESS
 	result := mysql.DB.GetAllHistory()
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  hsc.GetMsg(code),
-		"data": result,
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      result,
 	})
 	// c.JSON(http.StatusOK, gin.H{"ok": true})
 }

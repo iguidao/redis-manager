@@ -14,12 +14,13 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor() {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let user = JSON.parse(localStorage.getItem('currentUser') || '')
-    if (user && user.data.Token) {
+    let user = JSON.parse(localStorage.getItem('currentUser') || '{ "errorCode": 400, "data": { "token": "" } }')
+    if (user && user.data.token != "") {
         request = request.clone({
-            setHeaders: { Authorization: `${user.data.Token}`}
+            setHeaders: { Authorization: `${user.data.token}`}
         });
     }
     return next.handle(request);
   }
 }
+

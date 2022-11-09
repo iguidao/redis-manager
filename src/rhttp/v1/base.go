@@ -13,9 +13,9 @@ import (
 func HealthCheck(c *gin.Context) {
 	code := hsc.SUCCESS
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  hsc.GetMsg(code),
-		"data": true,
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      true,
 	})
 	// c.JSON(http.StatusOK, gin.H{"ok": true})
 }

@@ -18,8 +18,9 @@ import { DashboardComponent } from './page/dashboard/dashboard.component';
 import { UserComponent } from './page/user/user.component';
 import { CodisComponent } from './page/codis/codis.component';
 import { RedisComponent } from './page/redis/redis.component';
-
-
+import { OperationComponent } from './page/operation/operation.component';
+import { OpcodisComponent } from './page/opcodis/opcodis.component';
+import { OpredisComponent } from './page/opredis/opredis.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,10 @@ import { RedisComponent } from './page/redis/redis.component';
     DashboardComponent,
     UserComponent,
     CodisComponent,
-    RedisComponent
+    RedisComponent,
+    OperationComponent,
+    OpcodisComponent,
+    OpredisComponent
   ],
   imports: [
     CoreModule,

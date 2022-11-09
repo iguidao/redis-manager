@@ -11,7 +11,7 @@ import { User } from '../service/model';
 })
 
 export class LoginComponent implements OnInit {
-  userphone!: number;
+  username: string = '';
   password: string = '';
   error!: string;
 
@@ -23,25 +23,18 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.router.navigate(['/page/dashboard'])
-    // this.authService.verify()
-    //   .then(() => this.router.navigate(['/page/dashboard']))
+    // this.router.navigate(['/page/dashboard'])
+    this.authService.verify()
+      .then(() => this.router.navigate(['/page/dashboard']))
   }
 
   login() {
     this.error = '';
-
-    if (this.password == '' || this.userphone == 0) {
+    if (this.password == '' ) {
       this.error = '还没填好呢！'
       return
     };
-    let phone = Number(this.userphone) 
-    // let temp = this.userphone.match(/^([0-9a-z_]*)@(goto)?keep.com$/);
-    // if (temp) {
-    //   this.userphone = temp[1];
-    // }
-
-    this.authService.login(phone, this.password)
+    this.authService.login(this.username, this.password)
       .then(() => {
         this.authService.notify();
         this.router.navigate(['/page/dashboard']);

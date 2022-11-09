@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { CodisService } from '../../service/codis.service';
+import { CodisInfo, CodisList } from '../../service/model';
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-codis',
@@ -7,10 +10,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CodisComponent implements OnInit {
 
-  constructor() { }
+  constructor(    // private router: Router,
+    public dialog: MatDialog,
+    private CodisService: CodisService,
+  ) { }
 
-  ngOnInit(): void {
-    console.log("laile codis")
+  error!: string;
+  codislist: CodisList[] = [];
+  codistotalCount!: number
+  displayedColumns = ['ID', 'Cname', 'Curl','CreatedAt', 'management']
+
+  ngOnInit() {
+    this.refreshCodisInfo();
+    // .subscribe(tasks => this.hist = tasks.data.lists)
   }
 
+  refreshCodisInfo() {
+    this.codislist = [];
+    this.CodisService.listCodis()
+    .subscribe(
+      (val): void => {
+          let codisinfo = val as CodisInfo;
+          if (codisinfo && codisinfo.data && codisinfo.errorCode == 0) {
+              this.codislist = codisinfo.data.lists
+              this.codistotalCount = codisinfo.data.total
+          } else{
+            this.error = codisinfo.msg
+          }
+      }
+    );
+  }
 }

@@ -3,7 +3,9 @@ module github.com/iguidao/redis-manager
 go 1.17
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.5.4
+	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/reiver/go-telnet v0.0.0-20180421082511-9ff0b2ab096e
@@ -11,6 +13,7 @@ require (
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.39
 	github.com/tommy351/rdb-go v0.5.4
 	go.uber.org/zap v1.21.0
+	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/mysql v1.3.5
 	gorm.io/gorm v1.23.8
@@ -50,7 +53,6 @@ require (
 	github.com/zhuyie/golzf v0.0.0-20161112031142-8387b0307ade // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
 	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect

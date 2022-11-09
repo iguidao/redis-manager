@@ -21,17 +21,18 @@ export class AuthenticationService {
   }
 
   currentUser(): User {
-    return JSON.parse(localStorage.getItem('currentUser') || '{ "errorCode": 400, "data": {} }') as User;
+    return JSON.parse(localStorage.getItem('currentUser') || '{ "errorCode": 400, "data": { "Token": "" } }') as User;
   }
 
   verify(): Promise<User> {
-    let user = JSON.parse(localStorage.getItem('currentUser') || '{ "errorCode": 400, "data": {} }')
-    if (user && user.errorCode == 400 && user.data.Token) {
+    let user = JSON.parse(localStorage.getItem('currentUser') || '{ "errorCode": 400, "data": { "Token": "" } }')
+    if (user && user.data.Toke != "") {
       let expire = this.jwtHelper.getTokenExpirationDate(user.data.Token);
       if (expire != null) {
+        console.log("expire: ",expire)
         let validin = expire.getTime() - (new Date()).getTime();  
         if (validin <= 10) {
-          return Promise.reject("need login")
+          return Promise.reject("needa login")
         } else {
           return this.refresh()
         }
@@ -39,12 +40,12 @@ export class AuthenticationService {
         return this.refresh()
       }
     } else {
-      return Promise.reject("need login")
+      return Promise.reject("needa login")
     }
   }
 
   refresh(): Promise<User> {
-    return this.http.post(this.base + '/account-admin/daoguan/v1/refresh', null)
+    return this.http.post(this.base + '/redis-manager/auth/v1/refresh', null)
       .toPromise()
       .then(response => {
         let user = response as User;
@@ -53,20 +54,19 @@ export class AuthenticationService {
       })
       .catch(this.handleError)
   }
-
-  login(userphone: number, password: string): Promise<User> {
-
-    return this.http.post(this.base + '/account-admin/auth/v1/login', { Phone: userphone, Password: password })
+  login(uname: string, up: string): Promise<User> {
+    return this.http.post(this.base + '/redis-manager/user/v1/sign-in', { 'username': uname, 'password': up })
       .toPromise()
         .then(response => {
-
-        let user = response as User;
-        if (user && user.data.token) {
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          return user
-        } else {
-          return Promise.reject("登陆失败")
-        }
+          let user = response as User;
+          // console.log("response: ", user.data.token)
+          if (user && user.data.token) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            // console.log("dengluchenggong: ",localStorage.getItem('currentUser') || '{ "errorCode": 400, "data": {} }')
+            return user
+          } else {
+            return Promise.reject("登陆失败")
+          }
       })
       .catch(err => this.handleError(err))
   }

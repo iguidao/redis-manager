@@ -10,6 +10,25 @@ export interface User {
 // 用户认证信息
 export interface Authdata {
   token: string;
-  NickName: string;
+  username: string;
   result: string;
+}
+
+// codis信息
+export interface CodisInfo {
+  errorCode: number;
+  msg: string;
+  data: CodisData;
+}
+export interface CodisData {
+  lists: CodisList[];
+  total: number;
+}
+export interface CodisList {
+  ID: number;
+  CreatedAt: Time;
+  UpdatedAt: Time;
+  DeletedAt: Time;
+  Curl: string;
+  Cname: string;
 }

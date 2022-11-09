@@ -18,10 +18,22 @@
         <!-- {{ appuri }} -->
         <app-codis></app-codis>
      </div>  
+     <div fxFlex="1 1" fxFlexFill *ngIf="appuri == 'opcodis'">
+      <!-- {{ appuri }} -->
+      <app-opcodis></app-opcodis>
+    </div>
      <div fxFlex="1 1" fxFlexFill *ngIf="appuri == 'redis'">
       <!-- {{ appuri }} -->
       <app-redis></app-redis>
-   </div>  
+      </div>  
+      <div fxFlex="1 1" fxFlexFill *ngIf="appuri == 'opredis'">
+        <!-- {{ appuri }} -->
+        <app-opredis></app-opredis>
+      </div>
+      <div fxFlex="1 1" fxFlexFill *ngIf="appuri == 'operation'">
+        <!-- {{ appuri }} -->
+        <app-operation></app-operation>
+      </div>  
     </mat-sidenav-content>
   </mat-sidenav-container>
   

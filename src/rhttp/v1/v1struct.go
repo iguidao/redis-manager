@@ -33,3 +33,11 @@ type AddCluster struct {
 	Environment   string `json:"environment"`
 	ClusterNotes  string `json:"cluster_notes"`
 }
+
+// user
+type UserInfo struct {
+	UserName string `json:"username"`
+	Password string `json:"password"`
+	Mail     string `json:"mail"`
+	UserType string `json:"usertype"`
+}

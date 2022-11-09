@@ -25,18 +25,21 @@ func CodisAdd(c *gin.Context) {
 		code = hsc.ERROR
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  hsc.GetMsg(code),
-		"data": result,
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      result,
 	})
 }
 func CodisList(c *gin.Context) {
 	code := hsc.SUCCESS
-	result := mysql.DB.GetAllCodis()
+	result := make(map[string]interface{})
+	codislist := mysql.DB.GetAllCodis()
+	result["lists"] = codislist
+	result["total"] = len(codislist)
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  hsc.GetMsg(code),
-		"data": result,
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      result,
 	})
 }
 func CodisClusterList(c *gin.Context) {
@@ -54,9 +57,9 @@ func CodisClusterList(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  hsc.GetMsg(code),
-		"data": listresult,
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      listresult,
 	})
 }
 
@@ -73,8 +76,8 @@ func CodisGroup(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  hsc.GetMsg(code),
-		"data": listresult,
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      listresult,
 	})
 }

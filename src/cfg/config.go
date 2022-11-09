@@ -56,6 +56,9 @@ func Get_Info_String(get_type string) string {
 	case "logapppath":
 		local_logapppath := viper.GetString("local.logapppath")
 		return local_logapppath
+	case "secretkey":
+		rediscfg_secretkey := viper.GetString("local.secretkey")
+		return rediscfg_secretkey
 	case "cosaccesskey":
 		cos_cosaccesskey := viper.GetString("cos.cosaccesskey")
 		return cos_cosaccesskey

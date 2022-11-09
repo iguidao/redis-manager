@@ -65,6 +65,5 @@ func Migrate() {
 		logger.Info("start create data table CodisInfo migrate data schemas...")
 		DB.AutoMigrate(&CodisInfo{})
 	}
-
 	logger.Info("auto check data table done.")
 }

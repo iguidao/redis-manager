@@ -21,8 +21,8 @@ type UserInfo struct {
 	UserName string `gorm:"not null;index"`
 	Password string `gorm:"not null"`
 	Email    string `gorm:"type:varchar(255)"`
-	Mobile   string `gorm:"type:varchar(20)"`
 	UserType string `gorm:"not null;index;type:varchar(50)"` //admin 管理员；visitor 访客；staff 员工
+	Enable   bool   // 0是封禁False，1是可登录True
 }
 
 //用户组

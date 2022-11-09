@@ -107,9 +107,6 @@ func GetSlave(curl, ClusterName string, id string) string {
 		if strconv.Itoa(v.Id) == id {
 			for _, server := range v.Servers {
 				redis_list = append(redis_list, server.Server)
-				// if server.Action.State == "synced" {
-				// 	result = server.Server
-				// }
 			}
 		}
 	}
