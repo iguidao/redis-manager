@@ -5,18 +5,23 @@
   </mat-sidenav>
     <mat-sidenav-content fxLayout="row" fxLayoutGap="20px">
       <div fxFlex="0 0 calc(160px)">
-        <!-- <application-steer> -->
-        <!-- </application-steer> -->
       </div>
-      <div fxFlex="1 1" fxFlexFill *ngIf="appname == 'dashboard'">
-        <!-- {{ appname }} -->
+      <div fxFlex="1 1" fxFlexFill *ngIf="appuri == 'dashboard'">
+        <!-- {{ appuri }} -->
        <app-dashboard></app-dashboard>
       </div>
-
-      <div fxFlex="1 1" fxFlexFill *ngIf="appname == 'article'">
-         <!-- {{ appname }} -->
-
+      <div fxFlex="1 1" fxFlexFill *ngIf="appuri == 'user'">
+         <!-- {{ appuri }} -->
+         <app-user></app-user>
       </div>  
+      <div fxFlex="1 1" fxFlexFill *ngIf="appuri == 'codis'">
+        <!-- {{ appuri }} -->
+        <app-codis></app-codis>
+     </div>  
+     <div fxFlex="1 1" fxFlexFill *ngIf="appuri == 'redis'">
+      <!-- {{ appuri }} -->
+      <app-redis></app-redis>
+   </div>  
     </mat-sidenav-content>
   </mat-sidenav-container>
   

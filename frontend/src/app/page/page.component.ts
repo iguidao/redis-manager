@@ -25,7 +25,7 @@ export class PageComponent implements OnInit {
   appscore: number = 0;
   select!: string;
   env!: string;
-  appname!: string;
+  appuri!: string;
   envs!: string[];
   snackbar: any;
 
@@ -55,21 +55,21 @@ export class PageComponent implements OnInit {
   public isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(map((result: BreakpointState) => result.matches));
-  
+
+
   ngOnInit() {
     this.route.paramMap.pipe(
       switchMap((params: ParamMap) => of(params.get('appname')))
     ).subscribe((appname: string | null) => {
       if (appname && appname != 'null') {
-        this.appname = appname;
-        localStorage.setItem('app', appname);
-        this.router.navigate(['page', this.appname], {
-          queryParamsHandling: 'preserve',
+        this.appuri = appname;
+        localStorage.setItem('app', this.appuri);
+        this.router.navigate(['page', this.appuri], {
+          queryParamsHandling: null,
         })
-        // this.refreshAppInfo();
       }else{
         this.router.navigate(['page', 'dashboard'], {
-          queryParamsHandling: 'preserve',
+          queryParamsHandling: null,
         })     
       }
     })

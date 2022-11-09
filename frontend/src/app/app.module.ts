@@ -16,6 +16,8 @@ import { PageComponent } from './page/page.component';
 import { SelectComponent } from './page/select/select.component';
 import { DashboardComponent } from './page/dashboard/dashboard.component';
 import { UserComponent } from './page/user/user.component';
+import { CodisComponent } from './page/codis/codis.component';
+import { RedisComponent } from './page/redis/redis.component';
 
 
 
@@ -27,7 +29,9 @@ import { UserComponent } from './page/user/user.component';
     PageComponent,
     SelectComponent,
     DashboardComponent,
-    UserComponent
+    UserComponent,
+    CodisComponent,
+    RedisComponent
   ],
   imports: [
     CoreModule,
