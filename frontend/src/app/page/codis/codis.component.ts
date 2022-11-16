@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CodisService } from '../../service/codis.service';
 import { CodisInfo, CodisList } from '../../service/model';
 import { MatDialog } from "@angular/material/dialog";
+import { DcodisComponent } from "../dialog/dcodis/dcodis.component";
+
 
 @Component({
   selector: 'app-codis',
@@ -39,5 +41,12 @@ export class CodisComponent implements OnInit {
           }
       }
     );
+  }
+  AddCodis() {
+    this.dialog.open(DcodisComponent, {
+      // height: '400px',
+      width: '400px',
+      data: {},
+    });
   }
 }

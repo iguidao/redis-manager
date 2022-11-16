@@ -1,0 +1,19 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+.text-inside-grid {
+    position: absolute;
+    left: 5px;
+}
+
+.post-tile .mat-card-image {
+    max-height: 300px;
+}
+
+.mat-dialog-actions button {
+    margin-left: 30px;
+    width: 100px;
+}

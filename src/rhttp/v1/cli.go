@@ -43,7 +43,7 @@ func OpKey(c *gin.Context) {
 		go opredis.LockRm(cliquery.CacheOp + "-" + cliquery.CacheType + "-" + cliquery.ClusterName + "-" + cliquery.KeyName)
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"code": code,
+		"errorCode": code,
 		"msg":  hsc.GetMsg(code),
 		"data": result,
 	})
@@ -103,7 +103,6 @@ func CodisOp(cliquery CliQuery) (interface{}, bool) {
 				if opredis.ConnectRedis(serverip, "") {
 					opredis.RedisSave(serverip)
 				}
-
 			case 2:
 				result["友情提示"] = tips
 			case 3:

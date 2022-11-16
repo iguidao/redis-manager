@@ -21,6 +21,8 @@ import { RedisComponent } from './page/redis/redis.component';
 import { OperationComponent } from './page/operation/operation.component';
 import { OpcodisComponent } from './page/opcodis/opcodis.component';
 import { OpredisComponent } from './page/opredis/opredis.component';
+import { DcodisComponent } from './page/dialog/dcodis/dcodis.component';
+import { DredisComponent } from './page/dialog/dredis/dredis.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { OpredisComponent } from './page/opredis/opredis.component';
     RedisComponent,
     OperationComponent,
     OpcodisComponent,
-    OpredisComponent
+    OpredisComponent,
+    DcodisComponent,
+    DredisComponent
   ],
   imports: [
     CoreModule,

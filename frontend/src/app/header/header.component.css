@@ -13,7 +13,16 @@
     font-size: 14px;
 }
 
+.headerline {
+    display: inline-block;
+    width: 2px;
+    background-color: #999;
+    margin: 8px 20px;
+    font-size: 14px;
+}
+
 mat-toolbar {
     position: relative;
     z-index: 10;
 }
+
