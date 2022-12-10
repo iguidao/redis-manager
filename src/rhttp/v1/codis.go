@@ -44,14 +44,11 @@ func CodisList(c *gin.Context) {
 }
 func CodisClusterList(c *gin.Context) {
 	var listresult []string
-	code := hsc.SUCCESS
-	var codisinfo CodisInfo
-	err := c.BindJSON(&codisinfo)
-	if err != nil {
-		code = hsc.INVALID_PARAMS
-		logger.Error("Codis get error: ", err)
-	} else {
-		listresult = codisapi.GeClusterList(codisinfo.Curl)
+	code := hsc.INVALID_PARAMS
+	curl := c.Query("curl")
+	if curl != "" {
+		code = hsc.SUCCESS
+		listresult = codisapi.GeClusterList(curl)
 		if len(listresult) == 0 {
 			code = hsc.NO_CONNECT_CODIS
 		}
@@ -65,16 +62,13 @@ func CodisClusterList(c *gin.Context) {
 
 func CodisGroup(c *gin.Context) {
 	var listresult []string
-	code := hsc.SUCCESS
-	var codisinfo CodisInfo
-	err := c.BindJSON(&codisinfo)
-	if err != nil {
-		code = hsc.INVALID_PARAMS
-		logger.Error("Codis get error: ", err)
-	} else {
-		listresult = codisapi.GetGroup(codisinfo.Curl, codisinfo.ClusterName)
+	code := hsc.INVALID_PARAMS
+	curl := c.Query("curl")
+	clustername := c.Query("cluster_name")
+	if curl != "" || clustername != "" {
+		code = hsc.SUCCESS
+		listresult = codisapi.GetGroup(curl, clustername)
 	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,
 		"msg":       hsc.GetMsg(code),

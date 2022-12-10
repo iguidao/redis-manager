@@ -20,7 +20,8 @@ func NewServer() *gin.Engine {
 	f, _ := os.Create(logpath)
 	gin.DefaultWriter = io.MultiWriter(f)
 	r := gin.Default()
-
+	r.NoMethod(v1.HandleNotFound)
+	r.NoRoute(v1.HandleNotFound)
 	// 跨域信息
 	r.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
@@ -34,23 +35,23 @@ func NewServer() *gin.Engine {
 	r.LoadHTMLFiles("./website/index.html")
 	home := r.Group("")
 	{
-		home.GET("/", v1.Home)
+		home.GET("/", v1.Home) //主页接口
 	}
 
 	base := r.Group("/redis-manager/base/v1")
 	{
-		base.GET("/health", v1.HealthCheck)
+		base.GET("/health", v1.HealthCheck) //自检接口
 	}
 	user := r.Group("/redis-manager/user/v1")
 	{
-		user.POST("/sign-in", v1.Login)
+		user.POST("/sign-in", v1.Login) //登陆接口
 
 	}
 	auth := r.Group("/redis-manager/auth/v1")
 	auth.Use(jwt.JWT())
 	{
-		auth.POST("/sign-up", v1.Register)
-		auth.POST("/refresh", v1.Refresh)
+		auth.POST("/sign-up", v1.Register) //注册接口
+		auth.POST("/refresh", v1.Refresh)  //刷新接口
 	}
 	history := r.Group("/redis-manager/ophistory/v1")
 	{

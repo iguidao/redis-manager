@@ -4,6 +4,7 @@ package hsc
 var MsgFlags = map[int]string{
 	SUCCESS:        "succes",
 	ERROR:          "error",
+	NOT_FOUND:      "Not Found",
 	INVALID_PARAMS: "invalid params",
 	NOT_PROMISE:    "no promise",
 

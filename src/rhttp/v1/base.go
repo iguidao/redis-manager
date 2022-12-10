@@ -19,3 +19,12 @@ func HealthCheck(c *gin.Context) {
 	})
 	// c.JSON(http.StatusOK, gin.H{"ok": true})
 }
+
+func HandleNotFound(c *gin.Context) {
+	code := hsc.NOT_FOUND
+	c.JSON(http.StatusOK, gin.H{
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      false,
+	})
+}
