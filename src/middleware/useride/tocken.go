@@ -6,7 +6,7 @@ import (
 
 	"github.com/iguidao/redis-manager/src/cfg"
 
-	jwt_lib "github.com/dgrijalva/jwt-go"
+	jwt_lib "github.com/golang-jwt/jwt/v4"
 )
 
 type Token struct {

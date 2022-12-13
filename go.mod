@@ -3,11 +3,11 @@ module github.com/iguidao/redis-manager
 go 1.17
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.5.4
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
+	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/reiver/go-telnet v0.0.0-20180421082511-9ff0b2ab096e
 	github.com/spf13/viper v1.12.0
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.39

@@ -31,7 +31,7 @@ func NewServer() *gin.Engine {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	r.Static("/static", "./website")
+	r.Static("/assets", "./website/assets")
 	r.LoadHTMLFiles("./website/index.html")
 	home := r.Group("")
 	{
