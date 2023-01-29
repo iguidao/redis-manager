@@ -6,6 +6,7 @@ import (
 	"github.com/iguidao/redis-manager/src/hsc"
 	"github.com/iguidao/redis-manager/src/middleware/codisapi"
 	"github.com/iguidao/redis-manager/src/middleware/logger"
+	"github.com/iguidao/redis-manager/src/middleware/model"
 	"github.com/iguidao/redis-manager/src/middleware/mysql"
 	"github.com/iguidao/redis-manager/src/middleware/opredis"
 	"github.com/iguidao/redis-manager/src/middleware/tools"
@@ -83,7 +84,7 @@ func CodisGroup(c *gin.Context) {
 
 func CodisOpNode(c *gin.Context) {
 	code := hsc.SUCCESS
-	var codisnode CodisNode
+	var codisnode model.CodisNode
 	var topom codisapi.Topom
 	var ok bool
 	var result interface{}

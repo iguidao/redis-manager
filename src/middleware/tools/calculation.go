@@ -58,3 +58,13 @@ func DeleteListString(val string, slist []string) []string {
 	}
 	return resultlist
 }
+
+func DeleteListint(val int, slist []int) []int {
+	var resultlist []int
+	for _, v := range slist {
+		if v != val {
+			resultlist = append(resultlist, v)
+		}
+	}
+	return resultlist
+}

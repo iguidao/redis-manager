@@ -1,18 +1,15 @@
-package tools
+package opredis
 
-import (
-	"github.com/iguidao/redis-manager/src/cfg"
-	"github.com/iguidao/redis-manager/src/middleware/opredis"
-)
+import "github.com/iguidao/redis-manager/src/cfg"
 
 func BigKeyClick(clusterName, groupName, keyname string) (string, int) {
 	// keyname := "Click-Bigkey-" + clusterName + "-" + groupName
-	num, ok := opredis.IncrStringKey(keyname)
+	num, ok := IncrStringKey(keyname)
 	if !ok {
 		return "大key分析计数出错了执行出现了问题，请找sre服务台！！！", 0
 	}
 	if num == 1 {
-		if !opredis.ExpireKey(keyname, cfg.Get_Info_Int("locktime")) {
+		if !ExpireKey(keyname, cfg.Get_Info_Int("locktime")) {
 			return "大key分析计数时间出错了执行出现了问题，请找sre服务台！！！", 0
 		}
 	}

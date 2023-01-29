@@ -44,8 +44,8 @@ func OpKey(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,
-		"msg":  hsc.GetMsg(code),
-		"data": result,
+		"msg":       hsc.GetMsg(code),
+		"data":      result,
 	})
 }
 
@@ -92,7 +92,7 @@ func CodisOp(cliquery CliQuery) (interface{}, bool) {
 		serverip := codisapi.GetSlave(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
 		if opredis.ConnectRedis(cfg.Get_Info_String("REDIS"), cfg.Get_Info_String("redispw")) {
 			clickkeyname := "Click-Bigkey-" + cliquery.CacheType + "-" + cliquery.ClusterName + "-" + cliquery.GroupName
-			tips, ok := tools.BigKeyClick(cliquery.ClusterName, cliquery.GroupName, clickkeyname)
+			tips, ok := opredis.BigKeyClick(cliquery.ClusterName, cliquery.GroupName, clickkeyname)
 			result["友情提示"] = "大key分析执行出现了问题，请找sre服务台！！！"
 			switch ok {
 			case 0:

@@ -5,11 +5,11 @@ import (
 	"time"
 
 	"github.com/iguidao/redis-manager/src/middleware/codisapi"
+	"github.com/iguidao/redis-manager/src/middleware/model"
 	"github.com/iguidao/redis-manager/src/middleware/tools"
-	hstruct "github.com/iguidao/redis-manager/src/rhttp/v1"
 )
 
-func Cdilatationn(codisnode hstruct.CodisNode, auth string, topom codisapi.Topom) {
+func Cdilatationn(codisnode model.CodisNode, auth string, topom codisapi.Topom) {
 	uok, _ := UpClusterHost(codisnode, topom, auth)
 	if !uok {
 		panic("codis add host fails")
@@ -21,7 +21,7 @@ func Cdilatationn(codisnode hstruct.CodisNode, auth string, topom codisapi.Topom
 }
 
 // codis集群添加某个机器
-func UpClusterHost(codisnode hstruct.CodisNode, topom codisapi.Topom, auth string) (bool, []string) {
+func UpClusterHost(codisnode model.CodisNode, topom codisapi.Topom, auth string) (bool, []string) {
 	log.Println("将要上限的proxy节点：", codisnode.Proxy.List, " 将要上限的group节点：", codisnode.Group)
 	var uplist []string
 	var grouplist []int
@@ -40,27 +40,25 @@ func UpClusterHost(codisnode hstruct.CodisNode, topom codisapi.Topom, auth strin
 	}
 	log.Println("group list:", grouplist)
 	// for i := 0; i < model.Gn; i++ {
-
-	for _, gid := range grouplist {
-		var count int = 1
-		for _, v := range servernew {
-			log.Println("开始上线group节点：", v, "ip: ", v)
-			if codisapi.CodisGroupUp(gid, curl, cn, auth, v, sport) {
-				if codisapi.CodisServerSync(curl, cn, auth, v, sport) {
-					uplist = append(uplist, v)
+	for _, v := range codisnode.Group {
+		log.Println("开始上线group节点：", v)
+		for _, gid := range grouplist {
+			for _, ip := range v.List {
+				if codisapi.CodisGroupUp(gid, codisnode.Curl, codisnode.ClusterName, auth, ip, v.Port) {
+					if codisapi.CodisServerSync(codisnode.Curl, codisnode.ClusterName, auth, ip, v.Port) {
+						uplist = append(uplist, ip)
+					}
 				}
 			}
-			if count == 2 {
-				break
-			} else {
-				servernew = tools.DeleteListString(v, servernew)
-				count++
-			}
 			time.Sleep(time.Duration(1) * time.Second)
+			grouplist = tools.DeleteListint(gid, grouplist)
+			break
 		}
+
 	}
+
 	time.Sleep(time.Duration(5) * time.Second)
-	codisapi.CodisSync(curl, cn, auth)
+	codisapi.CodisSync(codisnode.Curl, codisnode.ClusterName, auth)
 	return true, uplist
 }
 
