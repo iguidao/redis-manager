@@ -2,12 +2,12 @@ package hsc
 
 // 提供错误信息
 var MsgFlags = map[int]string{
-	SUCCESS:        "succes",
-	ERROR:          "error",
-	NOT_FOUND:      "Not Found",
-	INVALID_PARAMS: "invalid params",
-	NOT_PROMISE:    "no promise",
-
+	SUCCESS:                        "succes",
+	ERROR:                          "error",
+	NOT_FOUND:                      "Not Found",
+	INVALID_PARAMS:                 "invalid params",
+	NOT_PROMISE:                    "no promise",
+	Method_FAILS:                   "Method Fails",
 	ERROR_AUTH_CHECK_TOKEN_FAIL:    "Token Check Fail",
 	ERROR_AUTH_CHECK_TOKEN_TIMEOUT: "Token Timeout",
 	ERROR_AUTH_TOKEN:               "Token Create Fail",

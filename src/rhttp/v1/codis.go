@@ -7,6 +7,8 @@ import (
 	"github.com/iguidao/redis-manager/src/middleware/codisapi"
 	"github.com/iguidao/redis-manager/src/middleware/logger"
 	"github.com/iguidao/redis-manager/src/middleware/mysql"
+	"github.com/iguidao/redis-manager/src/middleware/opredis"
+	"github.com/iguidao/redis-manager/src/middleware/tools"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,16 +16,19 @@ import (
 func CodisAdd(c *gin.Context) {
 	code := hsc.SUCCESS
 	var codisinfo CodisInfo
+	var result int
+	var ok bool
 	err := c.BindJSON(&codisinfo)
 	if err != nil {
 		code = hsc.INVALID_PARAMS
 		logger.Error("Codis add error: ", err)
+	} else {
+		result, ok = mysql.DB.AddCodis(codisinfo.Curl, codisinfo.Cname)
+		if !ok {
+			code = hsc.ERROR
+		}
 	}
 
-	result, ok := mysql.DB.AddCodis(codisinfo.Curl, codisinfo.Cname)
-	if !ok {
-		code = hsc.ERROR
-	}
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,
 		"msg":       hsc.GetMsg(code),
@@ -73,5 +78,49 @@ func CodisGroup(c *gin.Context) {
 		"errorCode": code,
 		"msg":       hsc.GetMsg(code),
 		"data":      listresult,
+	})
+}
+
+func CodisOpNode(c *gin.Context) {
+	code := hsc.SUCCESS
+	var codisnode CodisNode
+	var topom codisapi.Topom
+	var ok bool
+	var result interface{}
+	var clusterauth string
+	err := c.BindJSON(&codisnode)
+	if err != nil {
+		code = hsc.INVALID_PARAMS
+		logger.Error("Codis op node error: ", err)
+	} else {
+		topom, ok = codisapi.CodisTopom(codisnode.Curl, codisnode.ClusterName)
+		if !ok {
+			result = "Codis Get topom stats fails."
+		}
+		for _, v := range topom.Stats.Slots {
+			if v.Action.State == "pending" || v.Action.State == "migrating" {
+				result = "Codis Group Slot is mving!"
+			}
+		}
+		clusterauth = tools.NewXAuth(codisnode.ClusterName)
+		if clusterauth == "" {
+			result = "Codis Get ID fail."
+		}
+		if result == nil {
+			if codisnode.OpType == "dilatation" {
+				opredis.Cdilatationn(codisnode, clusterauth, topom)
+			} else if codisnode.OpType == "shrinkage" {
+
+			} else {
+				result = "Codis op type fails " + codisnode.OpType
+			}
+		}
+
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      result,
 	})
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/jwt"
@@ -20,8 +21,8 @@ func NewServer() *gin.Engine {
 	f, _ := os.Create(logpath)
 	gin.DefaultWriter = io.MultiWriter(f)
 	r := gin.Default()
-	r.NoMethod(v1.HandleNotFound)
-	r.NoRoute(v1.HandleNotFound)
+	r.NoMethod(v1.MethodFails)
+	r.NoRoute(v1.RouterNotFound)
 	// 跨域信息
 	r.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
@@ -30,13 +31,18 @@ func NewServer() *gin.Engine {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+	// angular配置
+	r.Use(static.Serve("/", static.LocalFile("./website", false)))
+	// r.Use(gstatic.Serve("/", gstatic.LocalFile("./website", false)))
+	// r.StaticFile("", "./website/index.html")
 
-	r.Static("/assets", "./website/assets")
-	r.LoadHTMLFiles("./website/index.html")
-	home := r.Group("")
-	{
-		home.GET("/", v1.Home) //主页接口
-	}
+	// vue配置
+	// r.Static("/assets", "./website/assets")
+	// r.LoadHTMLFiles("./website/index.html")
+	// home := r.Group("")
+	// {
+	// 	home.GET("/", v1.Home) //主页接口
+	// }
 
 	base := r.Group("/redis-manager/base/v1")
 	{
@@ -54,23 +60,28 @@ func NewServer() *gin.Engine {
 		auth.POST("/refresh", v1.Refresh)  //刷新接口
 	}
 	history := r.Group("/redis-manager/ophistory/v1")
+	history.Use(jwt.JWT())
 	{
 		history.GET("/list", v1.OpHistory) //查看历史操作记录
 	}
 
 	cli := r.Group("/redis-manager/cli/v1")
+	cli.Use(jwt.JWT())
 	{
 		cli.POST("/opkey", v1.OpKey)             //对key进行操作
 		cli.POST("/analysisrdb", v1.AnalysisRdb) //分析dump文件
 	}
 	codis := r.Group("/redis-manager/codis/v1")
+	codis.Use(jwt.JWT())
 	{
 		codis.POST("/add", v1.CodisAdd)            //添加codis的平台地址
-		codis.GET("/list", v1.CodisList)           // 列出有哪些平台地址
+		codis.GET("/list", v1.CodisList)           //列出有哪些平台地址
 		codis.GET("/cluster", v1.CodisClusterList) //列出该平台地址有多少个集群
 		codis.GET("/group", v1.CodisGroup)         //列出该集群有多少个group
+		codis.POST("/opnode", v1.CodisOpNode)      //针对codis的proxy和server节点进行操作
 	}
 	redis := r.Group("/redis-manager/redis/v1")
+	redis.Use(jwt.JWT())
 	{
 		redis.GET("/list", v1.RedisList)
 		redis.POST("/add", v1.RedisAdd)
