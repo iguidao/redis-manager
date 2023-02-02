@@ -109,9 +109,9 @@ func CodisOpNode(c *gin.Context) {
 		}
 		if result == nil {
 			if codisnode.OpType == "dilatation" {
-				opredis.Cdilatationn(codisnode, clusterauth, topom)
+				result = opredis.Cdilatationn(codisnode, clusterauth, topom)
 			} else if codisnode.OpType == "shrinkage" {
-
+				result = opredis.Cshrinkage(codisnode, clusterauth, topom)
 			} else {
 				result = "Codis op type fails " + codisnode.OpType
 			}

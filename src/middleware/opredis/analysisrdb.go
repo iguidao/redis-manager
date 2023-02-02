@@ -37,7 +37,6 @@ func Analysis(filename, serverip string) map[string]interface{} {
 		if err != nil {
 			panic(err)
 		}
-		// log.Println("data: ", data)
 		switch data := data.(type) {
 		case *rdb.StringData:
 			stringkeysize := len(data.Value)
@@ -48,7 +47,6 @@ func Analysis(filename, serverip string) map[string]interface{} {
 			listkeysize := 0
 			for _, value := range data.Value {
 				listkeysize = listkeysize + len(value)
-				// log.Println("list: ", data.Key, i, value)
 			}
 			if listkeysize > checksize {
 				listkeymap[data.Key] = listkeysize
@@ -57,7 +55,6 @@ func Analysis(filename, serverip string) map[string]interface{} {
 			hashkeysize := 0
 			for _, value := range data.Value {
 				hashkeysize = hashkeysize + len(value)
-				// log.Println("hash: ", data.Key, i, value)
 			}
 			if hashkeysize > checksize {
 				hashkeymap[data.Key] = hashkeysize
@@ -66,7 +63,6 @@ func Analysis(filename, serverip string) map[string]interface{} {
 			setkeysize := 0
 			for _, value := range data.Value {
 				setkeysize = setkeysize + len(value)
-				// log.Println("set: ", data.Key, i, value)
 			}
 			if setkeysize > checksize {
 				setkeymap[data.Key] = setkeysize
@@ -76,13 +72,10 @@ func Analysis(filename, serverip string) map[string]interface{} {
 			sortsetkeysize := 0
 			for _, value := range data.Value {
 				sortsetkeysize = sortsetkeysize + len(value.Value)
-				// log.Println("set: ", data.Key, i, value)
 			}
 			if sortsetkeysize > checksize {
 				zsetkeymap[data.Key] = sortsetkeysize
 			}
-			// default:
-			// 	log.Println("weizhileixing:")
 		}
 	}
 

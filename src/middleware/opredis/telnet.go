@@ -1,9 +1,9 @@
 package opredis
 
 import (
-	"log"
 	"time"
 
+	"github.com/iguidao/redis-manager/src/middleware/logger"
 	"github.com/reiver/go-telnet"
 )
 
@@ -17,7 +17,7 @@ func ReaderTelnet(conn *telnet.Conn) (out string, knowtime int64) {
 		comtime := time.Now().Unix()
 		_, err := conn.Read(recvData)
 		if nil != err {
-			log.Println(err)
+			logger.Error("ReaderTelnet error: ", err)
 		}
 		result = result + string(recvData)
 		if comtime-knowtime > 1 {
@@ -37,7 +37,7 @@ func SenderTelnet(conn *telnet.Conn, command string) {
 func TelnetCommond(ip, command string) (string, int64) {
 	conn, err := telnet.DialTo(ip)
 	if nil != err {
-		log.Println(err)
+		logger.Error("TelnetCommond error: ", err)
 	}
 	defer conn.Close()
 	SenderTelnet(conn, command)

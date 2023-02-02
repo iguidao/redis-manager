@@ -82,7 +82,6 @@ func Countkey(keylist []string) {
 	csetkeymap := make(map[string]int64)
 	czsetkeymap := make(map[string]int64)
 	for _, keyname := range keylist {
-		// log.Println(keyname)
 		keytype, ok := TypeKey(keyname)
 		if !ok {
 			continue

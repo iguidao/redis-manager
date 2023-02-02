@@ -2,7 +2,6 @@ package codisapi
 
 import (
 	"encoding/json"
-	"log"
 	"strconv"
 
 	"github.com/iguidao/redis-manager/src/middleware/httpapi"
@@ -130,14 +129,13 @@ func GetSlave(curl, ClusterName string, id string) string {
 // 获取集群信息
 func CodisTopom(codisurl, cn string) (Topom, bool) {
 	var topom Topom
-	// log.Println(clusterAuth)
 	url := codisurl + "/topom"
 	geturi := map[string]string{
 		"forward": cn,
 	}
 	httpCode, httpResult := httpapi.GetDefault(url, geturi, nil)
 	if !httpCode {
-		log.Println("获取codis集群信息失败：", httpCode, httpResult)
+		logger.Error("获取codis集群信息失败：", httpCode, httpResult)
 		return topom, false
 	}
 	json.Unmarshal([]byte(httpResult), &topom)
@@ -146,17 +144,31 @@ func CodisTopom(codisurl, cn string) (Topom, bool) {
 
 // 添加proxy
 func CodisProxyUp(curl, cn, clusterAuth, proxyip, port string) bool {
-	// log.Println(clusterAuth)
 	url := curl + "/api/topom/proxy/create/" + clusterAuth + "/" + proxyip + ":" + port
 	geturi := map[string]string{
 		"forward": cn,
 	}
 	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
 	if !httpCode {
-		log.Println("添加proxy节点", proxyip, "失败：", httpCode, httpResult)
+		logger.Error("添加proxy节点", proxyip, "失败：", httpCode, httpResult)
 		return false
 	}
-	log.Println("添加proxy节点", proxyip, "成功", httpCode, httpResult)
+	logger.Info("添加proxy节点", proxyip, "成功", httpCode, httpResult)
+	return true
+}
+
+// 下掉proxy
+func CodisProxyDown(curl, cn, clusterAuth, proxyid string) bool {
+	url := curl + "/api/topom/proxy/remove/" + clusterAuth + "/" + proxyid + "/0"
+	geturi := map[string]string{
+		"forward": cn,
+	}
+	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
+	if !httpCode {
+		logger.Error("删除proxy节点", proxyid, "失败：", httpCode, httpResult)
+		return false
+	}
+	logger.Info("删除proxy节点", proxyid, "成功", httpCode, httpResult)
 	return true
 }
 
@@ -169,10 +181,10 @@ func CodisAddGroup(curl, cn, clusterAuth string, groupid int) bool {
 	}
 	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
 	if !httpCode {
-		log.Println("添加group组", groupid, "失败：", httpCode, httpResult)
+		logger.Error("添加group组", groupid, "失败：", httpCode, httpResult)
 		return false
 	}
-	log.Println("添加group组", groupid, "成功", httpCode, httpResult)
+	logger.Info("添加group组", groupid, "成功", httpCode, httpResult)
 	return true
 }
 
@@ -180,16 +192,47 @@ func CodisAddGroup(curl, cn, clusterAuth string, groupid int) bool {
 func CodisGroupUp(groupid int, curl, cn, clusterAuth, hostname, port string) bool {
 	groupname := strconv.Itoa(groupid)
 	url := curl + "/api/topom/group/add/" + clusterAuth + "/" + groupname + "/" + hostname + ":" + port
-	log.Println(url)
 	geturi := map[string]string{
 		"forward": cn,
 	}
 	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
 	if !httpCode {
-		log.Println("添加group节点", groupid, "失败：", httpCode, httpResult)
+		logger.Error("添加group节点", groupid, "失败：", httpCode, httpResult)
 		return false
 	}
-	log.Println("添加group节点", groupid, "成功", httpCode, httpResult)
+	logger.Info("添加group节点", groupid, "成功", httpCode, httpResult)
+	return true
+}
+
+// 删除group中的节点
+func CodisGroupDown(groupid int, curl, cn, clusterAuth, hostname string) bool {
+	groupname := strconv.Itoa(groupid)
+	url := curl + "/api/topom/group/del/" + clusterAuth + "/" + groupname + "/" + hostname
+	geturi := map[string]string{
+		"forward": cn,
+	}
+	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
+	if !httpCode {
+		logger.Error("删除group节点", groupid, "失败：", httpCode, httpResult)
+		return false
+	}
+	logger.Info("删除group节点", groupid, "成功", httpCode, httpResult)
+	return true
+}
+
+// 删除group组
+func CodisRmGroup(curl, cn, clusterAuth string, groupid int) bool {
+	groupname := strconv.Itoa(groupid)
+	url := curl + "/api/topom/group/remove/" + clusterAuth + "/" + groupname
+	geturi := map[string]string{
+		"forward": cn,
+	}
+	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
+	if !httpCode {
+		logger.Error("删除group组", groupid, "失败：", httpCode, httpResult)
+		return false
+	}
+	logger.Info("删除group组", groupid, "成功", httpCode, httpResult)
 	return true
 }
 
@@ -201,10 +244,10 @@ func CodisServerSync(curl, cn, clusterAuth, hostname, port string) bool {
 	}
 	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
 	if !httpCode {
-		log.Println("Codis机器"+hostname+"sync失败：", httpCode, httpResult)
+		logger.Error("Codis机器"+hostname+"sync失败：", httpCode, httpResult)
 		return false
 	}
-	log.Println("Codis机器"+hostname+"sync成功：", httpCode, httpResult)
+	logger.Info("Codis机器"+hostname+"sync成功：", httpCode, httpResult)
 	return true
 }
 
@@ -216,10 +259,28 @@ func CodisSync(curl, cn, clusterAuth string) bool {
 	}
 	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
 	if !httpCode {
-		log.Println("Codis集群sync失败：", httpCode, httpResult)
+		logger.Error("Codis集群sync失败：", httpCode, httpResult)
 		return false
 	}
-	log.Println("Codis集群sync成功：", httpCode, httpResult)
+	logger.Info("Codis集群sync成功：", httpCode, httpResult)
+	return true
+}
+
+// 迁移slot
+func CodisSlotMv(curl, cn, clusterAuth string, oldid, newid, slotnumber int) bool {
+	oldgroup := strconv.Itoa(oldid)
+	newgroup := strconv.Itoa(newid)
+	slotstring := strconv.Itoa(slotnumber)
+	url := curl + "/api/topom/slots/action/create-some/" + clusterAuth + "/" + oldgroup + "/" + newgroup + "/" + slotstring
+	geturi := map[string]string{
+		"forward": cn,
+	}
+	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
+	if !httpCode {
+		logger.Error("迁移slot：", slotnumber, "从", oldid, "到", newid, "失败：", httpCode, httpResult)
+		return false
+	}
+	logger.Info("迁移slot：", slotnumber, "从", oldid, "到", newid, "任务开始")
 	return true
 }
 
@@ -231,24 +292,23 @@ func CodisRebalance(curl, cn, clusterAuth string) bool {
 	}
 	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
 	if !httpCode {
-		log.Println("执行集群Rebalance失败: ", httpCode, httpResult)
+		logger.Error("执行集群Rebalance失败: ", httpCode, httpResult)
 		return false
 	}
-	log.Println("执行集群Rebalance任务开始")
+	logger.Info("执行集群Rebalance任务开始")
 	return true
 }
 
 // 获取状态
 func CodisInfo(curl, cn string) (TopomStats, bool) {
 	var topomstats TopomStats
-	// log.Println(clusterAuth)
 	url := curl + "/topom/stats"
 	geturi := map[string]string{
 		"forward": cn,
 	}
 	httpCode, httpResult := httpapi.GetDefault(url, geturi, nil)
 	if !httpCode {
-		log.Println("获取codis集群信息失败：", httpCode, httpResult)
+		logger.Error("获取codis集群信息失败：", httpCode, httpResult)
 		return topomstats, false
 	}
 	json.Unmarshal([]byte(httpResult), &topomstats)

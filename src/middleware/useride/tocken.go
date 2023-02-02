@@ -1,10 +1,10 @@
 package useride
 
 import (
-	"log"
 	"time"
 
 	"github.com/iguidao/redis-manager/src/cfg"
+	"github.com/iguidao/redis-manager/src/middleware/logger"
 
 	jwt_lib "github.com/golang-jwt/jwt/v4"
 )
@@ -20,13 +20,10 @@ func Token_Get() string {
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
 	claims["iat"] = time.Now().Unix()
 	token.Claims = claims
-	//if err != nil {
-	//        log.Println("Error extracting the key", err)
-	//}
 
 	tokenString, err := token.SignedString([]byte(SecretKey))
 	if err != nil {
-		log.Println("Error while signing the token", err)
+		logger.Error("Error while signing the token", err)
 	}
 
 	//response := Token{tokenString}

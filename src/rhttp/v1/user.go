@@ -1,11 +1,11 @@
 package v1
 
 import (
-	"log"
 	"net/http"
 	"strings"
 
 	"github.com/iguidao/redis-manager/src/hsc"
+	"github.com/iguidao/redis-manager/src/middleware/logger"
 	"github.com/iguidao/redis-manager/src/middleware/mysql"
 	"github.com/iguidao/redis-manager/src/middleware/useride"
 	"github.com/iguidao/redis-manager/src/middleware/util"
@@ -54,7 +54,7 @@ func Login(c *gin.Context) {
 	var rduser UserInfo
 	err := c.BindJSON(&rduser)
 	if err != nil {
-		log.Println(err)
+		logger.Error("login error:", err)
 		code = hsc.INVALID_PARAMS
 		Result["result"] = "参数错误"
 	} else if useride.Gd_login(rduser.UserName, rduser.Password) {
@@ -89,7 +89,7 @@ func Refresh(c *gin.Context) {
 	authtoken := strings.Split(auth, "Bearer ")[1]
 	token, err := util.RefreshToken(authtoken)
 	if err != nil {
-		log.Println(err)
+		logger.Error("refresh fails:", err)
 		code = hsc.ERROR_AUTH_TOKEN
 		Result["result"] = "获取Token失败"
 	} else {

@@ -1,8 +1,6 @@
 package mysql
 
 import (
-	"log"
-
 	"github.com/iguidao/redis-manager/src/middleware/logger"
 	"gorm.io/gorm"
 )
@@ -37,7 +35,7 @@ func (m *MySQL) FindUser(ruser string) bool {
 	return true
 }
 
-func (m *MySQL) CreatUser(nick_name, email, usertype string, password string) bool {
+func (m *MySQL) CreatUser(nick_name, email, usertype, password string) bool {
 	if result := m.Create(&UserInfo{
 		UserName: nick_name,
 		Email:    email,
@@ -45,7 +43,7 @@ func (m *MySQL) CreatUser(nick_name, email, usertype string, password string) bo
 		UserType: usertype,
 		Enable:   true,
 	}); result.Error != nil {
-		log.Println(result.Error)
+		logger.Error("create mysql user fails", result.Error)
 		return false
 	}
 	return true

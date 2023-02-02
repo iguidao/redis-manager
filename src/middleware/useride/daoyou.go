@@ -1,8 +1,7 @@
 package useride
 
 import (
-	"log"
-
+	"github.com/iguidao/redis-manager/src/middleware/logger"
 	"github.com/iguidao/redis-manager/src/middleware/mysql"
 )
 
@@ -10,18 +9,14 @@ func Gd_login(username, password string) bool {
 	scrypt_password := Get_scrypt(password)
 	//mysql_password := mysql.Get_user(phone)
 	mysql_password, err := mysql.DB.FindUserPassword(username)
-	// log.Println(scrypt_password)
-	// log.Println(mysql_password.UserPassword)
 	if err != nil {
-		log.Println("数据库查询错误: ", err, username)
+		logger.Error("数据库查询错误: ", err, username)
 		return false
 	}
 
 	if scrypt_password != mysql_password.Password {
-		// log.Println("登陆失败: ", username)
 		return false
 	} else {
-		// log.Println("登陆成功: ", username)
 		return true
 	}
 	//return "ok"
