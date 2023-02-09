@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/gin-contrib/cors"
-	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/jwt"
@@ -21,8 +20,7 @@ func NewServer() *gin.Engine {
 	f, _ := os.Create(logpath)
 	gin.DefaultWriter = io.MultiWriter(f)
 	r := gin.Default()
-	r.NoMethod(v1.MethodFails)
-	r.NoRoute(v1.RouterNotFound)
+
 	// 跨域信息
 	r.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
@@ -32,7 +30,7 @@ func NewServer() *gin.Engine {
 		MaxAge:           12 * time.Hour,
 	}))
 	// angular配置
-	r.Use(static.Serve("/", static.LocalFile("./website", false)))
+	// r.Use(static.Serve("/", static.LocalFile("./website", false)))
 	// r.Use(gstatic.Serve("/", gstatic.LocalFile("./website", false)))
 	// r.StaticFile("", "./website/index.html")
 
@@ -43,6 +41,15 @@ func NewServer() *gin.Engine {
 	// {
 	// 	home.GET("/", v1.Home) //主页接口
 	// }
+
+	// cankao
+	// store := cookie.NewStore([]byte("goredismanagerphper"))
+	// r.Use(middleware.StaticCache(), gzip.Gzip(gzip.DefaultCompression), sessions.Sessions("goredismanager", store))
+	// r.Use(gin.Logger(), middleware.GinRecovery(glog.NewLogger("gin_error.log"), true))
+	// r.StaticFS("", StaticsFs)
+	// r.NoRoute(func(ctx *gin.Context) {
+	// 	ctx.Redirect(http.StatusMovedPermanently, "/static/#")
+	// })
 
 	base := r.Group("/redis-manager/base/v1")
 	{
@@ -86,5 +93,8 @@ func NewServer() *gin.Engine {
 		redis.GET("/list", v1.RedisList)
 		redis.POST("/add", v1.RedisAdd)
 	}
+
+	r.NoMethod(v1.MethodFails)
+	r.NoRoute(v1.RouterNotFound)
 	return r
 }
