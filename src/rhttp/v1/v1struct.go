@@ -7,6 +7,13 @@ type CodisInfo struct {
 	ClusterName string `json:"cluster_name"`
 }
 
+// config配置信息
+type ConfigInfo struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+	Note  string `json:"note"`
+}
+
 // 操作缓存的指令
 type CliQuery struct {
 	CacheType   string `json:"cache_type"`

@@ -65,5 +65,9 @@ func Migrate() {
 		logger.Info("start create data table CodisInfo migrate data schemas...")
 		DB.AutoMigrate(&CodisInfo{})
 	}
+	if !DB.Migrator().HasTable(&Rconfig{}) {
+		logger.Info("start create data table Rconfig migrate data schemas...")
+		DB.AutoMigrate(&Rconfig{})
+	}
 	logger.Info("auto check data table done.")
 }

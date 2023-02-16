@@ -93,7 +93,19 @@ func NewServer() *gin.Engine {
 		redis.GET("/list", v1.RedisList)
 		redis.POST("/add", v1.RedisAdd)
 	}
-
+	cloud := r.Group("/redis-manager/cloud/v1")
+	cloud.Use(jwt.JWT())
+	{
+		cloud.GET("/list", v1.CloudList)
+	}
+	cfg := r.Group("/redis-manager/cfg/v1")
+	cfg.Use(jwt.JWT())
+	{
+		cfg.POST("/add", v1.CfgAdd)                // 添加配置信息
+		cfg.GET("/list", v1.CfgList)               // 获取配置信息
+		cfg.POST("/adddefault", v1.CfgAddDefault)  //添加默认key
+		cfg.GET("/listdefault", v1.CfgListDefault) //返回默认配置key
+	}
 	r.NoMethod(v1.MethodFails)
 	r.NoRoute(v1.RouterNotFound)
 	return r

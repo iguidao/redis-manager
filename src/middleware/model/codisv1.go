@@ -8,10 +8,12 @@ type CodisNode struct {
 	Group       []CodisNodeGroup `json:"group"`
 	OpType      string           `json:"op_type"`
 }
+
 type CodisNodeProxy struct {
 	List []string `json:"list"`
 	Port string   `json:"port"`
 }
+
 type CodisNodeGroup struct {
 	Id   string   `json:"id"`
 	List []string `json:"list"`

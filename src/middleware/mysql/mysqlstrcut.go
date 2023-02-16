@@ -86,6 +86,14 @@ type CodisInfo struct {
 	Cname string `gorm:"type:varchar(50)"`
 }
 
+// config信息
+type Rconfig struct {
+	Base
+	Name  string `gorm:"not null:index:primary_key"`
+	Value string `gorm:"type:varchar(255)"`
+	Note  string `gorm:"type:varchar(255)"`
+}
+
 //操作历史
 type OpHistory struct {
 	Base
@@ -94,6 +102,7 @@ type OpHistory struct {
 	OpInfo   string `gorm:"type:varchar(100)"` // 操作动作
 	OpParams string `gorm:"type:text"`         //操作参数属组或者对象
 }
+
 type Tabler interface {
 	TableName() string
 }
@@ -120,4 +129,8 @@ func (RedisNode) TableName() string {
 
 func (OpHistory) TableName() string {
 	return "op_history"
+}
+
+func (Rconfig) TableName() string {
+	return "rconfig"
 }
