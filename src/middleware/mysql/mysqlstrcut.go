@@ -65,9 +65,9 @@ type ClusterInfo struct {
 type RedisNode struct {
 	Base
 	CluserId   int    `gorm:"not null;index"`
-	NodeId     string `gorm:"type:varchar(50);index""`
+	NodeId     string `gorm:"type:varchar(50);index"`
 	MasterId   string `gorm:"type:varchar(50)"`
-	Host       string `gorm:"type:varchar(50);index""`
+	Host       string `gorm:"type:varchar(50);index"`
 	Port       int
 	NodeRole   string `gorm:"type:varchar(50)"`
 	Flags      string `gorm:"type:varchar(50)"`

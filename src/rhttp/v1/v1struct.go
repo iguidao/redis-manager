@@ -48,3 +48,10 @@ type UserInfo struct {
 	Mail     string `json:"mail"`
 	UserType string `json:"usertype"`
 }
+
+// casbin rule
+type CasbinPolicyJson struct {
+	Identity string `json:"identity"`
+	Path     string `json:"path"`
+	Method   string `json:"method"`
+}

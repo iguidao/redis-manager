@@ -33,7 +33,7 @@ func Register(c *gin.Context) {
 	} else {
 		scrypt_password := useride.Get_scrypt(rduser.Password)
 		result := mysql.DB.CreatUser(rduser.UserName, rduser.Mail, rduser.UserType, scrypt_password)
-		if result == false {
+		if !result {
 			code = hsc.ERROR
 			Result["result"] = "创建用户失败"
 		} else {

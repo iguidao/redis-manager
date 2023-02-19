@@ -106,6 +106,24 @@ func NewServer() *gin.Engine {
 		cfg.POST("/adddefault", v1.CfgAddDefault)  //添加默认key
 		cfg.GET("/listdefault", v1.CfgListDefault) //返回默认配置key
 	}
+
+	rootrule := r.Group("/permission-internal/v1")
+	rootrule.Use(jwt.JWT())
+	{
+		rootrule.POST("/rule/add", v1.AddRule)
+		rootrule.DELETE("/rule/del", v1.DelRule)
+		rootrule.PUT("/rule/update", v1.UpdateRule)
+		rootrule.GET("/rule/all", v1.AllRule)
+	}
+	checkrule := r.Group("/permission-internal/v1")
+	{
+		checkrule.POST("/rule/check", v1.CheckRule)
+	}
+	authcheck := r.Group("/permission-internal/authcheck/v1")
+	authcheck.Use(jwt.JWT())
+	{
+		authcheck.GET("/test", v1.AuthCheck)
+	}
 	r.NoMethod(v1.MethodFails)
 	r.NoRoute(v1.RouterNotFound)
 	return r

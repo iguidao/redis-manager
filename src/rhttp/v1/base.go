@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/iguidao/redis-manager/src/hsc"
+	"github.com/iguidao/redis-manager/src/middleware/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -55,4 +56,33 @@ func RouterNotFound(c *gin.Context) {
 		c.Writer.Write((content))
 		c.Writer.Flush()
 	}
+}
+
+func HttpTemplate(c *gin.Context) {
+	data := make(map[string]interface{})
+	code := hsc.SUCCESS
+	c.JSON(http.StatusOK, gin.H{
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      data,
+	})
+}
+
+func Cookie(c *gin.Context) {
+	cookie, err := c.Cookie("gin_cookie")
+	if err != nil {
+		cookie = "NotSet"
+		c.SetCookie("gin_cookie", "test", 3600, "/", "localhost", false, true)
+	}
+	c.JSON(http.StatusOK, gin.H{"cookie": cookie})
+}
+func AuthCheck(c *gin.Context) {
+	// var result auth.Result
+	userinfo, ok := c.Get("UserInfo")
+	if ok {
+		logger.Info("===========")
+		logger.Info(userinfo.(string))
+		logger.Info("===========")
+	}
+	c.JSON(http.StatusOK, gin.H{"ok": true})
 }
