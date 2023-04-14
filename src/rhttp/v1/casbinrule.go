@@ -4,11 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/iguidao/redis-manager/src/hsc"
-
-	"github.com/iguidao/redis-manager/src/middleware/casbin"
-
 	"github.com/gin-gonic/gin"
+	"github.com/iguidao/redis-manager/src/hsc"
+	"github.com/iguidao/redis-manager/src/middleware/casbin"
 	"github.com/iguidao/redis-manager/src/middleware/util"
 )
 

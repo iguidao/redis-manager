@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/iguidao/redis-manager/src/cfg"
+	"github.com/iguidao/redis-manager/src/middleware/casbin"
 	"github.com/iguidao/redis-manager/src/middleware/logger"
 	"github.com/iguidao/redis-manager/src/middleware/mysql"
 	"github.com/iguidao/redis-manager/src/rhttp"
@@ -14,7 +15,7 @@ func init() {
 	logger.SetupLogger()
 	mysql.Connect(cfg.Get_Info_String("MYSQL"))
 	mysql.Migrate()
-
+	casbin.Connect(cfg.Get_Info_String("MYSQL"))
 }
 
 func main() {

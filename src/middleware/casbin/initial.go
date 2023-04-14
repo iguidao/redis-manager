@@ -1,8 +1,6 @@
 package casbin
 
 import (
-	"log"
-
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
@@ -32,7 +30,7 @@ func Connect(dsn string) {
 		SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
 	}), &gorm.Config{})
 	if err != nil {
-		log.Println("Cannot open mysql database: ", err.Error())
+		logger.Error("Cannot open mysql database: ", err.Error())
 		panic(err)
 	}
 	// Initialize a Gorm adapter and use it in a Casbin enforcer:

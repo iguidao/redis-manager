@@ -25,62 +25,88 @@ redis-manager
 /website
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# redis-manager-ui 
+# Logs
+redis-manager-ui/logs
+redis-manager-ui/*.log
+redis-manager-ui/npm-debug.log*
+redis-manager-ui/yarn-debug.log*
+redis-manager-ui/yarn-error.log*
+redis-manager-ui/pnpm-debug.log*
+redis-manager-ui/lerna-debug.log*
+
+redis-manager-ui/node_modules
+redis-manager-ui/dist
+redis-manager-ui/dist-ssr
+redis-manager-ui/*.local
+
+# Editor directories and files
+redis-manager-ui/.vscode/*
+redis-manager-ui/!.vscode/extensions.json
+redis-manager-ui/.idea
+redis-manager-ui/.DS_Store
+redis-manager-ui/*.suo
+redis-manager-ui/*.ntvs*
+redis-manager-ui/*.njsproj
+redis-manager-ui/*.sln
+redis-manager-ui/*.sw?
+
 # Compiled output
-frontend/dist/
-frontend/tmp
-frontend/out-tsc
-frontend/bazel-out
+redis-manager-ui/dist/
+redis-manager-ui/tmp
+redis-manager-ui/out-tsc
+redis-manager-ui/bazel-out
 
 # Node
-frontend/node_modules/
-frontend/npm-debug.log
-frontend/yarn-error.log
+redis-manager-ui/node_modules/
+redis-manager-ui/npm-debug.log
+redis-manager-ui/yarn-error.log
 
 # IDEs and editors
-frontend/.idea/
-frontend/.project
-frontend/.classpath
-frontend/.c9/
-frontend/*.launch
-frontend/.settings/
-frontend/*.sublime-workspace
+redis-manager-ui/.idea/
+redis-manager-ui/.project
+redis-manager-ui/.classpath
+redis-manager-ui/.c9/
+redis-manager-ui/*.launch
+redis-manager-ui/.settings/
+redis-manager-ui/*.sublime-workspace
 
 # Visual Studio Code
-frontend/.vscode/*
-frontend/!.vscode/settings.json
-frontend/!.vscode/tasks.json
-frontend/!.vscode/launch.json
-frontend/!.vscode/extensions.json
-frontend/.history/*
+redis-manager-ui/.vscode/*
+redis-manager-ui/!.vscode/settings.json
+redis-manager-ui/!.vscode/tasks.json
+redis-manager-ui/!.vscode/launch.json
+redis-manager-ui/!.vscode/extensions.json
+redis-manager-ui/.history/*
 
 # Miscellaneous
-frontend/.angular/cache
-frontend/.sass-cache/
-frontend/connect.lock
-frontend/coverage
-frontend/libpeerconnection.log
-frontend/testem.log
-frontend/typings
+redis-manager-ui/.angular/cache
+redis-manager-ui/.sass-cache/
+redis-manager-ui/connect.lock
+redis-manager-ui/coverage
+redis-manager-ui/libpeerconnection.log
+redis-manager-ui/testem.log
+redis-manager-ui/typings
 
 # System files
-frontend/.DS_Store
-frontend/Thumbs.db
+redis-manager-ui/.DS_Store
+redis-manager-ui/Thumbs.db
 
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
-frontend/**/*.log
-frontend/test/unit/coverage/
-frontend/test/e2e/reports/
-frontend/selenium-debug.log
-frontend/tests/**/coverage/
-frontend/tests/e2e/reports
+redis-manager-ui/npm-debug.log*
+redis-manager-ui/yarn-debug.log*
+redis-manager-ui/yarn-error.log*
+redis-manager-ui/**/*.log
+redis-manager-ui/test/unit/coverage/
+redis-manager-ui/test/e2e/reports/
+redis-manager-ui/selenium-debug.log
+redis-manager-ui/tests/**/coverage/
+redis-manager-ui/tests/e2e/reports
 # Editor directories and files
-frontend/*.suo
-frontend/*.ntvs*
-frontend/*.njsproj
-frontend/*.sln
-frontend/*.local
-frontend/package-lock.json
-frontend/yarn.lock
+redis-manager-ui/*.suo
+redis-manager-ui/*.ntvs*
+redis-manager-ui/*.njsproj
+redis-manager-ui/*.sln
+redis-manager-ui/*.local
+redis-manager-ui/package-lock.json
+redis-manager-ui/yarn.lock
 
