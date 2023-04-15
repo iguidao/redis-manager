@@ -44,8 +44,9 @@ const onLoginIn = async () => {
         if (valid) {
           const res = await login(loginForm);
           console.log("res: ",res.data.data)
-          if (res.data.errorCode == 0 ) {
-              console.log("res token: ",res.data.data.token);
+          if (res.data.errorCode === 0 ) {
+              sessionStorage.setItem('Authorization', res.data.data.token);
+              // console.log("res token: ",res.data.data.token);
               router.push("/home");
           } else {
               ElMessage(res.data.msg);

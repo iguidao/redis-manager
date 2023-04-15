@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import router from '../../router';
-console.log(router.currentRoute.value.matched)
+// console.log(router.currentRoute.value.matched)
 const routers = computed(()=>{
     // 过滤掉没有meta的 
     return router.currentRoute.value.matched.filter(item=>item.meta.title)

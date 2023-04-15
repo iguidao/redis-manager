@@ -109,12 +109,12 @@ router.beforeEach((to, from, next) => {
       return next()
     }
     // 获取token
-    // const token= sessionStorage.getItem('Authorization')
-    // if (!token) {
-    //   return next('/login')
-    // } else {
-    //   next()
-    // }
+    const token = sessionStorage.getItem('Authorization')
+    if (!token) {
+      return next('/login')
+    } else {
+      next()
+    }
     return next()
   })
   
