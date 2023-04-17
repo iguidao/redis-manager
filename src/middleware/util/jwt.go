@@ -1,8 +1,6 @@
 package util
 
 import (
-	"strconv"
-
 	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/mysql"
 
@@ -23,8 +21,9 @@ var (
 )
 
 type Claims struct {
-	UserId   string `json:"userid"`
+	UserId   int    `json:"userid"`
 	UserName string `json:"username"`
+	UserType string `json:"usertype"`
 	// UserPhone    int64     `json:"UserPhone"`
 	// Password string    `json:"Password"`
 	// CreaTime time.Time `json:"CreaTime"`
@@ -44,11 +43,13 @@ func GenerateToken(Username string, Password string) (string, error) {
 	expireTime := nowTime.Add(168 * time.Hour)
 	muserinfo := mysql.DB.UserInfo(Username)
 	username := muserinfo.UserName
-	UserId := strconv.Itoa(muserinfo.Base.ID)
+	// userid := strconv.Itoa()
+	usertype := muserinfo.UserType
 	// CreaTime := muserinfo.Base.CreatedAt
 	claims := Claims{
-		UserId,
+		muserinfo.Base.ID,
 		username,
+		usertype,
 		// UserPhone,
 		// Password,
 		// CreaTime,
@@ -115,6 +116,7 @@ func GetUserInfo(tokenString string) (UserJWTInfo, error) {
 		userinfo = UserJWTInfo{
 			claims.UserId,
 			claims.UserName,
+			claims.UserType,
 		}
 		// muserinfo := mysql.DB.UserInfo(claims.UserPhone)
 		// userinfo = UserConverge(claims)

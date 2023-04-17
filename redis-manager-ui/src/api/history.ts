@@ -1,20 +1,19 @@
 import RequestHttp from '../utils/request'
 
-namespace Rconfig {
+namespace Rhistory {
     // 拿到配置数据
-    export interface LoginResData {
-        data: {
-            lists: [{
+    export interface HistoryResData {
+        data: [
+            {
                 ID: number;
                 CreatedAt: string;
                 UpdatedAt: string;
                 DeletedAt: string;
-                Name: string;
-                Value: string;
-                Note: string;
-            }];
-            total: number;
-        }
+                UserId: number;
+                OpInfo: string;
+                OpParams: string;
+            }
+        ]
         errorCode: number;
         msg: string;
     }
@@ -22,6 +21,6 @@ namespace Rconfig {
   // 配置获取
   export const list = () => {
       // 返回的数据格式可以和服务端约定
-      return RequestHttp.get<Rconfig.LoginResData>('/cfg/v1/list');
+      return RequestHttp.get<Rhistory.HistoryResData>('/ophistory/v1/list');
   }
   

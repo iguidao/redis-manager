@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/iguidao/redis-manager/src/hsc"
@@ -30,6 +31,11 @@ func RedisAdd(c *gin.Context) {
 		logger.Error("Cluster add error: ", err)
 		code = hsc.INVALID_PARAMS
 	}
+	username, _ := c.Get("UserId")
+	urlinfo := c.Request.URL
+	jsonBody, _ := json.Marshal(clusterinfo)
+	method := c.Request.Method
+	go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 	result := mysql.DB.GetAllCluster()
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,

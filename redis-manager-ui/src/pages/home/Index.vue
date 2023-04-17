@@ -66,10 +66,6 @@
               <el-icon><MagicStick /></el-icon>
               <span>数据查询</span>
             </el-menu-item>
-            <el-menu-item index="/history/index" @click="saveActiveNav('/history/index')">
-              <el-icon><Tickets /></el-icon>
-              <span>历史记录</span>
-            </el-menu-item>
             <el-sub-menu index="2">
               <template #title>
                 <el-icon><User /></el-icon>
@@ -94,6 +90,10 @@
                 <span>全局配置</span>
               </el-menu-item>
             </el-sub-menu>
+            <el-menu-item index="/history/index" @click="saveActiveNav('/history/index')">
+              <el-icon><Tickets /></el-icon>
+              <span>历史记录</span>
+            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-container>

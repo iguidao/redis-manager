@@ -7,6 +7,7 @@ const (
 	INVALID_PARAMS = 400
 	NO_LOGIN       = 401
 	NOT_PROMISE    = 403
+	SERVER_ERROR   = 544
 
 	NOT_FOUND                      = 10001
 	Method_FAILS                   = 10002

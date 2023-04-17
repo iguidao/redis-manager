@@ -1,11 +1,17 @@
 package mysql
 
+import (
+	"log"
+
+	"github.com/iguidao/redis-manager/src/middleware/logger"
+)
+
 // add cfg
-func (m *MySQL) AddCfg(name, value, note string) (int, bool) {
+func (m *MySQL) AddCfg(name, key, value string) (int, bool) {
 	addcfginfo := &Rconfig{
-		Name:  name,
+		Key:   key,
 		Value: value,
-		Note:  note,
+		Name:  name,
 	}
 	result := m.Create(&addcfginfo)
 	if result.Error != nil {
@@ -13,18 +19,27 @@ func (m *MySQL) AddCfg(name, value, note string) (int, bool) {
 	}
 	return addcfginfo.ID, true
 }
+func (m *MySQL) DelCfg(key string) bool {
+	var cfg *Rconfig
+	if err := m.Model(cfg).Where("`key` = ?", key).Delete(&cfg).Error; err != nil {
+		logger.Error(err)
+		return false
+	}
+	return true
+}
 
 // update cfg
-func (m *MySQL) UpdateCfg(name, value string) bool {
+func (m *MySQL) UpdateCfg(key, value string) bool {
 	var cfg Rconfig
-	result := m.Model(&cfg).Where("name = ?", name).Update("value", value)
+	result := m.Model(&cfg).Where("`key` = ?", key).Update("value", value)
+	log.Println("result.Error: ", result.Error)
 	return result.Error == nil
 }
 
 // check cfg
-func (m *MySQL) ExistCfg(name string) bool {
+func (m *MySQL) ExistCfg(key string) bool {
 	var cfg *Rconfig
-	if err := m.Model(cfg).Where("name = ?", name).First(&cfg).Error; err != nil {
+	if err := m.Model(cfg).Where("`key` = ?", key).First(&cfg).Error; err != nil {
 		return false
 	}
 	return true

@@ -1,18 +1,25 @@
 package v1
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/iguidao/redis-manager/src/hsc"
 	"github.com/iguidao/redis-manager/src/middleware/casbin"
+	"github.com/iguidao/redis-manager/src/middleware/mysql"
 	"github.com/iguidao/redis-manager/src/middleware/util"
 )
 
 func CheckRule(c *gin.Context) {
 	data := make(map[string]interface{})
 	code := hsc.SUCCESS
+	username, _ := c.Get("UserId")
+	urlinfo := c.Request.URL
+	jsonBody, _ := json.Marshal("Policy")
+	method := c.Request.Method
+	go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,
 		"msg":       hsc.GetMsg(code),
@@ -42,6 +49,11 @@ func AddRule(c *gin.Context) {
 		log.Println(err)
 		code = hsc.INVALID_PARAMS
 	} else {
+		username, _ := c.Get("UserId")
+		urlinfo := c.Request.URL
+		jsonBody, _ := json.Marshal(Policy)
+		method := c.Request.Method
+		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 		if !casbin.RuleAdd(Policy.Identity, Policy.Path, Policy.Method) {
 			code = hsc.ERROR
 		}
@@ -62,6 +74,11 @@ func DelRule(c *gin.Context) {
 		log.Println(err)
 		code = hsc.INVALID_PARAMS
 	} else {
+		username, _ := c.Get("UserId")
+		urlinfo := c.Request.URL
+		jsonBody, _ := json.Marshal(Policy)
+		method := c.Request.Method
+		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 		if !casbin.RuleDel(Policy.Identity, Policy.Path, Policy.Method) {
 			code = hsc.ERROR
 		}
@@ -76,6 +93,11 @@ func DelRule(c *gin.Context) {
 func UpdateRule(c *gin.Context) {
 	data := make(map[string]interface{})
 	code := hsc.SUCCESS
+	username, _ := c.Get("UserId")
+	urlinfo := c.Request.URL
+	jsonBody, _ := json.Marshal("Policy")
+	method := c.Request.Method
+	go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,
 		"msg":       hsc.GetMsg(code),

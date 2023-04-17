@@ -22,7 +22,6 @@ func OpKey(c *gin.Context) {
 	var result interface{}
 	var ok bool
 	code := hsc.NO_CONNECT_CODIS
-	urlinfo := c.Request.URL
 	err := c.BindJSON(&cliquery)
 	if err != nil {
 		logger.Error("Op Key Bind Json error: ", err)
@@ -32,8 +31,11 @@ func OpKey(c *gin.Context) {
 		code = hsc.CLICK_REPEATEDLY
 		result = "别点了，太多人操作了，该操作1次只能1个人！！！"
 	} else {
+		username, _ := c.Get("UserId")
+		urlinfo := c.Request.URL
 		jsonBody, _ := json.Marshal(cliquery)
-		go mysql.DB.AddHistory(urlinfo.Path, string(jsonBody))
+		method := c.Request.Method
+		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 		if cliquery.CacheType == "codis" {
 			result, ok = CodisOp(cliquery)
 			if ok {

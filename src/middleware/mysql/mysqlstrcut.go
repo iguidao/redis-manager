@@ -89,15 +89,14 @@ type CodisInfo struct {
 // config信息
 type Rconfig struct {
 	Base
-	Name  string `gorm:"not null:index:primary_key"`
+	Name  string `gorm:"type:varchar(255)"`
+	Key   string `gorm:"not null:index:primary_key"`
 	Value string `gorm:"type:varchar(255)"`
-	Note  string `gorm:"type:varchar(255)"`
 }
 
 //操作历史
 type OpHistory struct {
 	Base
-	GroupId  int    `gorm:"not null;index"`
 	UserId   int    `gorm:"not null;index"`
 	OpInfo   string `gorm:"type:varchar(100)"` // 操作动作
 	OpParams string `gorm:"type:text"`         //操作参数属组或者对象
@@ -121,6 +120,9 @@ func (GroupContain) TableName() string {
 
 func (ClusterInfo) TableName() string {
 	return "cluster_info"
+}
+func (CodisInfo) TableName() string {
+	return "codis_info"
 }
 
 func (RedisNode) TableName() string {

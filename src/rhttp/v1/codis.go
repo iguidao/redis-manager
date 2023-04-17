@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/iguidao/redis-manager/src/hsc"
@@ -24,6 +25,11 @@ func CodisAdd(c *gin.Context) {
 		code = hsc.INVALID_PARAMS
 		logger.Error("Codis add error: ", err)
 	} else {
+		username, _ := c.Get("UserId")
+		urlinfo := c.Request.URL
+		jsonBody, _ := json.Marshal(codisinfo)
+		method := c.Request.Method
+		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 		result, ok = mysql.DB.AddCodis(codisinfo.Curl, codisinfo.Cname)
 		if !ok {
 			code = hsc.ERROR
@@ -94,6 +100,11 @@ func CodisOpNode(c *gin.Context) {
 		code = hsc.INVALID_PARAMS
 		logger.Error("Codis op node error: ", err)
 	} else {
+		username, _ := c.Get("UserId")
+		urlinfo := c.Request.URL
+		jsonBody, _ := json.Marshal(codisnode)
+		method := c.Request.Method
+		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 		topom, ok = codisapi.CodisTopom(codisnode.Curl, codisnode.ClusterName)
 		if !ok {
 			result = "Codis Get topom stats fails."

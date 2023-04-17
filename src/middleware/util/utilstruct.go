@@ -4,8 +4,9 @@ import "time"
 
 // user info tbale
 type UserJWTInfo struct {
-	Uid      string
+	Uid      int
 	UserName string
+	UserType string
 	// UserPhone int64
 	// CreatedAt time.Time
 }

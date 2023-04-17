@@ -16,6 +16,8 @@ func JWT() gin.HandlerFunc {
 		var code int
 		var token string
 		var username string
+		var usertype string
+		var userid int
 		Result := make(map[string]interface{})
 		code = hsc.SUCCESS
 		auth := c.Request.Header.Get("Authorization")
@@ -35,6 +37,8 @@ func JWT() gin.HandlerFunc {
 				code = hsc.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
 			} else {
 				username = claims.UserName
+				usertype = claims.UserType
+				userid = claims.UserId
 			}
 		}
 		if code != hsc.SUCCESS {
@@ -47,6 +51,8 @@ func JWT() gin.HandlerFunc {
 			return
 		}
 		c.Set("UserName", username)
+		c.Set("UserType", usertype)
+		c.Set("UserId", userid)
 		c.Next()
 	}
 }

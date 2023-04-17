@@ -71,12 +71,14 @@ func NewServer() *gin.Engine {
 	{
 		history.GET("/list", v1.OpHistory) //查看历史操作记录
 	}
-
-	cli := r.Group("/redis-manager/cli/v1")
-	cli.Use(jwt.JWT())
+	cfg := r.Group("/redis-manager/cfg/v1")
+	cfg.Use(jwt.JWT())
 	{
-		cli.POST("/opkey", v1.OpKey)             //对key进行操作
-		cli.POST("/analysisrdb", v1.AnalysisRdb) //分析dump文件
+		cfg.POST("/update", v1.CfgUpdate)          // 添加配置信息
+		cfg.GET("/list", v1.CfgList)               // 获取配置信息
+		cfg.DELETE("/del", v1.CfgDelete)           //删除配置
+		cfg.POST("/adddefault", v1.CfgAddDefault)  //添加默认key
+		cfg.GET("/listdefault", v1.CfgListDefault) //返回默认配置key
 	}
 	codis := r.Group("/redis-manager/codis/v1")
 	codis.Use(jwt.JWT())
@@ -87,6 +89,13 @@ func NewServer() *gin.Engine {
 		codis.GET("/group", v1.CodisGroup)         //列出该集群有多少个group
 		codis.POST("/opnode", v1.CodisOpNode)      //针对codis的proxy和server节点进行操作
 	}
+	cli := r.Group("/redis-manager/cli/v1")
+	cli.Use(jwt.JWT())
+	{
+		cli.POST("/opkey", v1.OpKey)             //对key进行操作
+		cli.POST("/analysisrdb", v1.AnalysisRdb) //分析dump文件
+	}
+
 	redis := r.Group("/redis-manager/redis/v1")
 	redis.Use(jwt.JWT())
 	{
@@ -97,14 +106,6 @@ func NewServer() *gin.Engine {
 	cloud.Use(jwt.JWT())
 	{
 		cloud.GET("/list", v1.CloudList)
-	}
-	cfg := r.Group("/redis-manager/cfg/v1")
-	cfg.Use(jwt.JWT())
-	{
-		cfg.POST("/add", v1.CfgAdd)                // 添加配置信息
-		cfg.GET("/list", v1.CfgList)               // 获取配置信息
-		cfg.POST("/adddefault", v1.CfgAddDefault)  //添加默认key
-		cfg.GET("/listdefault", v1.CfgListDefault) //返回默认配置key
 	}
 
 	rootrule := r.Group("/permission-internal/v1")

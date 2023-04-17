@@ -9,9 +9,9 @@ type CodisInfo struct {
 
 // config配置信息
 type ConfigInfo struct {
-	Name  string `json:"name"`
+	// Name  string `json:"name"`
+	Key   string `json:"key"`
 	Value string `json:"value"`
-	Note  string `json:"note"`
 }
 
 // 操作缓存的指令

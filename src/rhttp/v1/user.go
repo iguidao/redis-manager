@@ -66,6 +66,7 @@ func Login(c *gin.Context) {
 			Result["token"] = "Bearer " + token
 			Result["result"] = "登录成功"
 			Result["username"] = rduser.UserName
+			Result["usertype"] = rduser.UserType
 			code = hsc.SUCCESS
 			// go useride.CacheUserinfo(token, Phonenum)
 		}

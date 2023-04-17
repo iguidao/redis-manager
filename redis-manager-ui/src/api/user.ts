@@ -1,6 +1,6 @@
 import RequestHttp from '../utils/request'
 
-namespace Login {
+namespace Rlogin {
     // 用户登录表单
     export interface LoginReqForm {
       username: string;
@@ -18,8 +18,8 @@ namespace Login {
     }
   }
   // 用户登录
-  export const login = (params: Login.LoginReqForm) => {
+  export const login = (params: Rlogin.LoginReqForm) => {
       // 返回的数据格式可以和服务端约定
-      return RequestHttp.post<Login.LoginResData>('/user/v1/sign-in', params);
+      return RequestHttp.post<Rlogin.LoginResData>('/user/v1/sign-in', params);
   }
   
