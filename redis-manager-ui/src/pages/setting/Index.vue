@@ -93,9 +93,17 @@ const formcfg = reactive({
 const load = async () => {
   // console.log(await list())
   let data = (await listCfg()).data
-  tableData.value = data.data.lists
+  if (data.errorCode === 0 ) {
+    tableData.value = data.data.lists
+  } else {
+    ElMessage.error(data.msg)
+  }
   let dcfg = (await listDefaultCfg()).data
-  options.value = dcfg.data
+  if (dcfg.errorCode === 0 ) {
+    options.value = dcfg.data
+  } else {
+    ElMessage.error(dcfg.msg)
+  }
 }
 const handleEdit = (id:number, val:any) => {
   dialogFormVisible.value = true

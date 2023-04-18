@@ -29,10 +29,6 @@ func NewServer() *gin.Engine {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
-	// angular配置
-	// r.Use(static.Serve("/", static.LocalFile("./website", false)))
-	// r.Use(gstatic.Serve("/", gstatic.LocalFile("./website", false)))
-	// r.StaticFile("", "./website/index.html")
 
 	// vue配置
 	// r.Static("/assets", "./website/assets")
@@ -41,15 +37,6 @@ func NewServer() *gin.Engine {
 	// {
 	// 	home.GET("/", v1.Home) //主页接口
 	// }
-
-	// cankao
-	// store := cookie.NewStore([]byte("goredismanagerphper"))
-	// r.Use(middleware.StaticCache(), gzip.Gzip(gzip.DefaultCompression), sessions.Sessions("goredismanager", store))
-	// r.Use(gin.Logger(), middleware.GinRecovery(glog.NewLogger("gin_error.log"), true))
-	// r.StaticFS("", StaticsFs)
-	// r.NoRoute(func(ctx *gin.Context) {
-	// 	ctx.Redirect(http.StatusMovedPermanently, "/static/#")
-	// })
 
 	base := r.Group("/redis-manager/base/v1")
 	{
@@ -107,7 +94,6 @@ func NewServer() *gin.Engine {
 	{
 		cloud.GET("/list", v1.CloudList)
 	}
-
 	rootrule := r.Group("/permission-internal/v1")
 	rootrule.Use(jwt.JWT())
 	{

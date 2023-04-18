@@ -7,6 +7,9 @@ dependencies:
   axios:
     specifier: ^1.3.5
     version: registry.npmmirror.com/axios@1.3.5
+  clipboard:
+    specifier: ^2.0.11
+    version: registry.npmmirror.com/clipboard@2.0.11
   element-plus:
     specifier: ^2.3.3
     version: registry.npmmirror.com/element-plus@2.3.3(vue@3.2.47)
@@ -16,9 +19,18 @@ dependencies:
   vue:
     specifier: ^3.2.47
     version: registry.npmmirror.com/vue@3.2.47
+  vue-json-viewer:
+    specifier: ^3.0.4
+    version: registry.npmmirror.com/vue-json-viewer@3.0.4(vue@3.2.47)
   vue-router:
     specifier: ^4.1.6
     version: registry.npmmirror.com/vue-router@4.1.6(vue@3.2.47)
+  vue3-json-viewer:
+    specifier: ^2.2.2
+    version: registry.npmmirror.com/vue3-json-viewer@2.2.2(vue@3.2.47)
+  vue3-json-viewer-plus:
+    specifier: ^1.0.1
+    version: registry.npmmirror.com/vue3-json-viewer-plus@1.0.1(vue@3.2.47)
   vuex:
     specifier: ^4.1.0
     version: registry.npmmirror.com/vuex@4.1.0(vue@3.2.47)
@@ -722,6 +734,16 @@ packages:
       fsevents: registry.npmmirror.com/fsevents@2.3.2
     dev: true
 
+  registry.npmmirror.com/clipboard@2.0.11:
+    resolution: {integrity: sha512-C+0bbOqkezLIsmWSvlsXS0Q0bmkugu7jcfMIACB+RDEntIzQIkdr148we28AfSloQLRdZlYL/QYyrq05j/3Faw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/clipboard/-/clipboard-2.0.11.tgz}
+    name: clipboard
+    version: 2.0.11
+    dependencies:
+      good-listener: registry.npmmirror.com/good-listener@1.2.2
+      select: registry.npmmirror.com/select@1.1.2
+      tiny-emitter: registry.npmmirror.com/tiny-emitter@2.1.0
+    dev: false
+
   registry.npmmirror.com/combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/combined-stream/-/combined-stream-1.0.8.tgz}
     name: combined-stream
@@ -767,6 +789,12 @@ packages:
     name: delayed-stream
     version: 1.0.0
     engines: {node: '>=0.4.0'}
+    dev: false
+
+  registry.npmmirror.com/delegate@3.2.0:
+    resolution: {integrity: sha512-IofjkYBZaZivn0V8nnsMJGBr4jVLxHDheKSW88PyxS5QC4Vo9ZbZVvhzlSxY87fVq3STR6r+4cGepyHkcWOQSw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/delegate/-/delegate-3.2.0.tgz}
+    name: delegate
+    version: 3.2.0
     dev: false
 
   registry.npmmirror.com/element-plus@2.3.3(vue@3.2.47):
@@ -924,6 +952,14 @@ packages:
     dependencies:
       is-glob: registry.npmmirror.com/is-glob@4.0.3
     dev: true
+
+  registry.npmmirror.com/good-listener@1.2.2:
+    resolution: {integrity: sha512-goW1b+d9q/HIwbVYZzZ6SsTr4IgE+WA44A0GmPIQstuOrgsFcT7VEJ48nmr9GaRtNu0XTKacFLGnBPAM6Afouw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/good-listener/-/good-listener-1.2.2.tgz}
+    name: good-listener
+    version: 1.2.2
+    dependencies:
+      delegate: registry.npmmirror.com/delegate@3.2.0
+    dev: false
 
   registry.npmmirror.com/has@1.0.3:
     resolution: {integrity: sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/has/-/has-1.0.3.tgz}
@@ -1250,6 +1286,12 @@ packages:
     version: 1.0.0
     dev: true
 
+  registry.npmmirror.com/select@1.1.2:
+    resolution: {integrity: sha512-OwpTSOfy6xSs1+pwcNrv0RBMOzI39Lp3qQKUTPVVPRjCdNa5JH/oPRiqsesIskK8TVgmRiHwO4KXlV2Li9dANA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/select/-/select-1.1.2.tgz}
+    name: select
+    version: 1.1.2
+    dev: false
+
   registry.npmmirror.com/source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/source-map-js/-/source-map-js-1.0.2.tgz}
     name: source-map-js
@@ -1282,6 +1324,12 @@ packages:
     version: 1.0.0
     engines: {node: '>= 0.4'}
     dev: true
+
+  registry.npmmirror.com/tiny-emitter@2.1.0:
+    resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/tiny-emitter/-/tiny-emitter-2.1.0.tgz}
+    name: tiny-emitter
+    version: 2.1.0
+    dev: false
 
   registry.npmmirror.com/to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz}
@@ -1453,6 +1501,18 @@ packages:
       vue: registry.npmmirror.com/vue@3.2.47
     dev: false
 
+  registry.npmmirror.com/vue-json-viewer@3.0.4(vue@3.2.47):
+    resolution: {integrity: sha512-pnC080rTub6YjccthVSNQod2z9Sl5IUUq46srXtn6rxwhW8QM4rlYn+CTSLFKXWfw+N3xv77Cioxw7B4XUKIbQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-json-viewer/-/vue-json-viewer-3.0.4.tgz}
+    id: registry.npmmirror.com/vue-json-viewer/3.0.4
+    name: vue-json-viewer
+    version: 3.0.4
+    peerDependencies:
+      vue: ^3.2.2
+    dependencies:
+      clipboard: registry.npmmirror.com/clipboard@2.0.11
+      vue: registry.npmmirror.com/vue@3.2.47
+    dev: false
+
   registry.npmmirror.com/vue-router@4.1.6(vue@3.2.47):
     resolution: {integrity: sha512-DYWYwsG6xNPmLq/FmZn8Ip+qrhFEzA14EI12MsMgVxvHFDYvlr4NXpVF5hrRH1wVcDP8fGi5F4rxuJSl8/r+EQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-router/-/vue-router-4.1.6.tgz}
     id: registry.npmmirror.com/vue-router/4.1.6
@@ -1487,6 +1547,30 @@ packages:
       '@volar/vue-typescript': registry.npmmirror.com/@volar/vue-typescript@1.2.0
       typescript: registry.npmmirror.com/typescript@4.9.3
     dev: true
+
+  registry.npmmirror.com/vue3-json-viewer-plus@1.0.1(vue@3.2.47):
+    resolution: {integrity: sha512-Ape8krANNszqFKv7MruAVVlNmsXdZoTBXaWlQjbeYD8ldIHbzZr28gjiE1YT2I127KMKKNjuaSX4zAmpo1wjeg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue3-json-viewer-plus/-/vue3-json-viewer-plus-1.0.1.tgz}
+    id: registry.npmmirror.com/vue3-json-viewer-plus/1.0.1
+    name: vue3-json-viewer-plus
+    version: 1.0.1
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      clipboard: registry.npmmirror.com/clipboard@2.0.11
+      vue: registry.npmmirror.com/vue@3.2.47
+    dev: false
+
+  registry.npmmirror.com/vue3-json-viewer@2.2.2(vue@3.2.47):
+    resolution: {integrity: sha512-56l3XDGggnpwEqZieXsSMhNT4NhtO6d7zuSAxHo4i0UVxymyY2jRb7UMQOU1ztChKALZCAzX7DlgrsnEhxu77A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue3-json-viewer/-/vue3-json-viewer-2.2.2.tgz}
+    id: registry.npmmirror.com/vue3-json-viewer/2.2.2
+    name: vue3-json-viewer
+    version: 2.2.2
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      clipboard: registry.npmmirror.com/clipboard@2.0.11
+      vue: registry.npmmirror.com/vue@3.2.47
+    dev: false
 
   registry.npmmirror.com/vue@3.2.47:
     resolution: {integrity: sha512-60188y/9Dc9WVrAZeUVSDxRQOZ+z+y5nO2ts9jWXSTkMvayiWxCWOWtBQoYjLeccfXkiiPZWAHcV+WTPhkqJHQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue/-/vue-3.2.47.tgz}
