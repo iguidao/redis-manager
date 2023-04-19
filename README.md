@@ -2,9 +2,11 @@
 这是一个可以操作redis集群/codis的web管理平台
 #### 注：该功能代码还在开发中，目前只是支持codis的一些操作
 
-### 功能列表
-1. 支持进行codis集群的[string/list/hash/set/zset]类型的key的查询
-2. 支持查询codis集群的大key/热key/慢key/查询1万key
+**Redis Manager** 是 Redis 缓存管理平台，支持Redis集群（cluster、codis、腾讯云redis、 阿里云redis）的管理以及基本的数据操作
+**Codis数据操作**：支持[string/list/hash/set/zset]类型的key的查询，以及查询[大key/热key/慢key/查询1万key]等功能
+
+
+
 
 ### 启动方式
 - mysql创建 `redis_manager` 数据库

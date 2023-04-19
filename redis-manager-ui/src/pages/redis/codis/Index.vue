@@ -1,49 +1,53 @@
 <template>
   <div class="content">
-    <el-card shadow="never">
-      <el-row>
-        <el-col :span="2">
-            <span>codis集群</span>
-        </el-col>
-        <el-col :span="2">
-          <el-select v-model="codisurl" placeholder="请选择平台地址">
-            <el-option 
-              v-for="item in codismanager" 
-              :key="item.Cname" 
-              :label="item.Cname" 
-              :value="item.Curl" />
-          </el-select>
-        </el-col>
-        <el-col :span="5">
-          <el-link :href="codisurl" target="_blank"  type="success">{{ codisurl }} </el-link>
-        </el-col>
-        <el-col :offset="12"  :span="3" style="min-width: 120px">
-          <el-button size="small" type="primary" @click="dialogFormVisible = true">添加codis平台</el-button>
-        </el-col>  
-      </el-row>
-    </el-card>
-  </div>
-   <div class="content">
-      <el-card shadow="never" >
-        <iframe :src="codisurl" frameborder="0" width="100%" height="100%" class="codis_dashboard"></iframe>
+    <div>
+        <el-card shadow="never">
+        <el-row>
+          <el-col :span="2">
+              <span>codis集群</span>
+          </el-col>
+          <el-col :span="2">
+            <el-select v-model="codisurl" placeholder="请选择平台地址">
+              <el-option 
+                v-for="item in codismanager" 
+                :key="item.Cname" 
+                :label="item.Cname" 
+                :value="item.Curl" />
+            </el-select>
+          </el-col>
+          <el-col :offset="1" :span="10">
+            <el-link :href="codisurl" target="_blank"  type="success">{{ codisurl }} </el-link>
+          </el-col>
+          <el-col :offset="6"  :span="3" style="min-width: 120px">
+            <el-button size="small" type="primary" @click="dialogFormVisible = true">添加codis平台</el-button>
+          </el-col>  
+        </el-row>
       </el-card>
-   </div>
-   <el-dialog v-model="dialogFormVisible" title="新增codis平台地址" width="30%" align-center>
-       <el-form :model="formcodis">
-         <el-form-item label="平台名称" :label-width="formLabelWidth">
-             <el-input v-model="formcodis.cname" autocomplete="off" />
-         </el-form-item>      
-         <el-form-item label="平台地址" :label-width="formLabelWidth">
-             <el-input v-model="formcodis.curl" autocomplete="off" />
-         </el-form-item>
-       </el-form>
-       <template #footer>
-       <span class="dialog-footer">
-           <el-button @click="dialogFormVisible = false">取消</el-button>
-           <el-button type="primary" @click="handleChange()">Confirm</el-button>
-       </span>
-       </template>
-   </el-dialog>
+    </div>
+    <div>
+        <el-card shadow="never" >
+          <iframe :src="codisurl" frameborder="0" width="100%" height="100%" class="codis_dashboard"></iframe>
+        </el-card>
+    </div>
+    <div>
+        <el-dialog v-model="dialogFormVisible" title="新增codis平台地址" width="30%" align-center>
+            <el-form :model="formcodis">
+              <el-form-item label="平台名称" :label-width="formLabelWidth">
+                  <el-input v-model="formcodis.cname" autocomplete="off" />
+              </el-form-item>      
+              <el-form-item label="平台地址" :label-width="formLabelWidth">
+                  <el-input v-model="formcodis.curl" autocomplete="off" />
+              </el-form-item>
+            </el-form>
+            <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取消</el-button>
+                <el-button type="primary" @click="handleChange()">Confirm</el-button>
+            </span>
+            </template>
+        </el-dialog>
+    </div>
+  </div>
 
 </template>
 

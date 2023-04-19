@@ -45,6 +45,10 @@
                   <el-icon><TakeawayBox /></el-icon>
                   <span>Redis集群</span>
                 </template>
+                <el-menu-item index="/codis/index" @click="saveActiveNav('/codis/index')">
+                  <el-icon><CaretRight /></el-icon>
+                  <span>自建Codis集群</span>
+                </el-menu-item>
                 <el-menu-item index="/redis/index" @click="saveActiveNav('/redis/index')">
                   <el-icon><CaretRight /></el-icon>
                   <span>自建Redis集群</span>
@@ -56,10 +60,6 @@
                 <el-menu-item index="/aliredis/index" @click="saveActiveNav('/aliredis/index')">
                   <el-icon><CaretRight /></el-icon>
                   <span>阿里Redis集群</span>
-                </el-menu-item>
-                <el-menu-item index="/codis/index" @click="saveActiveNav('/codis/index')">
-                  <el-icon><CaretRight /></el-icon>
-                  <span>自建Codis集群</span>
                 </el-menu-item>
             </el-sub-menu>
             <el-menu-item index="/command/query" @click="saveActiveNav('/command/query')">

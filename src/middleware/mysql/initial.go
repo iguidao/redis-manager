@@ -40,6 +40,8 @@ func Migrate() {
 	if !DB.Migrator().HasTable(&UserInfo{}) {
 		logger.Info("start create data table user migrate data schemas...")
 		DB.AutoMigrate(&UserInfo{})
+		logger.Info("Add User to  account:iguidao , password:123456")
+		DB.CreatUser("iguidao", "iguidao@iguidao.com", "iguidao", "tXfP0JhWJgtaNQc/DcHF78yeI73RRR+35uFNDx4cIVA=")
 	}
 	if !DB.Migrator().HasTable(&UserGroup{}) {
 		logger.Info("start create data table user_group migrate data schemas...")

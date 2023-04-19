@@ -53,15 +53,15 @@ func (m *MySQL) GetAllCfg() []Rconfig {
 }
 
 // get one cfg
-func (m *MySQL) GetOneCfg(name string) Rconfig {
+func (m *MySQL) GetOneCfg(key string) Rconfig {
 	var cfg Rconfig
-	m.Where("name = ?", name).First(&cfg)
+	m.Where("`key` = ?", key).First(&cfg)
 	return cfg
 }
 
 // get one cfg value
-func (m *MySQL) GetOneCfgValue(name string) string {
+func (m *MySQL) GetOneCfgValue(key string) string {
 	var cfg Rconfig
-	m.Where("name = ?", name).First(&cfg)
+	m.Where("`key` = ?", key).First(&cfg)
 	return cfg.Value
 }

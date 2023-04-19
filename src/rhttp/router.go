@@ -48,7 +48,7 @@ func NewServer() *gin.Engine {
 
 	}
 	auth := r.Group("/redis-manager/auth/v1")
-	auth.Use(jwt.JWT())
+	// auth.Use(jwt.JWT())
 	{
 		auth.POST("/sign-up", v1.Register) //注册接口
 		auth.POST("/refresh", v1.Refresh)  //刷新接口

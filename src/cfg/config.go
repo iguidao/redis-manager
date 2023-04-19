@@ -68,9 +68,6 @@ func Get_Info_String(get_type string) string {
 	case "cosendpointpub":
 		cos_cosendpointpub := viper.GetString("cos.cosendpointpub")
 		return cos_cosendpointpub
-	case "redisbgsave":
-		rediscfg_redisbgsave := viper.GetString("rediscfg.redisbgsave")
-		return rediscfg_redisbgsave
 	default:
 		return "noconfig"
 	}

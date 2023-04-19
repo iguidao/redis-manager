@@ -11,7 +11,7 @@ var MsgFlags = map[int]string{
 	ERROR_AUTH_CHECK_TOKEN_FAIL:    "Token Check Fail",
 	ERROR_AUTH_CHECK_TOKEN_TIMEOUT: "Token Timeout",
 	ERROR_AUTH_TOKEN:               "Token Create Fail",
-	ERROR_AUTH:                     "Token Error",
+	ERROR_AUTH:                     "认证失败",
 
 	NO_CONNECT_CODIS: "Connect Codis Fail",
 	NO_USE:           "功能会造成慢查询，暂时下线",

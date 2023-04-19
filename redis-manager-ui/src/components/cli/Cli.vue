@@ -1,11 +1,13 @@
 <template>
   <div class="content">
-      <el-row class="row-bg">
+      <el-row :gutter="1">
         <el-col :span="1">
+          <div class="grid-content">
             <span>集群：</span>
+          </div>
         </el-col>
-        <el-col :span="2">
-          <el-select v-model="redisname" placeholder="Redis集群">
+        <el-col  :span="2">
+          <el-select v-model="redisname" placeholder="Redis集群" @change="getRedisName()">
             <el-option 
               v-for="item in redisdic" 
               :key="item.value" 
@@ -31,24 +33,27 @@
               :value="item" />
           </el-select>
         </el-col>
-        <el-col :offset="15" :span="2" style="min-width: 120px">
-          <el-button  type="primary">查询</el-button>
-        </el-col>  
+        <el-col  :span="5">
+          <el-input v-model="queryname" v-if="redisname === 'codis'" class="w-10 m-2" placeholder="要查询的内容" />
+        </el-col>
+        <el-col  :offset="7" :span="4">
+          <el-button type="primary" @click="operationkey()">查询</el-button>
+        </el-col>
       </el-row>
+
+      <el-divider></el-divider>
+      <div>
+        <JsonViewer :value="jsonData" expand-depth="1" copyable boxed sort/>
+      </div>
   </div>
-    <div class="box">
-        <h4>普通</h4>
-            <JsonViewer :value="jsonData" copyable boxed sort theme="light"  @onKeyClick="keyClick"/>
-        <h4>暗黑</h4>
-            <JsonViewer :value="jsonData" copyable boxed sort theme="dark"  @onKeyClick="keyClick"/>
-    </div>
+
 </template>
   
 <script lang="ts" setup>
-// import JsonViewer from 'vue3-json-viewer'
-// import 'vue3-json-viewer/dist/index.css';
-import { onMounted, defineProps, ref, reactive} from 'vue';
+
+import { onMounted, ref, reactive} from 'vue';
 import { listCodis, listCluster } from '../../api/codis'
+import { cliRedisOpkey } from '../../api/cli'
 // import moment from 'moment';
 import { ElMessage } from 'element-plus';
 
@@ -80,21 +85,37 @@ const fromcodis = reactive({
   cname: '',
 })
 const codiscluster = ref<any[]>([])
-let obj = {
-  name: "qiu",//字符串
-  age: 18,//数组
-  isMan:false,//布尔值
-  date:new Date(),
-  fn:()=>{},
-  arr:[1,2,5],
-  reg:/ab+c/i
-};
-const jsonData = reactive(obj);
-const keyClick = ()=>{
-  console.log("被点击了")
-}
+const queryname = ref("")
+const queryfrom = reactive({
+  cache_type: '',
+  cache_op: '',
+  cluster_name: '',
+  key_name: '',
+  codis_url: '',
+  group_name: '',
+})
+const queryresult = ref<any>()
+const jsonData = reactive(queryresult);
+
 
 // 数据请求
+// 操作key
+const operationkey = async () => {
+  if ( redisname.value == "codis" ) {
+    queryfrom.cache_type = redisname.value
+    queryfrom.cache_op = props.opkey
+    queryfrom.cluster_name = codisname.value
+    queryfrom.key_name = queryname.value
+    queryfrom.codis_url = codisurl.value
+    let result = (await cliRedisOpkey(queryfrom)).data
+    if (result.errorCode === 0 ) {
+      queryresult.value = result.data
+    } else {
+      ElMessage.error(result.msg)
+    }
+  }
+
+}
 // codis请求
 const getCodisCluster = async () => {
   codisname.value = ""
@@ -106,15 +127,19 @@ const getCodisCluster = async () => {
     ElMessage.error(result.msg)
   }
 }
-
+// 选择集群
+const getRedisName = async () => {
+  if ( redisname.value == "codis" ) {
+    let result = (await listCodis()).data
+    if (result.errorCode === 0 ) {
+      codismanager.value = result.data.lists
+    } else {
+      ElMessage.error(result.msg)
+    }
+  }
+}
 // 启动执行
 const load = async () => {
-  let result = (await listCodis()).data
-  if (result.errorCode === 0 ) {
-    codismanager.value = result.data.lists
-  } else {
-    ElMessage.error(result.msg)
-  }
 }
 onMounted(async () => {
   await load()
@@ -131,25 +156,29 @@ const props = defineProps({
 
 <style lange="scss" scoped>
 .content {
-margin: 20px 8px;
+  margin: 20px 8px;
 }
 
 .el-button--text {
- margin-right: 15px;
+  margin-right: 15px;
 }
 .el-select {
- width: 130px;
+  width: 130px;
 }
 .el-input {
- width: 300px;
+  width: 300px;
 }
 .cli_commend {
   width: 100%;
   height: 70vh;
   /* height: auto; */
 }
+.el-col {
+  border-radius: 1px;
+}
 
-.box{
-  margin-top: 1rem;
+.grid-content {
+  border-radius: 1px;
+  min-height: 10px;
 }
 </style>

@@ -6,7 +6,6 @@ local:
     logapppath: "./logs/app.log"
 
 rediscfg:
-    redisbgsave: YOURBGSAVE
     allkeyfornum: 10
     locktime: 60
     biglocktime: 600

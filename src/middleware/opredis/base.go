@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/logger"
+	"github.com/iguidao/redis-manager/src/middleware/mysql"
 
 	"github.com/go-redis/redis/v9"
 )
@@ -182,7 +182,7 @@ func SizeHashKey(keyname string) (int64, bool) {
 	return val, true
 }
 
-//Set key op
+// Set key op
 func GetSetKey(keyname string) ([]string, bool) {
 	val, err := RD.SMembers(ctx, keyname).Result()
 	if err != nil {
@@ -200,7 +200,7 @@ func SizeSetKey(keyname string) (int64, bool) {
 	return val, true
 }
 
-//Zset key op
+// Zset key op
 func GetZsetKey(keyname string) ([]string, bool) {
 	znum, err := RD.ZCard(ctx, keyname).Result()
 	if err != nil {
@@ -260,7 +260,7 @@ func RedisSave(serverip string) bool {
 	_, err := RD.BgSave(ctx).Result()
 	if err != nil {
 		logger.Debug("ip: "+serverip+" 执行redis的 BGSAVE 操作失败：", err)
-		youbgsave := cfg.Get_Info_String("redisbgsave")
+		youbgsave := mysql.DB.GetOneCfgValue("redis_bgsave")
 		_, err := RD.Do(ctx, youbgsave).Result()
 		if err != nil {
 			logger.Debug("ip: "+serverip+" 执行redis的 "+youbgsave+" 操作失败：", err)
