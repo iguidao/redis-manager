@@ -33,8 +33,16 @@
               :value="item" />
           </el-select>
         </el-col>
-        <el-col  :span="5">
-          <el-input v-model="queryname" v-if="redisname === 'codis'" class="w-10 m-2" placeholder="要查询的内容" />
+        <el-col  :span="5"  v-if="redisname === 'codis'" >
+          <el-input v-model="queryname" class="w-10 m-2" v-if="$props.opkey==='query'" placeholder="要查询的内容" />
+          <el-input v-model="queryname" class="w-10 m-2" v-else-if="$props.opkey==='del'" placeholder="要查询的内容" />
+          <el-select v-model="codisgroup" v-else  placeholder="选择Group">
+            <el-option 
+              v-for="item in codiscluster" 
+              :key="item" 
+              :label="item" 
+              :value="item" />
+          </el-select>
         </el-col>
         <el-col  :offset="8" :span="4">
           <el-button type="primary" @click="operationkey()">查询</el-button>
@@ -85,6 +93,7 @@ const fromcodis = reactive({
   cname: '',
 })
 const codiscluster = ref<any[]>([])
+const codisgroup = ref("")
 const queryname = ref("")
 const queryfrom = reactive({
   cache_type: '',
