@@ -1,11 +1,11 @@
 <template>
   <div class="content">
       <el-row :gutter="1">
-        <el-col :span="1">
+        <!-- <el-col :span="1">
           <div class="grid-content">
             <span>集群：</span>
           </div>
-        </el-col>
+        </el-col> -->
         <el-col  :span="2">
           <el-select v-model="redisname" placeholder="Redis集群" @change="getRedisName()">
             <el-option 
@@ -36,7 +36,7 @@
         <el-col  :span="5">
           <el-input v-model="queryname" v-if="redisname === 'codis'" class="w-10 m-2" placeholder="要查询的内容" />
         </el-col>
-        <el-col  :offset="7" :span="4">
+        <el-col  :offset="8" :span="4">
           <el-button type="primary" @click="operationkey()">查询</el-button>
         </el-col>
       </el-row>

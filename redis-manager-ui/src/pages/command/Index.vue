@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Cli }  from '../../components/cli/Cli.vue'
+import Cli from '../../components/cli/Cli.vue'
 import { ref } from 'vue';
 const opkey = ref("")
 </script>
