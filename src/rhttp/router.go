@@ -93,6 +93,8 @@ func NewServer() *gin.Engine {
 	cloud.Use(jwt.JWT())
 	{
 		cloud.GET("/list", v1.CloudList)
+		cloud.GET("/region", v1.RegionList)
+		cloud.POST("/password", v1.ChangeCloudPassword)
 	}
 	rootrule := r.Group("/permission-internal/v1")
 	rootrule.Use(jwt.JWT())

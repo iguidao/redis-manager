@@ -25,8 +25,8 @@
     </div>
     <!-- 图表 -->
     <div class="chart">
-      <el-card class="e-chart" id="one-chart"></el-card>
-      <el-card class="e-chart" id="two-chart"></el-card>
+      <!-- <el-card class="e-chart" id="one-chart"></el-card>
+      <el-card class="e-chart" id="two-chart"></el-card> -->
     </div>
   </div>
 </template>

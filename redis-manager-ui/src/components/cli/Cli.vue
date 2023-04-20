@@ -23,35 +23,67 @@
               :label="item.Cname" 
               :value="item.Curl" />
           </el-select>
+          <el-select v-model="txregion" v-else-if="redisname === 'txredis'" placeholder="选择腾讯Region" @change="getTxRedisCluster()">
+            <el-option 
+              v-for="item in txredisregion" 
+              :key="item.RegionName" 
+              :label="item.RegionName" 
+              :value="item.Region" />
+          </el-select>
         </el-col>
         <el-col :span="2">
-          <el-select v-model="codisname" v-if="redisname === 'codis'" placeholder="选择集群">
+          <el-select v-model="codisname" v-if="redisname === 'codis'" placeholder="选择集群" @change="getCodisGroup()">
             <el-option 
               v-for="item in codiscluster" 
               :key="item" 
               :label="item" 
               :value="item" />
+          </el-select>
+          <el-select v-model="txredisid" v-else-if="redisname === 'txredis'" placeholder="选择集群">
+            <el-option 
+              v-for="item in txrediscluster" 
+              :key="item.InstanceName" 
+              :label="item.InstanceName" 
+              :value="item.InstanceId" />
           </el-select>
         </el-col>
-        <el-col  :span="5"  v-if="redisname === 'codis'" >
-          <el-input v-model="queryname" class="w-10 m-2" v-if="$props.opkey==='query'" placeholder="要查询的内容" />
-          <el-input v-model="queryname" class="w-10 m-2" v-else-if="$props.opkey==='del'" placeholder="要查询的内容" />
-          <el-select v-model="codisgroup" v-else  placeholder="选择Group">
-            <el-option 
-              v-for="item in codiscluster" 
-              :key="item" 
-              :label="item" 
-              :value="item" />
-          </el-select>
+        <el-col  :span="5">
+          <div  v-if="redisname === 'codis'">
+            <el-input v-model="queryname" class="w-10 m-2" v-if="$props.opkey==='query'" placeholder="请输入key名称" />
+            <el-input v-model="queryname" class="w-10 m-2" v-else-if="$props.opkey==='del'" placeholder="要删除的key名称" />
+            <el-select v-model="groupname" v-else  placeholder="选择Group">
+              <el-option 
+                v-for="item in codisgroup" 
+                :key="item" 
+                :label="item" 
+                :value="item" />
+            </el-select>
+          </div>
+          <div  v-else-if="redisname === 'txredis'">
+            <el-input v-model="queryname" class="w-10 m-2" v-if="$props.opkey==='query'" placeholder="请输入key名称" />
+            <el-input v-model="queryname" class="w-10 m-2" v-else-if="$props.opkey==='del'" placeholder="要删除的key名称" />
+          </div>
         </el-col>
         <el-col  :offset="8" :span="4">
-          <el-button type="primary" @click="operationkey()">查询</el-button>
+          <el-popconfirm
+              v-if="$props.opkey==='del'" 
+              title="确定要删除吗？" 
+              confirm-button-text="确认" 
+              cancel-button-text="取消" 
+              confirm-button-type="danger" 
+              cancel-button-type="primary" 
+              @confirm="operationkey()">
+              <template #reference>
+                <el-button  type="danger">删除</el-button>
+              </template>
+            </el-popconfirm>
+          <el-button type="primary" v-else @click="operationkey()" >查询</el-button>
         </el-col>
       </el-row>
 
       <el-divider></el-divider>
       <div>
-        <JsonViewer :value="jsonData" expand-depth="1" copyable boxed sort/>
+        <JsonViewer :value="jsonData" expand-depth="2" copyable boxed sort/>
       </div>
   </div>
 
@@ -60,12 +92,14 @@
 <script lang="ts" setup>
 
 import { onMounted, ref, reactive} from 'vue';
-import { listCodis, listCluster } from '../../api/codis'
+import { listCodis, listCodisCluster, listCodisGroup } from '../../api/codis'
+import { listTxRegion, listTxRedis } from '../../api/txredis'
 import { cliRedisOpkey } from '../../api/cli'
 // import moment from 'moment';
 import { ElMessage } from 'element-plus';
 
 // 配置列表
+
 const redisname = ref("")
 const redisdic = [
   {
@@ -85,15 +119,29 @@ const redisdic = [
     label: '腾讯redis集群',
   }
 ]
-const codismanager = ref<any[]>([])
+// codis
 const codisurl = ref("")
 const codisname = ref("")
+const codismanager = ref<any[]>([])
+const codiscluster = ref<any[]>([])
+const codisgroup = ref<any[]>([])
 const fromcodis = reactive({
   curl: '',
   cname: '',
+  cluster_name: '',
 })
-const codiscluster = ref<any[]>([])
-const codisgroup = ref("")
+
+// txredis
+const txregion = ref("")
+const txredisid = ref("")
+const txredisregion = ref<any[]>([])
+const txrediscluster = ref<any[]>([])
+const fromtxredis = reactive({
+  cloud: '',
+  region: '',
+})
+// all
+const groupname = ref("")
 const queryname = ref("")
 const queryfrom = reactive({
   cache_type: '',
@@ -102,6 +150,8 @@ const queryfrom = reactive({
   key_name: '',
   codis_url: '',
   group_name: '',
+  region: '',
+	instance_id: '',
 })
 const queryresult = ref<any>()
 const jsonData = reactive(queryresult);
@@ -110,18 +160,19 @@ const jsonData = reactive(queryresult);
 // 数据请求
 // 操作key
 const operationkey = async () => {
-  if ( redisname.value == "codis" ) {
-    queryfrom.cache_type = redisname.value
-    queryfrom.cache_op = props.opkey
-    queryfrom.cluster_name = codisname.value
-    queryfrom.key_name = queryname.value
-    queryfrom.codis_url = codisurl.value
-    let result = (await cliRedisOpkey(queryfrom)).data
-    if (result.errorCode === 0 ) {
-      queryresult.value = result.data
-    } else {
-      ElMessage.error(result.msg)
-    }
+  queryfrom.cache_type = redisname.value
+  queryfrom.cache_op = props.opkey
+  queryfrom.cluster_name = codisname.value
+  queryfrom.key_name = queryname.value
+  queryfrom.codis_url = codisurl.value
+  queryfrom.group_name = groupname.value
+  queryfrom.region = txregion.value
+  queryfrom.instance_id = txredisid.value
+  let result = (await cliRedisOpkey(queryfrom)).data
+  if (result.errorCode === 0 ) {
+    queryresult.value = result.data
+  } else {
+    ElMessage.error(result.msg)
   }
 
 }
@@ -129,14 +180,36 @@ const operationkey = async () => {
 const getCodisCluster = async () => {
   codisname.value = ""
   fromcodis.curl = codisurl.value
-  let result = (await listCluster(fromcodis)).data
+  let result = (await listCodisCluster(fromcodis)).data
   if (result.errorCode === 0 ) {
     codiscluster.value = result.data
   } else {
     ElMessage.error(result.msg)
   }
 }
-// 选择集群
+const getCodisGroup = async () => {
+  fromcodis.curl = codisurl.value
+  fromcodis.cluster_name = codisname.value
+  let result = (await listCodisGroup(fromcodis)).data
+  if (result.errorCode === 0 ) {
+    codisgroup.value = result.data
+  } else {
+    ElMessage.error(result.msg)
+  }
+}
+
+// txredis 请求
+const getTxRedisCluster = async () => {
+  fromtxredis.cloud = redisname.value
+  fromtxredis.region = txregion.value
+  let result = (await listTxRedis(fromtxredis)).data
+  if (result.errorCode === 0 ) {
+    txrediscluster.value = result.data.redis_list
+  } else {
+    ElMessage.error(result.msg)
+  }
+}
+// 选择codis/cluster/txredis/aliredis集群
 const getRedisName = async () => {
   if ( redisname.value == "codis" ) {
     let result = (await listCodis()).data
@@ -145,8 +218,18 @@ const getRedisName = async () => {
     } else {
       ElMessage.error(result.msg)
     }
+  } else if ( redisname.value == "txredis" ) {
+    fromtxredis.cloud = redisname.value
+    let result = (await listTxRegion(fromtxredis)).data
+    if (result.errorCode === 0 ) {
+      txredisregion.value = result.data.region_list.RegionSet
+    } else {
+      ElMessage.error(result.msg)
+    }  
   }
 }
+//腾讯云redis请求
+
 // 启动执行
 const load = async () => {
 }

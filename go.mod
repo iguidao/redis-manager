@@ -3,7 +3,6 @@ module github.com/iguidao/redis-manager
 go 1.17
 
 require (
-	github.com/casbin/casbin v1.9.1
 	github.com/casbin/casbin/v2 v2.63.0
 	github.com/casbin/gorm-adapter/v3 v3.14.0
 	github.com/fsnotify/fsnotify v1.5.4
@@ -14,7 +13,8 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/reiver/go-telnet v0.0.0-20180421082511-9ff0b2ab096e
 	github.com/spf13/viper v1.12.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.596
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.643
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.643
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.596
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.39
 	github.com/tommy351/rdb-go v0.5.4
@@ -39,6 +39,7 @@ require (
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -63,7 +64,6 @@ require (
 	github.com/mozillazg/go-httpheader v0.2.1 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
-	github.com/reiver/go-oi v1.0.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
@@ -88,4 +88,9 @@ require (
 	modernc.org/mathutil v1.5.0 // indirect
 	modernc.org/memory v1.4.0 // indirect
 	modernc.org/sqlite v1.19.1 // indirect
+)
+
+require (
+	github.com/reiver/go-oi v1.0.0 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.643
 )

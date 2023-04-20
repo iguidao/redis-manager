@@ -53,7 +53,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, reactive} from 'vue';
-import { addCfg, listCodis, listCluster } from '../../../api/codis'
+import { addCodisCfg, listCodis, listCodisCluster } from '../../../api/codis'
 // import moment from 'moment';
 import { ElMessage } from 'element-plus';
 
@@ -87,7 +87,7 @@ const handleChange = async () => {
  } else if (!formcodis.cname) {
    ElMessage.error("未获取到的新增codis平台名称")
  } else {
-   const res = await addCfg(formcodis)
+   const res = await addCodisCfg(formcodis)
    if (res.data.errorCode === 0) {
      ElMessage.success("添加成功")
      await load()

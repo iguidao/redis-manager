@@ -15,7 +15,7 @@ type Base struct {
 	//创建索引`sql:"index"`
 }
 
-//用户
+// 用户
 type UserInfo struct {
 	Base
 	UserName string `gorm:"not null;index"`
@@ -25,7 +25,7 @@ type UserInfo struct {
 	Enable   bool   // 0是封禁False，1是可登录True
 }
 
-//用户组
+// 用户组
 type UserGroup struct {
 	Base
 	GroupName     string `gorm:"not null;index"`
@@ -33,14 +33,14 @@ type UserGroup struct {
 	GroupType     string `gorm:"not null;index;type:varchar(50)"` //admin 管理组；visitor 访客组；staff 员工组
 }
 
-//组与用户的关系
+// 组与用户的关系
 type GroupContain struct {
 	Base
 	GroupId int `gorm:"not null;index"`
 	UserId  int `gorm:"not null;index"`
 }
 
-//集群信息
+// 集群信息
 type ClusterInfo struct {
 	Base
 	GroupId              int    `gorm:"not null;index"`
@@ -79,6 +79,26 @@ type RedisNode struct {
 	SlotNumber int
 }
 
+// cloud redis信息
+type CloudInfo struct {
+	Base
+	Cloud            string `gorm:"type:varchar(10)"`  //云厂商
+	InstanceId       string `gorm:"not null;index"`    //实例ID
+	InstanceName     string `gorm:"type:varchar(100)"` //实例名称
+	PrivateIp        string `gorm:"type:varchar(20)"`  //内网IP
+	Port             int    `gorm:"type:varchar(10)"`  //端口
+	Region           string `gorm:"type:varchar(20)"`  //region
+	Createtime       string `gorm:"type:varchar(20)"`  //创建时间
+	Size             int    `gorm:"type:varchar(10)"`  //实例大小
+	InstanceStatus   string `gorm:"type:varchar(10)"`  //实例状态
+	RedisShardSize   int    `gorm:"type:varchar(10)"`  // 分片大小
+	RedisShardNum    int    `gorm:"type:varchar(10)"`  //分练数量
+	RedisReplicasNum int    `gorm:"type:varchar(10)"`  //副本个数
+	NoAuth           bool   `gorm:"type:varchar(10)"`  //是否需要密码
+	PublicIp         string `gorm:"type:varchar(20)"`  //外网IP
+	Password         string `gorm:"type:varchar(50)"`  //密码
+}
+
 // codis信息
 type CodisInfo struct {
 	Base
@@ -94,7 +114,7 @@ type Rconfig struct {
 	Value string `gorm:"type:varchar(255)"`
 }
 
-//操作历史
+// 操作历史
 type OpHistory struct {
 	Base
 	UserId   int    `gorm:"not null;index"`
@@ -116,6 +136,10 @@ func (UserGroup) TableName() string {
 
 func (GroupContain) TableName() string {
 	return "group_contain"
+}
+
+func (CloudInfo) TableName() string {
+	return "cloud_info"
 }
 
 func (ClusterInfo) TableName() string {

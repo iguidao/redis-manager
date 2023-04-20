@@ -51,6 +51,10 @@ func Migrate() {
 		logger.Info("start create data table group_contain migrate data schemas...")
 		DB.AutoMigrate(&GroupContain{})
 	}
+	if !DB.Migrator().HasTable(&CloudInfo{}) {
+		logger.Info("start create data table cloud_info migrate data schemas...")
+		DB.AutoMigrate(&CloudInfo{})
+	}
 	if !DB.Migrator().HasTable(&ClusterInfo{}) {
 		logger.Info("start create data table cluster_info migrate data schemas...")
 		DB.AutoMigrate(&ClusterInfo{})

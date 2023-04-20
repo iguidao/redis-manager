@@ -62,7 +62,7 @@ func CodisClusterList(c *gin.Context) {
 		code = hsc.SUCCESS
 		listresult = codisapi.GeClusterList(curl)
 		if len(listresult) == 0 {
-			code = hsc.NO_CONNECT_CODIS
+			code = hsc.ERROR_NO_CONNEC
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{

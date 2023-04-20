@@ -21,8 +21,8 @@ type TxLResponseInstanceSet struct {
 	VpcId                   int                             `json:"VpcId"`
 	SubnetId                int                             `json:"SubnetId"`
 	Status                  int                             `json:"Status"`
-	RedisIp                 string                          `json:"WanIp"`
-	RedisPort               int                             `json:"Port"`
+	WanIp                   string                          `json:"WanIp"`
+	Port                    int                             `json:"Port"`
 	Createtime              string                          `json:"Createtime"`
 	Size                    int                             `json:"Size"`
 	SizeUsed                int                             `json:"SizeUsed"`
@@ -71,4 +71,69 @@ type TxLResponseInstanceSetNodeSet struct {
 	NodeId   int    `json:"NodeId"`
 	ZoneId   int    `json:"ZoneId"`
 	ZoneName string `json:"ZoneName"`
+}
+
+// Region result
+type TxRegion struct {
+	Response TxRegionResponse `json:"Response"`
+}
+
+type TxRegionResponse struct {
+	TotalCount int                         `json:"TotalCount"`
+	RegionSet  []TxRegionResponseRegionSet `json:"RegionSet"`
+	RequestId  string                      `json:"RequestId"`
+}
+type TxRegionResponseRegionSet struct {
+	Region      string `json:"Region"`
+	RegionName  string `json:"RegionName"`
+	RegionState string `json:"RegionState"`
+}
+
+// Hot key resultn
+type TxHotKey struct {
+	Response TxHotKeyResponse `json:"Response"`
+}
+
+type TxHotKeyResponse struct {
+	Data      []TxHotKeyResponseData `json:"Data"`
+	RequestId string                 `json:"RequestId"`
+}
+type TxHotKeyResponseData struct {
+	Count int    `json:"Count"`
+	Key   string `json:"key"`
+	Type  string `json:"Type"`
+}
+
+// Slow Key result
+type TxProxySlowKey struct {
+	Response TxProxySlowKeyResponse `json:"Response"`
+}
+type TxProxySlowKeyResponse struct {
+	InstanceProxySlowLogDetail []TxProxySlowKeyResponseInstanceProxySlowLogDetail `json:"InstanceProxySlowLogDetail"`
+	RequestId                  string                                             `json:"RequestId"`
+	TotalCount                 int                                                `json:"TotalCount"`
+}
+type TxProxySlowKeyResponseInstanceProxySlowLogDetail struct {
+	Client      string `json:"Client"`
+	Command     string `json:"Command"`
+	CommandLine string `json:"CommandLine"`
+	Duration    int    `json:"Duration"`
+	ExecuteTime string `json:"ExecuteTime"`
+}
+type TxRedisSlowKey struct {
+	Response TxRedisSlowKeyResponse `json:"Response"`
+}
+
+type TxRedisSlowKeyResponse struct {
+	InstanceSlowlogDetail []TxRedisSlowKeyResponseInstanceSlowlogDetail `json:"InstanceSlowlogDetail"`
+	RequestId             string                                        `json:"RequestId"`
+	TotalCount            int                                           `json:"TotalCount"`
+}
+type TxRedisSlowKeyResponseInstanceSlowlogDetail struct {
+	Client      string `json:"Client"`
+	Command     string `json:"Command"`
+	CommandLine string `json:"CommandLine"`
+	Duration    int    `json:"Duration"`
+	ExecuteTime string `json:"ExecuteTime"`
+	Node        string `json:"Node"`
 }

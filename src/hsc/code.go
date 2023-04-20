@@ -16,7 +16,9 @@ const (
 	ERROR_AUTH_TOKEN               = 20003
 	ERROR_AUTH                     = 20004
 	MESSAGE_RE                     = 400
-	NO_CONNECT_CODIS               = 50001
-	NO_USE                         = 50002
-	CLICK_REPEATEDLY               = 50003
+	ERROR_NO_CONNEC                = 50001
+	ERROR_BACKGROUND               = 50002
+	WARN_CLICK_REPEATEDLY          = 60000
+	WARN_NO_USE                    = 60002
+	WARN_BACKGROUND                = 60004
 )

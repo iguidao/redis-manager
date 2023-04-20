@@ -22,6 +22,8 @@ type CliQuery struct {
 	KeyName     string `json:"key_name"`
 	CodisUrl    string `json:"codis_url"`
 	GroupName   string `json:"group_name"`
+	Region      string `json:"region"`
+	InstanceId  string `json:"instance_id"`
 }
 
 // 分析大key
@@ -54,4 +56,9 @@ type CasbinPolicyJson struct {
 	Identity string `json:"identity"`
 	Path     string `json:"path"`
 	Method   string `json:"method"`
+}
+
+type CloudPassword struct {
+	instanceid string `json:instanceid`
+	Password   string `json:"password"`
 }

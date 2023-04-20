@@ -2,7 +2,7 @@
    <div class="content">
     <el-card shadow="never">
       <el-row>
-        <el-col :span="1">
+        <el-col :span="2">
           <span>系统配置</span>
         </el-col>
         <el-col :offset="18"  :span="3" style="min-width: 120px">
@@ -51,10 +51,8 @@
         </el-form>
         <template #footer>
         <span class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取消</el-button>
-            <el-button type="primary" @click="handleChange()">
-            Confirm
-            </el-button>
+            <el-button @click="handleCancel()">取消</el-button>
+            <el-button type="primary" @click="handleChange()">确定</el-button>
         </span>
         </template>
     </el-dialog>
@@ -134,6 +132,8 @@ const handleChange = async () => {
     const res = await updateCfg(formcfg)
     if (res.data.errorCode === 0) {
       ElMessage.success("变更成功")
+      formcfg.key = ""
+      formcfg.value = ""
       await load()
     } else {
       ElMessage.error(res.data.msg)
@@ -141,7 +141,11 @@ const handleChange = async () => {
     dialogFormVisible.value = false
   }
 }
-
+const handleCancel = () => {
+  dialogFormVisible.value = false
+  formcfg.key = ""
+  formcfg.value = ""
+}
 // 启动执行
 onMounted(async () => {
   await load()

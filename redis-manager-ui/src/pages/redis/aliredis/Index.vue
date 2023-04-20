@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <el-card shadow="never">
-        AliRedisList
+        拼命开发中...
     </el-card>
   </div>
 </template>

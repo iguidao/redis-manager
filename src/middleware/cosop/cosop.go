@@ -6,8 +6,9 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/logger"
+	"github.com/iguidao/redis-manager/src/middleware/model"
+	"github.com/iguidao/redis-manager/src/middleware/mysql"
 	"github.com/tencentyun/cos-go-sdk-v5"
 )
 
@@ -16,9 +17,9 @@ const (
 )
 
 func CosGet(srcname, dstname string) bool {
-	AccessKey := cfg.Get_Info_String("cosaccesskey")
-	AccessKeyID := cfg.Get_Info_String("cosaccesskeyid")
-	EndpointPub := cfg.Get_Info_String("cosendpointpub")
+	AccessKey := mysql.DB.GetOneCfgValue(model.TXCOSACCESSKEY)
+	AccessKeyID := mysql.DB.GetOneCfgValue(model.TXCOSACCESSKEYID)
+	EndpointPub := mysql.DB.GetOneCfgValue(model.TXCOSENDPOINTPUB)
 	u, _ := url.Parse(EndpointPub)
 	b := &cos.BaseURL{BucketURL: u}
 
