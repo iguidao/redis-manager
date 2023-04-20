@@ -97,6 +97,8 @@ func TxRedisOp(cliquery CliQuery) (interface{}, bool) {
 				err := json.Unmarshal([]byte(txresult), &hotkey)
 				if err == nil {
 					return hotkey.Response.Data, true
+				} else {
+					logger.Error("json files hotkey error: ", err)
 				}
 			}
 		}
@@ -154,11 +156,13 @@ func TxRedisOp(cliquery CliQuery) (interface{}, bool) {
 			return nil, false
 		} else {
 			txresult, ok := txcloud.TxBigKey(cliquery.InstanceId)
-			var hotkey model.TxHotKey
+			var bigkey model.TxHotKey
 			if ok {
-				err := json.Unmarshal([]byte(txresult), &hotkey)
+				err := json.Unmarshal([]byte(txresult), &bigkey)
 				if err == nil {
-					return hotkey.Response.Data, true
+					return bigkey.Response.Data, true
+				} else {
+					logger.Error("json files bigkey error: ", err)
 				}
 			}
 		}
