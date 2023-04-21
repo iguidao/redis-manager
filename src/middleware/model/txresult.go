@@ -73,7 +73,7 @@ type TxLResponseInstanceSetNodeSet struct {
 	ZoneName string `json:"ZoneName"`
 }
 
-// Region result
+// Region tx result
 type TxRegion struct {
 	Response TxRegionResponse `json:"Response"`
 }

@@ -20,7 +20,7 @@ func SetupLogger() *zap.SugaredLogger {
 	if err != nil && !strings.Contains(err.Error(), "exists") {
 		fmt.Println("create logs dir err, ", err.Error())
 	}
-	fileName := cfg.Get_Info_String("logapppath")
+	fileName := "./logs/" + cfg.Get_Info_String("logapppath")
 	syncWriter := zapcore.AddSync(&lumberjack.Logger{
 		Filename:  fileName,
 		MaxSize:   1024,

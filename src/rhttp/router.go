@@ -15,7 +15,7 @@ import (
 // NewServer return a configured http server of gin
 func NewServer() *gin.Engine {
 	// 存储日志文件代码
-	logpath := cfg.Get_Info_String("logapipath")
+	logpath := "./logs/" + cfg.Get_Info_String("logapipath")
 	gin.DisableConsoleColor()
 	f, _ := os.Create(logpath)
 	gin.DefaultWriter = io.MultiWriter(f)
@@ -92,9 +92,12 @@ func NewServer() *gin.Engine {
 	cloud := r.Group("/redis-manager/cloud/v1")
 	cloud.Use(jwt.JWT())
 	{
-		cloud.GET("/list", v1.CloudList)
 		cloud.GET("/region", v1.RegionList)
+		cloud.GET("/list", v1.CloudList)
 		cloud.POST("/password", v1.ChangeCloudPassword)
+		cloud.POST("/size", v1.ChangeSize)
+		cloud.POST("/add", v1.CloudAdd)
+		cloud.DELETE("/del", v1.CloudDel)
 	}
 	rootrule := r.Group("/permission-internal/v1")
 	rootrule.Use(jwt.JWT())

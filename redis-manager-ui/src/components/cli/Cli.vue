@@ -93,7 +93,7 @@
 
 import { onMounted, ref, reactive} from 'vue';
 import { listCodis, listCodisCluster, listCodisGroup } from '../../api/codis'
-import { listTxRegion, listTxRedis } from '../../api/txredis'
+import { listCloudRegion, listCloudRedis } from '../../api/cloud'
 import { cliRedisOpkey } from '../../api/cli'
 // import moment from 'moment';
 import { ElMessage } from 'element-plus';
@@ -202,7 +202,7 @@ const getCodisGroup = async () => {
 const getTxRedisCluster = async () => {
   fromtxredis.cloud = redisname.value
   fromtxredis.region = txregion.value
-  let result = (await listTxRedis(fromtxredis)).data
+  let result = (await listCloudRedis(fromtxredis)).data
   if (result.errorCode === 0 ) {
     txrediscluster.value = result.data.redis_list
   } else {
@@ -220,7 +220,7 @@ const getRedisName = async () => {
     }
   } else if ( redisname.value == "txredis" ) {
     fromtxredis.cloud = redisname.value
-    let result = (await listTxRegion(fromtxredis)).data
+    let result = (await listCloudRegion(fromtxredis)).data
     if (result.errorCode === 0 ) {
       txredisregion.value = result.data.region_list.RegionSet
     } else {

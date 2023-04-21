@@ -18,6 +18,8 @@ const (
 	MESSAGE_RE                     = 400
 	ERROR_NO_CONNEC                = 50001
 	ERROR_BACKGROUND               = 50002
+	ERROR_CLOUD_CONNECT            = 50003
+	ERROR_CLOUD_GET                = 50004
 	WARN_CLICK_REPEATEDLY          = 60000
 	WARN_NO_USE                    = 60002
 	WARN_BACKGROUND                = 60004

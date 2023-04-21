@@ -58,7 +58,15 @@ type CasbinPolicyJson struct {
 	Method   string `json:"method"`
 }
 
+// cloud
 type CloudPassword struct {
-	instanceid string `json:instanceid`
+	Cloud      string `json:"cloud"`
+	Instanceid string `json:"instanceid"`
 	Password   string `json:"password"`
+}
+
+type TxShardCfg struct {
+	Cloud        string `json:"cloud"`
+	TxShardType  string `json:"txshardtype"`
+	TxShardValue string `json:"txshardvalue"`
 }

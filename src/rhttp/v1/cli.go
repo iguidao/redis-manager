@@ -59,24 +59,6 @@ func OpKey(c *gin.Context) {
 	})
 }
 
-func DefaultOp(cliquery CliQuery) (interface{}, bool) {
-	switch cliquery.CacheOp {
-	case "query":
-		return nil, false
-	case "hot":
-		return nil, false
-	case "all":
-		return nil, false
-	case "slow":
-		return nil, false
-	case "del":
-		return nil, false
-	case "big":
-		return nil, false
-	default:
-		return "没有找到这个查询key的方式: " + cliquery.CacheOp, false
-	}
-}
 func TxRedisOp(cliquery CliQuery) (interface{}, bool) {
 	switch cliquery.CacheOp {
 	case "query":
@@ -267,4 +249,22 @@ func AnalysisRdb(c *gin.Context) {
 		"msg":       hsc.GetMsg(code),
 		"data":      result,
 	})
+}
+func DefaultOp(cliquery CliQuery) (interface{}, bool) {
+	switch cliquery.CacheOp {
+	case "query":
+		return nil, false
+	case "hot":
+		return nil, false
+	case "all":
+		return nil, false
+	case "slow":
+		return nil, false
+	case "del":
+		return nil, false
+	case "big":
+		return nil, false
+	default:
+		return "没有找到这个查询key的方式: " + cliquery.CacheOp, false
+	}
 }

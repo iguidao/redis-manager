@@ -1,6 +1,6 @@
 import RequestHttp from '../utils/request'
 
-namespace RTxRegionlist {
+namespace RRegionlist {
     export interface ListReqForm {
         cloud: string;
     }
@@ -20,12 +20,12 @@ namespace RTxRegionlist {
         msg: string;
     } 
 }
-export const listTxRegion = (params: RTxRegionlist.ListReqForm) => {
+export const listCloudRegion = (params: RRegionlist.ListReqForm) => {
     // 返回的数据格式可以和服务端约定
-    return RequestHttp.get<RTxRegionlist.ListResData>('/cloud/v1/region', {params: params});
+    return RequestHttp.get<RRegionlist.ListResData>('/cloud/v1/region', {params: params});
 }
 
-namespace RTxRedislist {
+namespace RRedislist {
     export interface ListReqForm {
         cloud: string;
         region: string;
@@ -55,7 +55,24 @@ namespace RTxRedislist {
         msg: string;
     } 
 }
-export const listTxRedis = (params: RTxRedislist.ListReqForm) => {
+export const listCloudRedis = (params: RRedislist.ListReqForm) => {
     // 返回的数据格式可以和服务端约定
-    return RequestHttp.get<RTxRedislist.ListResData>('/cloud/v1/list', {params: params});
+    return RequestHttp.get<RRedislist.ListResData>('/cloud/v1/list', {params: params});
+}
+
+namespace RChangePassword {
+    export interface ReqForm {
+        cloud: string;
+        instanceid: string;
+        password: string;
+    }
+    export interface ResData {
+        data: {}
+        errorCode: number;
+        msg: string;
+    } 
+}
+export const changeCloudRedisPw = (params: RChangePassword.ReqForm) => {
+    // 返回的数据格式可以和服务端约定
+    return RequestHttp.post<RChangePassword.ResData>('/cloud/v1/password', params);
 }

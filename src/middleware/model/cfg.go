@@ -1,17 +1,21 @@
 package model
 
 var (
-	DefaultName      = make(map[string]string)
-	CC               = "custom_config"                                                                                    // 自行配置的key
-	CN               = "用户自定义默认key"                                                                                       // 自定义key备注note
-	TXSECRETID       = "tx_secretid"                                                                                      // 腾讯SECRETID，账号需要开启[QCloudFinanceFullAccess、QcloudRedisFullAccess、QcloudMonitorFullAccess、QcloudDBBRAINFullAccess]权限
-	TXSECRETKEY      = "tx_secretkey"                                                                                     // 腾讯SECRETKEY
-	TXAPIURL         = "tx_redis_api_url"                                                                                 // 腾讯APIURL
-	TXCOSACCESSKEY   = "tx_cos_accesskey"                                                                                 // 腾讯COS的ACCESSKEY
-	TXCOSACCESSKEYID = "tx_cos_accesskeyid"                                                                               // 腾讯COS的ACCESSKEYID
-	TXCOSENDPOINTPUB = "tx_cos_endpointpub"                                                                               // 腾讯COS的ENDPOINTPUB
-	BGSAVECOMMAND    = "redis_bgsave"                                                                                     //bgsave命令的别名
-	CfgDefault       = [...]string{TXSECRETID, TXSECRETKEY, TXAPIURL, TXCOSACCESSKEY, TXCOSACCESSKEYID, TXCOSENDPOINTPUB} // 默认key列表
+	DefaultName           = make(map[string]string)
+	CC                    = "custom_config"                                                                                    // 自行配置的key
+	CN                    = "用户自定义默认key"                                                                                       // 自定义key备注note
+	TXSECRETID            = "tx_secretid"                                                                                      // 腾讯SECRETID，账号需要开启[QCloudFinanceFullAccess、QcloudRedisFullAccess、QcloudMonitorFullAccess、QcloudDBBRAINFullAccess]权限
+	TXSECRETKEY           = "tx_secretkey"                                                                                     // 腾讯SECRETKEY
+	TXAPIURL              = "tx_redis_api_url"                                                                                 // 腾讯APIURL
+	TXCOSACCESSKEY        = "tx_cos_accesskey"                                                                                 // 腾讯COS的ACCESSKEY
+	TXCOSACCESSKEYID      = "tx_cos_accesskeyid"                                                                               // 腾讯COS的ACCESSKEYID
+	TXCOSENDPOINTPUB      = "tx_cos_endpointpub"                                                                               // 腾讯COS的ENDPOINTPUB
+	ALIAPIURL             = "ali_redis_api_url"                                                                                // 阿里PIURL
+	ALIACCESSKEYID        = "ali_accesskeyid"                                                                                  // 阿里accessKeyId
+	ALIALIACCESSKEYSECRET = "ali_accesskeysecret"                                                                              // 阿里accessKeySecret
+	BGSAVECOMMAND         = "redis_bgsave"                                                                                     // bgsave命令的别名
+	CLOUDREFRESH          = "cloud_refresh"                                                                                    // 云redis定时更新时间，使用cron格式
+	CfgDefault            = [...]string{TXSECRETID, TXSECRETKEY, TXAPIURL, TXCOSACCESSKEY, TXCOSACCESSKEYID, TXCOSENDPOINTPUB} // 默认key列表
 )
 
 func init() {
@@ -22,4 +26,8 @@ func init() {
 	DefaultName[TXCOSACCESSKEYID] = "腾讯COS的ACCESSKEYID"
 	DefaultName[TXCOSENDPOINTPUB] = "腾讯COS的ENDPOINTPUB"
 	DefaultName[BGSAVECOMMAND] = "Redis命令bgsave别名"
+	DefaultName[CLOUDREFRESH] = "云redis定时更新时间"
+	DefaultName[ALIAPIURL] = "阿里REDIS的APIURL"
+	DefaultName[ALIACCESSKEYID] = "阿里accessKeyId"
+	DefaultName[ALIALIACCESSKEYSECRET] = "阿里accessKeySecret"
 }
