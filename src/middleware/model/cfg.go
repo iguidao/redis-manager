@@ -15,6 +15,10 @@ var (
 	ALIALIACCESSKEYSECRET = "ali_accesskeysecret"                                                                              // 阿里accessKeySecret
 	BGSAVECOMMAND         = "redis_bgsave"                                                                                     // bgsave命令的别名
 	CLOUDREFRESH          = "cloud_refresh"                                                                                    // 云redis定时更新时间，使用cron格式
+	BOARDCODIS            = "board_codis"                                                                                      // 是否启动自建codis
+	BOARDTXREDIS          = "board_txredis"                                                                                    // 是否启动腾讯redis
+	BOARDALIREDIS         = "board_aliredis"                                                                                   // 是否启动阿里redis
+	BOARDCLUSTER          = "board_cluster"                                                                                    // 是否启动自建redis
 	CfgDefault            = [...]string{TXSECRETID, TXSECRETKEY, TXAPIURL, TXCOSACCESSKEY, TXCOSACCESSKEYID, TXCOSENDPOINTPUB} // 默认key列表
 )
 

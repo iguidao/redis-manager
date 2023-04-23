@@ -6,36 +6,19 @@ func (m *MySQL) GetAllCluster() []ClusterInfo {
 	m.Find(&clusters)
 	return clusters
 }
-func (m *MySQL) GetAllHistory() []OpHistory {
-	var ophistory []OpHistory
-	m.Find(&ophistory)
-	return ophistory
+
+func (m *MySQL) GetClusterNode(cluster string) []ClusterNode {
+	var nodes []ClusterNode
+	m.Model(nodes).Where("cluser_id = ?", cluster).Find(&nodes)
+	return nodes
 }
 
-// func (m *MySQL) GetCluster(page int, size int, status int) (clusterinfo []ClusterInfo) {
-// 	// m.Where(maps).Offset(page).Limit(size).Find(&clusterinfo)
-// 	m.Where("state = ?", status).Offset(page).Limit(size).Find(&clusterinfo)
-// 	return
-// }
-
 // add cluster
-func (m *MySQL) AddCluster(ArticleTitle string, ArticleContent string, AuthorId string) (int, bool) {
+func (m *MySQL) AddCluster(name, nodes, password string) (int, bool) {
 	addcluster := &ClusterInfo{
-		GroupId:              0,
-		UserId:               0,
-		ClusterName:          "",
-		RedisNodes:           "",
-		ClusterMode:          "", // 集群(Cluster)；单点(Single)；哨兵(Sentinel)
-		ClusterOs:            "",
-		ClusterVersion:       "",
-		Initialized:          true,
-		Clusterstate:         "",
-		ClusterSlotsAssigned: 0,
-		ClusterSlotsOk:       0,
-		ClusterNodes:         0,
-		RedisPassword:        "",
-		Environment:          "", // 主机 Machine；容器 Container
-		From:                 "", //导入Import；平台创建Self
+		Name:     "",
+		Nodes:    "",
+		Password: "",
 	}
 	result := m.Create(&addcluster)
 	if result.Error != nil {
@@ -45,17 +28,22 @@ func (m *MySQL) AddCluster(ArticleTitle string, ArticleContent string, AuthorId 
 	// return gdarticle.ID.String(), true
 }
 
-// add cluster
-func (m *MySQL) AddHistory(userid int, opinfo, opparams string) (int, bool) {
-	addcluster := &OpHistory{
-		UserId:   userid,
-		OpInfo:   opinfo,
-		OpParams: opparams,
+func (m *MySQL) AddClusterNode(nodeid, ip, port, flags, masterid, linkstate, slotrange string, clusterid, slotnumber int) (int, bool) {
+	addnode := &ClusterNode{
+		CluserId:   clusterid,
+		NodeId:     nodeid,
+		Ip:         ip,
+		Port:       port,
+		Flags:      flags,
+		MasterId:   masterid,
+		LinkState:  linkstate,
+		SlotRange:  slotrange,
+		SlotNumber: slotnumber,
 	}
-	result := m.Create(&addcluster)
+	result := m.Create(&addnode)
 	if result.Error != nil {
 		return 0, false
 	}
-	return addcluster.ID, true
+	return addnode.ID, true
 	// return gdarticle.ID.String(), true
 }

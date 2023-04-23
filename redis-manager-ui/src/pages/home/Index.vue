@@ -51,7 +51,7 @@
                 </el-menu-item>
                 <el-menu-item index="/redis/index" @click="saveActiveNav('/redis/index')">
                   <el-icon><CaretRight /></el-icon>
-                  <span>自建Redis集群</span>
+                  <span>自建Cluster集群</span>
                 </el-menu-item>
                 <el-menu-item index="/txredis/index" @click="saveActiveNav('/txredis/index')">
                   <el-icon><CaretRight /></el-icon>

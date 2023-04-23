@@ -53,6 +53,11 @@ func NewServer() *gin.Engine {
 		auth.POST("/sign-up", v1.Register) //注册接口
 		auth.POST("/refresh", v1.Refresh)  //刷新接口
 	}
+	board := r.Group("/redis-manager/board/v1")
+	board.Use(jwt.JWT())
+	{
+		board.GET("/desc", v1.BoardDesc) //board页面
+	}
 	history := r.Group("/redis-manager/ophistory/v1")
 	history.Use(jwt.JWT())
 	{
@@ -76,28 +81,28 @@ func NewServer() *gin.Engine {
 		codis.GET("/group", v1.CodisGroup)         //列出该集群有多少个group
 		codis.POST("/opnode", v1.CodisOpNode)      //针对codis的proxy和server节点进行操作
 	}
+	cloud := r.Group("/redis-manager/cloud/v1")
+	cloud.Use(jwt.JWT())
+	{
+		cloud.GET("/region", v1.RegionList)             //列出云的地域
+		cloud.GET("/list", v1.CloudList)                //列出云的集群列表
+		cloud.POST("/password", v1.ChangeCloudPassword) //修改数据库保存密码
+		cloud.POST("/size", v1.ChangeSize)              //修改集群大小
+		cloud.POST("/add", v1.CloudAdd)                 // 添加集群
+		cloud.DELETE("/del", v1.CloudDel)               //删除集群
+	}
+	cluster := r.Group("/redis-manager/cluster/v1")
+	cluster.Use(jwt.JWT())
+	{
+		cluster.GET("/list", v1.ClusterList) //列出所有集群
+		cluster.GET("/nodes", v1.NodeList)   // 列出集群的node
+		cluster.POST("/add", v1.ClusterAdd)  //添加集群
+	}
 	cli := r.Group("/redis-manager/cli/v1")
 	cli.Use(jwt.JWT())
 	{
 		cli.POST("/opkey", v1.OpKey)             //对key进行操作
 		cli.POST("/analysisrdb", v1.AnalysisRdb) //分析dump文件
-	}
-
-	redis := r.Group("/redis-manager/redis/v1")
-	redis.Use(jwt.JWT())
-	{
-		redis.GET("/list", v1.RedisList)
-		redis.POST("/add", v1.RedisAdd)
-	}
-	cloud := r.Group("/redis-manager/cloud/v1")
-	cloud.Use(jwt.JWT())
-	{
-		cloud.GET("/region", v1.RegionList)
-		cloud.GET("/list", v1.CloudList)
-		cloud.POST("/password", v1.ChangeCloudPassword)
-		cloud.POST("/size", v1.ChangeSize)
-		cloud.POST("/add", v1.CloudAdd)
-		cloud.DELETE("/del", v1.CloudDel)
 	}
 	rootrule := r.Group("/permission-internal/v1")
 	rootrule.Use(jwt.JWT())

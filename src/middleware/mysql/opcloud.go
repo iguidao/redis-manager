@@ -11,6 +11,12 @@ func (m *MySQL) GetAllCloudredis() []CloudInfo {
 	m.Find(&cloudinfo)
 	return cloudinfo
 }
+func (m *MySQL) GetCloudNumber(cloud string) int64 {
+	var cloudinfo []CloudInfo
+	var count int64
+	m.Model(cloudinfo).Where("cloud = ?", cloud).Find(&cloudinfo).Count(&count)
+	return count
+}
 func (m *MySQL) GetCloudredis(cloud, region string) []CloudInfo {
 	var cloudinfo []CloudInfo
 	m.Model(cloudinfo).Where("cloud = ? AND region = ?", cloud, region).Find(&cloudinfo)
@@ -21,9 +27,9 @@ func (m *MySQL) GetCloudRegion() []CloudInfo {
 	m.Select([]string{"cloud", "region"}).Find(&cloudinfo)
 	return cloudinfo
 }
-func (m *MySQL) ExistCloudredisId(instanceId string) bool {
+func (m *MySQL) ExistCloudredisId(cloud, instanceId string) bool {
 	var cloudinfo *CloudInfo
-	if err := m.Model(cloudinfo).Where("instance_id = ?", instanceId).First(&cloudinfo).Error; err != nil {
+	if err := m.Model(cloudinfo).Where("cloud = ? AND instance_id = ?", cloud, instanceId).First(&cloudinfo).Error; err != nil {
 		return false
 	}
 	return true

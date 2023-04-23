@@ -21,3 +21,10 @@ func (m *MySQL) GetAllCodis() []CodisInfo {
 	m.Find(&clusters)
 	return clusters
 }
+
+func (m *MySQL) GetCodisNumber() int64 {
+	var clusters []CodisInfo
+	var count int64
+	m.Find(&clusters).Count(&count)
+	return count
+}

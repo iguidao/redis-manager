@@ -4,23 +4,27 @@
     <div class="main-info">
       <el-card class="info">
         <el-button type="primary" icon="el-icon-user-solid" circle />
-        <h2 class="num-info">112</h2>
-        <p class="desc">腾讯Redis集群</p>
+        <h2 v-if="descdata.txredis" class="num-info">{{ descdata.txredis }}</h2>
+        <h2 v-else class="num-info">0</h2>
+        <p class="desc">腾讯Redis</p>
       </el-card>
       <el-card class="info">
         <el-button type="success" icon="el-icon-s-data" circle />
-        <h2 class="num-info">66</h2>
-        <p class="desc">阿里Redis集群</p>
+        <h2 v-if="descdata.aliredis" class="num-info">{{ descdata.aliredis }}</h2>
+        <h2 v-else class="num-info">0</h2>
+        <p class="desc">阿里Redis</p>
       </el-card>
       <el-card class="info">
         <el-button type="danger" icon="el-icon-coin" circle />
-        <h2 class="num-info">12</h2>
-        <p class="desc">自建Codis集群</p>
+        <h2 v-if="descdata.codis" class="num-info">{{ descdata.codis }}</h2>
+        <h2 v-else class="num-info">0</h2>
+        <p class="desc">自建Codis</p>
       </el-card>
       <el-card class="info">
         <el-button type="warning" icon="el-icon-data-line" circle />
-        <h2 class="num-info">99</h2>
-        <p class="desc">自建Redis集群</p>
+        <h2 v-if="descdata.redis" class="num-info">{{ descdata.redis }}</h2>
+        <h2 v-else class="num-info">0</h2>
+        <p class="desc">自建Cluster</p>
       </el-card>
     </div>
     <!-- 图表 -->
@@ -32,6 +36,23 @@
 </template>
 
 <script lang="ts" setup>
+import { BoardDesc } from '../../api/board'
+import { onMounted, ref } from 'vue';
+import { ElMessage } from "element-plus";
+const descdata = ref<any>({})
+const load = async () => {
+ // console.log(await list())
+ let data = (await BoardDesc()).data
+  if (data.errorCode === 0 ) {
+    descdata.value = data.data
+  } else {
+    ElMessage.error(data.msg)
+  }
+}
+
+onMounted(async () => {
+ await load()
+})
 </script>
 
 <style lange="scss" scoped>

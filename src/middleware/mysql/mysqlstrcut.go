@@ -43,40 +43,25 @@ type GroupContain struct {
 // 集群信息
 type ClusterInfo struct {
 	Base
-	GroupId              int    `gorm:"not null;index"`
-	UserId               int    `gorm:"not null;index"`
-	ClusterName          string `gorm:"not null;index"`
-	RedisNodes           string `gorm:"type:varchar(255)"`
-	ClusterNotes         string `gorm:"type:varchar(255)"`
-	ClusterMode          string `gorm:"type:varchar(25)"` // 集群(Cluster)；单点(Single)；哨兵(Sentinel)
-	ClusterOs            string `gorm:"type:varchar(255)"`
-	ClusterVersion       string `gorm:"type:varchar(25)"`
-	Initialized          bool
-	Clusterstate         string `gorm:"type:varchar(50)"`
-	ClusterSlotsAssigned int
-	ClusterSlotsOk       int
-	ClusterNodes         int
-	RedisPassword        string `gorm:"type:varchar(255)"`
-	Environment          string `gorm:"type:varchar(50)"` // 主机 Machine；容器 Container
-	From                 string `gorm:"type:varchar(50)"` //导入Import；平台创建Self
+	Name     string `gorm:"not null;index"`
+	Mode     string `gorm:"type:varchar(25)"`  // 集群(Cluster)；哨兵(Sentinel)
+	Nodes    string `gorm:"type:varchar(255)"` //ip:port,ip:port
+	Password string `gorm:"type:varchar(255)"`
 }
 
 // node信息
-type RedisNode struct {
+type ClusterNode struct {
 	Base
-	CluserId   int    `gorm:"not null;index"`
-	NodeId     string `gorm:"type:varchar(50);index"`
-	MasterId   string `gorm:"type:varchar(50)"`
-	Host       string `gorm:"type:varchar(50);index"`
-	Port       int
-	NodeRole   string `gorm:"type:varchar(50)"`
-	Flags      string `gorm:"type:varchar(50)"`
-	LinkState  string `gorm:"type:varchar(50)"`
-	Identity   string `gorm:"type:varchar(50)"`
-	InCluster  bool
-	RunStatus  bool
-	SlotRange  string `gorm:"type:varchar(50)"`
-	SlotNumber int
+	CluserId   int    `gorm:"not null;index"`         //集群ID
+	NodeId     string `gorm:"type:varchar(50);index"` //node的ID
+	Ip         string `gorm:"type:varchar(50)"`       //node的IP
+	Port       string `gorm:"type:varchar(25)"`       //node的端口
+	Flags      string `gorm:"type:varchar(50)"`       //node的身份
+	MasterId   string `gorm:"type:varchar(50)"`       //如果是从的话master的ID
+	LinkState  string `gorm:"type:varchar(50)"`       //链接状态
+	RunStatus  bool   `gorm:"type:varchar(25)"`       //运行状态
+	SlotRange  string `gorm:"type:varchar(50)"`       //slot区间
+	SlotNumber int    `gorm:"type:varchar(25)"`       //solt个数
 }
 
 // cloud redis信息
@@ -149,8 +134,8 @@ func (CodisInfo) TableName() string {
 	return "codis_info"
 }
 
-func (RedisNode) TableName() string {
-	return "redis_node"
+func (ClusterNode) TableName() string {
+	return "cluster_node"
 }
 
 func (OpHistory) TableName() string {

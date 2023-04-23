@@ -20,6 +20,7 @@ const (
 	ERROR_BACKGROUND               = 50002
 	ERROR_CLOUD_CONNECT            = 50003
 	ERROR_CLOUD_GET                = 50004
+	ERROR_WRITE_MYSQL              = 50005
 	WARN_CLICK_REPEATEDLY          = 60000
 	WARN_NO_USE                    = 60002
 	WARN_BACKGROUND                = 60004

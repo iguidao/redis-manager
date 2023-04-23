@@ -108,7 +108,7 @@ const redisdic = [
   },
   {
     value: 'cluster',
-    label: '自建redis集群',
+    label: '自建cluster集群',
   },
   {
     value: 'aliredis',

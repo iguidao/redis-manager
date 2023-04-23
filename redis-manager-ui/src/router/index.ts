@@ -51,7 +51,7 @@ const routes = [
           {
             path: '/redis/index',
             meta: {
-              title: '自建redis'
+              title: '自建cluster'
             },
             component: () => import('../pages/redis/redis/Index.vue'),
           },

@@ -59,9 +59,9 @@ func Migrate() {
 		logger.Info("start create data table cluster_info migrate data schemas...")
 		DB.AutoMigrate(&ClusterInfo{})
 	}
-	if !DB.Migrator().HasTable(&RedisNode{}) {
+	if !DB.Migrator().HasTable(&ClusterNode{}) {
 		logger.Info("start create data table redis_node migrate data schemas...")
-		DB.AutoMigrate(&RedisNode{})
+		DB.AutoMigrate(&ClusterNode{})
 	}
 	if !DB.Migrator().HasTable(&OpHistory{}) {
 		logger.Info("start create data table ophistory migrate data schemas...")
