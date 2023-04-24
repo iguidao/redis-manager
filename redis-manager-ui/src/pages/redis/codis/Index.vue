@@ -3,8 +3,8 @@
     <div>
         <el-card shadow="never">
         <el-row>
-          <el-col :span="2">
-              <span>codis集群</span>
+          <el-col :span="3">
+              <span>自建codis集群</span>
           </el-col>
           <el-col :span="2">
             <el-select v-model="codisurl" placeholder="请选择平台地址">
@@ -18,7 +18,7 @@
           <el-col :offset="1" :span="10">
             <el-link :href="codisurl" target="_blank"  type="success">{{ codisurl }} </el-link>
           </el-col>
-          <el-col :offset="6"  :span="3" style="min-width: 120px">
+          <el-col :offset="5"  :span="3" style="min-width: 120px">
             <el-button size="small" type="primary" @click="dialogFormVisible = true">添加codis平台</el-button>
           </el-col>  
         </el-row>

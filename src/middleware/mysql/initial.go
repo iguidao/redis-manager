@@ -27,7 +27,7 @@ func Connect(dsn string) {
 
 	}), &gorm.Config{})
 	if err != nil {
-		logger.Error("Cannot open mysql database: ", err.Error())
+		logger.Error("Mysql Cannot open mysql database: ", err.Error())
 		panic(err)
 	}
 	DB = MySQL{db}
@@ -36,44 +36,44 @@ func Connect(dsn string) {
 
 // Migrate the db schema
 func Migrate() {
-	logger.Info("start check data table  exists...")
+	logger.Info("Mysql start check data table  exists...")
 	if !DB.Migrator().HasTable(&UserInfo{}) {
-		logger.Info("start create data table user migrate data schemas...")
+		logger.Info("Mysql start create data table user migrate data schemas...")
 		DB.AutoMigrate(&UserInfo{})
-		logger.Info("Add User to  account:iguidao , password:123456")
+		logger.Info("Mysql Add User to  account:iguidao , password:123456")
 		DB.CreatUser("iguidao", "iguidao@iguidao.com", "iguidao", "tXfP0JhWJgtaNQc/DcHF78yeI73RRR+35uFNDx4cIVA=")
 	}
 	if !DB.Migrator().HasTable(&UserGroup{}) {
-		logger.Info("start create data table user_group migrate data schemas...")
+		logger.Info("Mysql start create data table user_group migrate data schemas...")
 		DB.AutoMigrate(&UserGroup{})
 	}
 	if !DB.Migrator().HasTable(&GroupContain{}) {
-		logger.Info("start create data table group_contain migrate data schemas...")
+		logger.Info("Mysql start create data table group_contain migrate data schemas...")
 		DB.AutoMigrate(&GroupContain{})
 	}
 	if !DB.Migrator().HasTable(&CloudInfo{}) {
-		logger.Info("start create data table cloud_info migrate data schemas...")
+		logger.Info("Mysql start create data table cloud_info migrate data schemas...")
 		DB.AutoMigrate(&CloudInfo{})
 	}
 	if !DB.Migrator().HasTable(&ClusterInfo{}) {
-		logger.Info("start create data table cluster_info migrate data schemas...")
+		logger.Info("Mysql start create data table cluster_info migrate data schemas...")
 		DB.AutoMigrate(&ClusterInfo{})
 	}
 	if !DB.Migrator().HasTable(&ClusterNode{}) {
-		logger.Info("start create data table redis_node migrate data schemas...")
+		logger.Info("Mysql start create data table redis_node migrate data schemas...")
 		DB.AutoMigrate(&ClusterNode{})
 	}
 	if !DB.Migrator().HasTable(&OpHistory{}) {
-		logger.Info("start create data table ophistory migrate data schemas...")
+		logger.Info("Mysql start create data table ophistory migrate data schemas...")
 		DB.AutoMigrate(&OpHistory{})
 	}
 	if !DB.Migrator().HasTable(&CodisInfo{}) {
-		logger.Info("start create data table CodisInfo migrate data schemas...")
+		logger.Info("Mysql start create data table CodisInfo migrate data schemas...")
 		DB.AutoMigrate(&CodisInfo{})
 	}
 	if !DB.Migrator().HasTable(&Rconfig{}) {
-		logger.Info("start create data table Rconfig migrate data schemas...")
+		logger.Info("Mysql start create data table Rconfig migrate data schemas...")
 		DB.AutoMigrate(&Rconfig{})
 	}
-	logger.Info("auto check data table done.")
+	logger.Info("Mysql auto check data table done.")
 }

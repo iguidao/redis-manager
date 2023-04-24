@@ -1,6 +1,7 @@
 package opredis
 
 import (
+	"log"
 	"time"
 
 	"github.com/iguidao/redis-manager/src/middleware/logger"
@@ -12,9 +13,10 @@ func ReaderTelnet(conn *telnet.Conn) (out string, knowtime int64) {
 	var buffer [100]byte
 	recvData := buffer[:]
 	knowtime = time.Now().Unix()
-
+	log.Println("knowtime: ", knowtime)
 	for {
 		comtime := time.Now().Unix()
+		log.Println("comtime: ", comtime)
 		_, err := conn.Read(recvData)
 		if nil != err {
 			logger.Error("ReaderTelnet error: ", err)

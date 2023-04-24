@@ -6,7 +6,7 @@ import (
 	"github.com/go-redis/redis/v9"
 )
 
-//单点和codis链接
+// 单点和codis链接
 type ClientConnect struct {
 	*redis.Client
 }
@@ -28,7 +28,7 @@ func ConnectRedis(addr, password string) bool {
 	return true
 }
 
-//集群链接
+// 集群链接
 type ClientClusterConnect struct {
 	*redis.ClusterClient
 }

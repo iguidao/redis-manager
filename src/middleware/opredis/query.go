@@ -1,6 +1,56 @@
 package opredis
 
-import "strings"
+import (
+	"strings"
+)
+
+func CQueryKey(keyname string) QueryResult {
+	keytype, ok := CTypeKey(keyname)
+	var result QueryResult
+	if ok {
+		result.Value, result.Len = CQuery_value(keytype, keyname)
+		ttl, tok := TtlKey(keyname)
+		if tok {
+			result.Ttl = ttl
+		}
+		result.Type = keytype
+	}
+	return result
+}
+func CQuery_value(keytype, keyname string) (interface{}, int) {
+	switch keytype {
+	case "string":
+		val, stringok := CGetStringKey(keyname)
+		if stringok {
+			return val, strings.Count(val, "")
+		}
+	case "list":
+		val, listok := CGetListKey(keyname)
+		if listok {
+			return val, len(val)
+		}
+	case "hash":
+		val, hashok := CGetHashKey(keyname)
+		if hashok {
+			return val, len(val)
+		}
+	case "set":
+		val, setok := CGetSetKey(keyname)
+		if setok {
+			return val, len(val)
+		}
+	case "zset":
+		val, zsetok := CGetZsetKey(keyname)
+		if zsetok {
+			return val, len(val)
+		}
+	case "none":
+		return "Not Found Key", 0
+	default:
+		return "This type " + keytype + " key, query is not supported", 0
+	}
+	return "Get Key Fail", 0
+}
 
 func QueryKey(keyname string) QueryResult {
 	keytype, ok := TypeKey(keyname)

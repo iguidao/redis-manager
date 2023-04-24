@@ -126,7 +126,7 @@ func RegionList(c *gin.Context) {
 			if ok {
 				err := json.Unmarshal([]byte(list), &rlist)
 				if err == nil {
-					result["region_list"] = rlist.Response
+					result["region_list"] = rlist.Response.RegionSet
 				} else {
 					logger.Error("json tx cloud result error: ", err)
 				}

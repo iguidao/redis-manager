@@ -37,20 +37,22 @@ func WriteCluster(clusterid int, v string) {
 			linkstate = nodelist[7]
 			slotrange = nodelist[8]
 			slotnumber = getslotnumber(slotrange)
+		} else {
+			masterid = nodelist[3]
 		}
 	}
 	id, ok := mysql.DB.AddClusterNode(nodeid, ip, pord, flags, masterid, linkstate, slotrange, clusterid, slotnumber)
 	if ok {
-		logger.Info("write ", ip, " redis to mysql ok: ", id, "nodeid: ", nodeid)
+		logger.Info("write ", ip, " redis to mysql ok: ", id, " nodeid: ", nodeid)
 	} else {
-		logger.Error("write ", ip, " redis to mysql false: ", id, "nodeid: ", nodeid)
+		logger.Error("write ", ip, " redis to mysql false: ", id, " nodeid: ", nodeid)
 	}
 }
 
 func getslotnumber(slotrange string) int {
 	var err error
 	var start, end, slot int
-	num := strings.Split(slotrange, ",")
+	num := strings.Split(slotrange, "-")
 	start, err = strconv.Atoi(num[0])
 	if err != nil {
 		return slot
@@ -59,6 +61,6 @@ func getslotnumber(slotrange string) int {
 	if err != nil {
 		return slot
 	}
-	slot = end - start
+	slot = end - start + 1
 	return slot
 }

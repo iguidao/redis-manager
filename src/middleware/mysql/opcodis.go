@@ -1,5 +1,7 @@
 package mysql
 
+import "github.com/iguidao/redis-manager/src/middleware/logger"
+
 // add codis
 
 func (m *MySQL) AddCodis(curl, cname string) (int, bool) {
@@ -9,6 +11,7 @@ func (m *MySQL) AddCodis(curl, cname string) (int, bool) {
 	}
 	result := m.Create(&addcodisinfo)
 	if result.Error != nil {
+		logger.Error("Mysql add Codis error:", result.Error)
 		return 0, false
 	}
 	return addcodisinfo.ID, true

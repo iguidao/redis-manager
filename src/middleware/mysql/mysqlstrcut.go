@@ -18,7 +18,7 @@ type Base struct {
 // 用户
 type UserInfo struct {
 	Base
-	UserName string `gorm:"not null;index"`
+	UserName string `gorm:"not null;index;unique"`
 	Password string `gorm:"not null"`
 	Email    string `gorm:"type:varchar(255)"`
 	UserType string `gorm:"not null;index;type:varchar(50)"` //admin 管理员；visitor 访客；staff 员工
@@ -28,7 +28,7 @@ type UserInfo struct {
 // 用户组
 type UserGroup struct {
 	Base
-	GroupName     string `gorm:"not null;index"`
+	GroupName     string `gorm:"not null;index;unique"`
 	GroupDescribe string `gorm:"type:varchar(255)"`
 	GroupType     string `gorm:"not null;index;type:varchar(50)"` //admin 管理组；visitor 访客组；staff 员工组
 }
@@ -43,8 +43,7 @@ type GroupContain struct {
 // 集群信息
 type ClusterInfo struct {
 	Base
-	Name     string `gorm:"not null;index"`
-	Mode     string `gorm:"type:varchar(25)"`  // 集群(Cluster)；哨兵(Sentinel)
+	Name     string `gorm:"not null;index;unique"`
 	Nodes    string `gorm:"type:varchar(255)"` //ip:port,ip:port
 	Password string `gorm:"type:varchar(255)"`
 }
@@ -52,42 +51,42 @@ type ClusterInfo struct {
 // node信息
 type ClusterNode struct {
 	Base
-	CluserId   int    `gorm:"not null;index"`         //集群ID
-	NodeId     string `gorm:"type:varchar(50);index"` //node的ID
-	Ip         string `gorm:"type:varchar(50)"`       //node的IP
-	Port       string `gorm:"type:varchar(25)"`       //node的端口
-	Flags      string `gorm:"type:varchar(50)"`       //node的身份
-	MasterId   string `gorm:"type:varchar(50)"`       //如果是从的话master的ID
-	LinkState  string `gorm:"type:varchar(50)"`       //链接状态
-	RunStatus  bool   `gorm:"type:varchar(25)"`       //运行状态
-	SlotRange  string `gorm:"type:varchar(50)"`       //slot区间
-	SlotNumber int    `gorm:"type:varchar(25)"`       //solt个数
+	CluserId   int    `gorm:"not null;index"`          //集群ID
+	NodeId     string `gorm:"type:varchar(50);unique"` //node的ID
+	Ip         string `gorm:"type:varchar(50)"`        //node的IP
+	Port       string `gorm:"type:varchar(25)"`        //node的端口
+	Flags      string `gorm:"type:varchar(50)"`        //node的身份
+	MasterId   string `gorm:"type:varchar(50)"`        //如果是从的话master的ID
+	LinkState  string `gorm:"type:varchar(50)"`        //链接状态
+	RunStatus  bool   `gorm:"type:varchar(25)"`        //运行状态
+	SlotRange  string `gorm:"type:varchar(50)"`        //slot区间
+	SlotNumber int    `gorm:"type:varchar(25)"`        //solt个数
 }
 
 // cloud redis信息
 type CloudInfo struct {
 	Base
-	Cloud            string `gorm:"type:varchar(10)"`  //云厂商
-	InstanceId       string `gorm:"not null;index"`    //实例ID
-	InstanceName     string `gorm:"type:varchar(100)"` //实例名称
-	PrivateIp        string `gorm:"type:varchar(20)"`  //内网IP
-	Port             int    `gorm:"type:varchar(10)"`  //端口
-	Region           string `gorm:"type:varchar(20)"`  //region
-	Createtime       string `gorm:"type:varchar(20)"`  //创建时间
-	Size             int    `gorm:"type:varchar(10)"`  //实例大小
-	InstanceStatus   string `gorm:"type:varchar(10)"`  //实例状态
-	RedisShardSize   int    `gorm:"type:varchar(10)"`  // 分片大小
-	RedisShardNum    int    `gorm:"type:varchar(10)"`  //分练数量
-	RedisReplicasNum int    `gorm:"type:varchar(10)"`  //副本个数
-	NoAuth           bool   `gorm:"type:varchar(10)"`  //是否需要密码
-	PublicIp         string `gorm:"type:varchar(20)"`  //外网IP
-	Password         string `gorm:"type:varchar(50)"`  //密码
+	Cloud            string `gorm:"type:varchar(10)"`      //云厂商
+	InstanceId       string `gorm:"not null;index;unique"` //实例ID
+	InstanceName     string `gorm:"type:varchar(100)"`     //实例名称
+	PrivateIp        string `gorm:"type:varchar(20)"`      //内网IP
+	Port             int    `gorm:"type:varchar(10)"`      //端口
+	Region           string `gorm:"type:varchar(20)"`      //region
+	Createtime       string `gorm:"type:varchar(20)"`      //创建时间
+	Size             int    `gorm:"type:varchar(10)"`      //实例大小
+	InstanceStatus   string `gorm:"type:varchar(10)"`      //实例状态
+	RedisShardSize   int    `gorm:"type:varchar(10)"`      //分片大小
+	RedisShardNum    int    `gorm:"type:varchar(10)"`      //分练数量
+	RedisReplicasNum int    `gorm:"type:varchar(10)"`      //副本个数
+	NoAuth           bool   `gorm:"type:varchar(10)"`      //是否需要密码
+	PublicIp         string `gorm:"type:varchar(20)"`      //外网IP
+	Password         string `gorm:"type:varchar(50)"`      //密码
 }
 
 // codis信息
 type CodisInfo struct {
 	Base
-	Curl  string `gorm:"not null;index"`
+	Curl  string `gorm:"not null;index;unique"`
 	Cname string `gorm:"type:varchar(50)"`
 }
 
@@ -95,7 +94,7 @@ type CodisInfo struct {
 type Rconfig struct {
 	Base
 	Name  string `gorm:"type:varchar(255)"`
-	Key   string `gorm:"not null:index:primary_key"`
+	Key   string `gorm:"not null:index:primary_key;unique"`
 	Value string `gorm:"type:varchar(255)"`
 }
 

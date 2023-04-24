@@ -3,7 +3,6 @@ package opredis
 import (
 	"context"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/iguidao/redis-manager/src/middleware/logger"
@@ -269,10 +268,4 @@ func RedisSave(serverip string) bool {
 		}
 	}
 	return true
-}
-
-func GetCluster() []string {
-	clusternode := RD.ClusterNodes(ctx)
-	nodeinfo := strings.Split(clusternode.Val(), "\n")
-	return nodeinfo
 }

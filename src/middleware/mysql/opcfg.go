@@ -15,6 +15,7 @@ func (m *MySQL) AddCfg(name, key, value string) (int, bool) {
 	}
 	result := m.Create(&addcfginfo)
 	if result.Error != nil {
+		logger.Error("Mysql add cfg error:", result.Error)
 		return 0, false
 	}
 	return addcfginfo.ID, true
@@ -22,7 +23,7 @@ func (m *MySQL) AddCfg(name, key, value string) (int, bool) {
 func (m *MySQL) DelCfg(key string) bool {
 	var cfg *Rconfig
 	if err := m.Model(cfg).Where("`key` = ?", key).Delete(&cfg).Error; err != nil {
-		logger.Error(err)
+		logger.Error("Mysql del cfg error:", err)
 		return false
 	}
 	return true
@@ -32,7 +33,9 @@ func (m *MySQL) DelCfg(key string) bool {
 func (m *MySQL) UpdateCfg(key, value string) bool {
 	var cfg Rconfig
 	result := m.Model(&cfg).Where("`key` = ?", key).Update("value", value)
-	log.Println("result.Error: ", result.Error)
+	if result.Error != nil {
+		log.Println("Mysql result.Error: ", result.Error)
+	}
 	return result.Error == nil
 }
 
@@ -40,6 +43,7 @@ func (m *MySQL) UpdateCfg(key, value string) bool {
 func (m *MySQL) ExistCfg(key string) bool {
 	var cfg *Rconfig
 	if err := m.Model(cfg).Where("`key` = ?", key).First(&cfg).Error; err != nil {
+		logger.Error("Mysql exist cfg error:", err)
 		return false
 	}
 	return true

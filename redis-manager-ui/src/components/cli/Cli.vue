@@ -1,5 +1,6 @@
 <template>
   <div class="content">
+    <div>
       <el-row :gutter="1">
         <!-- <el-col :span="1">
           <div class="grid-content">
@@ -30,6 +31,13 @@
               :label="item.RegionName" 
               :value="item.Region" />
           </el-select>
+          <el-select v-model="clusterid" v-else-if="redisname === 'cluster'" placeholder="选择集群"  @change="getClusterMaster()">
+            <el-option 
+              v-for="item in clusterlist" 
+              :key="item.Name" 
+              :label="item.Name" 
+              :value="item.ID" />
+          </el-select>
         </el-col>
         <el-col :span="2">
           <el-select v-model="codisname" v-if="redisname === 'codis'" placeholder="选择集群" @change="getCodisGroup()">
@@ -46,6 +54,17 @@
               :label="item.InstanceName" 
               :value="item.InstanceId" />
           </el-select>
+          <div  v-if="redisname === 'cluster'">
+            <el-input v-model="queryname" class="w-10 m-2" v-if="$props.opkey==='query'" placeholder="请输入key名称" />
+            <el-input v-model="queryname" class="w-10 m-2" v-else-if="$props.opkey==='del'" placeholder="要删除的key名称" />
+            <el-select v-model="masterid" v-else  placeholder="选择Master">
+              <el-option 
+                v-for="item in clustermasterlist" 
+                :key="item.Ip+':'+item.Port" 
+                :label="item.Flags + ': '+ item.SlotRange" 
+                :value="item.NodeId" />
+            </el-select>
+          </div>
         </el-col>
         <el-col  :span="5">
           <div  v-if="redisname === 'codis'">
@@ -80,7 +99,7 @@
           <el-button type="primary" v-else @click="operationkey()" >查询</el-button>
         </el-col>
       </el-row>
-
+    </div>
       <el-divider></el-divider>
       <div>
         <JsonViewer :value="jsonData" expand-depth="2" copyable boxed sort/>
@@ -94,6 +113,7 @@
 import { onMounted, ref, reactive} from 'vue';
 import { listCodis, listCodisCluster, listCodisGroup } from '../../api/codis'
 import { listCloudRegion, listCloudRedis } from '../../api/cloud'
+import { listCluster, listClusterMaster } from '../../api/cluster'
 import { cliRedisOpkey } from '../../api/cli'
 // import moment from 'moment';
 import { ElMessage } from 'element-plus';
@@ -140,6 +160,14 @@ const fromtxredis = reactive({
   cloud: '',
   region: '',
 })
+//cluster
+const clusterid = ref("")
+const masterid = ref("")
+const clusterlist = ref<any[]>([])
+const clustermasterlist  = ref<any[]>([])
+const fromcluster = reactive({
+  cluster_id: '',
+})
 // all
 const groupname = ref("")
 const queryname = ref("")
@@ -152,6 +180,8 @@ const queryfrom = reactive({
   group_name: '',
   region: '',
 	instance_id: '',
+  cluster_id: '',
+  node_id: '',
 })
 const queryresult = ref<any>()
 const jsonData = reactive(queryresult);
@@ -168,6 +198,8 @@ const operationkey = async () => {
   queryfrom.group_name = groupname.value
   queryfrom.region = txregion.value
   queryfrom.instance_id = txredisid.value
+  queryfrom.cluster_id = String(clusterid.value)
+  queryfrom.node_id = masterid.value
   let result = (await cliRedisOpkey(queryfrom)).data
   if (result.errorCode === 0 ) {
     queryresult.value = result.data
@@ -209,6 +241,16 @@ const getTxRedisCluster = async () => {
     ElMessage.error(result.msg)
   }
 }
+//cluster请求
+const getClusterMaster = async () => {
+  fromcluster.cluster_id = clusterid.value
+  let result = (await listClusterMaster(fromcluster)).data
+  if (result.errorCode === 0 ) {
+    clustermasterlist.value = result.data
+  } else {
+    ElMessage.error(result.msg)
+  }
+}
 // 选择codis/cluster/txredis/aliredis集群
 const getRedisName = async () => {
   if ( redisname.value == "codis" ) {
@@ -222,7 +264,14 @@ const getRedisName = async () => {
     fromtxredis.cloud = redisname.value
     let result = (await listCloudRegion(fromtxredis)).data
     if (result.errorCode === 0 ) {
-      txredisregion.value = result.data.region_list.RegionSet
+      txredisregion.value = result.data.region_list
+    } else {
+      ElMessage.error(result.msg)
+    }  
+  } else if ( redisname.value == "cluster" ) {
+    let result =  (await listCluster()).data
+    if (result.errorCode === 0 ) {
+      clusterlist.value = result.data
     } else {
       ElMessage.error(result.msg)
     }  

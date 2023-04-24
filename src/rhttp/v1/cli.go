@@ -2,8 +2,10 @@ package v1
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -40,12 +42,20 @@ func OpKey(c *gin.Context) {
 		method := c.Request.Method
 		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 		if cliquery.CacheType == "codis" {
+			code = hsc.ERROR_NO_CONNEC
 			result, ok = CodisOp(cliquery)
 			if ok {
 				code = hsc.SUCCESS
 			}
 		} else if cliquery.CacheType == "txredis" {
+			code = hsc.ERROR_NO_CONNEC
 			result, ok = TxRedisOp(cliquery)
+			if ok {
+				code = hsc.SUCCESS
+			}
+		} else if cliquery.CacheType == "cluster" {
+			code = hsc.ERROR_NO_CONNEC
+			result, ok = ClusterOp(cliquery)
 			if ok {
 				code = hsc.SUCCESS
 			}
@@ -58,7 +68,155 @@ func OpKey(c *gin.Context) {
 		"data":      result,
 	})
 }
+func ClusterOp(cliquery CliQuery) (interface{}, bool) {
+	switch cliquery.CacheOp {
+	case "query":
+		address, pw := mysql.DB.GetClusterAddress(cliquery.ClusterId)
+		addlist := strings.Split(address, ",")
+		if opredis.ConnectRedisCluster(addlist, pw) {
+			result := opredis.CQueryKey(cliquery.KeyName)
+			return result, true
+		}
+		return nil, false
+	case "hot":
+		serverip := mysql.DB.GetClusterNodeMasterAddress(cliquery.NodeId)
+		log.Println(serverip)
+		result := opredis.HotKey(serverip)
+		return result, true
+	case "all":
+		serverip := mysql.DB.GetClusterNodeSlaverAddress(cliquery.NodeId)
+		pw := mysql.DB.GetClusterPassword(cliquery.ClusterId)
+		if opredis.ConnectRedis(serverip, pw) {
+			result := opredis.AllKey()
+			return result, true
+		}
+		return nil, false
+	case "slow":
+		serverip := mysql.DB.GetClusterNodeMasterAddress(cliquery.NodeId)
+		pw := mysql.DB.GetClusterPassword(cliquery.ClusterId)
+		if opredis.ConnectRedis(serverip, pw) {
+			result := opredis.SlowKey()
+			return result, true
+		}
+		return nil, false
+	case "del":
+		address, pw := mysql.DB.GetClusterAddress(cliquery.ClusterId)
+		addlist := strings.Split(address, ",")
+		if opredis.ConnectRedisCluster(addlist, pw) {
+			result := opredis.CDeleteKey(cliquery.KeyName)
+			return result, true
+		}
+		return nil, false
+	case "big":
+		result := make(map[string]interface{})
+		serverip := mysql.DB.GetClusterNodeSlaverAddress(cliquery.NodeId)
+		pw := mysql.DB.GetClusterPassword(cliquery.ClusterId)
+		if opredis.ConnectRedis(cfg.Get_Info_String("REDIS"), cfg.Get_Info_String("redispw")) {
+			clickkeyname := "Click-Bigkey-" + cliquery.CacheType + "-" + cliquery.ClusterId + "-" + cliquery.NodeId
+			tips, ok := opredis.BigKeyClick(cliquery.ClusterId, cliquery.NodeId, clickkeyname)
+			result["友情提示"] = "大key分析执行出现了问题，请找sre服务台！！！"
+			switch ok {
+			case 0:
+				result["友情提示"] = tips
+			case 1:
+				result["友情提示"] = tips
+				opredis.ExpireKey(clickkeyname, cfg.Get_Info_Int("biglocktime"))
+				if opredis.ConnectRedis(serverip, pw) {
+					opredis.RedisSave(serverip)
+				}
+			case 2:
+				result["友情提示"] = tips
+			case 3:
+				result["友情提示"] = tips
+				if opredis.ExistsKey("bigkey-" + serverip) {
+					keyvalue, ok := opredis.GetStringKey("bigkey-" + serverip)
+					if ok {
+						result["Top-Key"] = tools.JsonToMap(keyvalue)
+					}
+				}
+			}
+			return result, true
+		}
+		return nil, false
+	default:
+		return "没有找到这个查询key的方式: " + cliquery.CacheOp, false
+	}
+}
 
+func CodisOp(cliquery CliQuery) (interface{}, bool) {
+	switch cliquery.CacheOp {
+	case "query":
+		proxylist := codisapi.GetProxy(cliquery.CodisUrl, cliquery.ClusterName)
+		for _, v := range proxylist {
+			if opredis.ConnectRedis(v, "") {
+				result := opredis.QueryKey(cliquery.KeyName)
+				return result, true
+			}
+		}
+		return nil, false
+	case "hot":
+		serverip := codisapi.GetMaster(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
+		log.Println(serverip)
+		result := opredis.HotKey(serverip)
+		return result, true
+	case "all":
+		serverip := codisapi.GetSlave(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
+		if opredis.ConnectRedis(serverip, "") {
+			result := opredis.AllKey()
+			return result, true
+		}
+		return nil, false
+	case "slow":
+		serverip := codisapi.GetMaster(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
+		if opredis.ConnectRedis(serverip, "") {
+			result := opredis.SlowKey()
+			return result, true
+		}
+		return nil, false
+	case "del":
+		proxylist := codisapi.GetProxy(cliquery.CodisUrl, cliquery.ClusterName)
+		for _, v := range proxylist {
+			if opredis.ConnectRedis(v, "") {
+				result := opredis.DeleteKey(cliquery.KeyName)
+				return result, true
+			}
+		}
+		return nil, false
+	case "big":
+		result := make(map[string]interface{})
+		serverip := codisapi.GetSlave(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
+		if opredis.ConnectRedis(cfg.Get_Info_String("REDIS"), cfg.Get_Info_String("redispw")) {
+			clickkeyname := "Click-Bigkey-" + cliquery.CacheType + "-" + cliquery.ClusterName + "-" + cliquery.GroupName
+			tips, ok := opredis.BigKeyClick(cliquery.ClusterName, cliquery.GroupName, clickkeyname)
+			result["友情提示"] = "大key分析执行出现了问题，请找sre服务台！！！"
+			switch ok {
+			case 0:
+				result["友情提示"] = tips
+			case 1:
+				result["友情提示"] = tips
+				opredis.ExpireKey(clickkeyname, cfg.Get_Info_Int("biglocktime"))
+				if opredis.ConnectRedis(serverip, "") {
+					opredis.RedisSave(serverip)
+				}
+			case 2:
+				result["友情提示"] = tips
+			case 3:
+				result["友情提示"] = tips
+				if opredis.ExistsKey("bigkey-" + serverip) {
+					keyvalue, ok := opredis.GetStringKey("bigkey-" + serverip)
+					if ok {
+						result["Top-Key"] = tools.JsonToMap(keyvalue)
+					}
+				}
+			}
+			return result, true
+		}
+		return nil, false
+	default:
+		return "没有找到这个查询key的方式: " + cliquery.CacheOp, false
+	}
+
+}
 func TxRedisOp(cliquery CliQuery) (interface{}, bool) {
 	switch cliquery.CacheOp {
 	case "query":
@@ -153,80 +311,6 @@ func TxRedisOp(cliquery CliQuery) (interface{}, bool) {
 		return "没有找到这个查询key的方式: " + cliquery.CacheOp, false
 	}
 }
-func CodisOp(cliquery CliQuery) (interface{}, bool) {
-	switch cliquery.CacheOp {
-	case "query":
-		proxylist := codisapi.GetProxy(cliquery.CodisUrl, cliquery.ClusterName)
-		for _, v := range proxylist {
-			if opredis.ConnectRedis(v, "") {
-				result := opredis.QueryKey(cliquery.KeyName)
-				return result, true
-			}
-		}
-		return nil, false
-	case "hot":
-		serverip := codisapi.GetMaster(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
-		result := opredis.HotKey(serverip)
-		return result, true
-	case "all":
-		serverip := codisapi.GetSlave(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
-		if opredis.ConnectRedis(serverip, "") {
-			result := opredis.AllKey()
-			return result, true
-		}
-		return nil, false
-	case "slow":
-		serverip := codisapi.GetMaster(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
-		if opredis.ConnectRedis(serverip, "") {
-			result := opredis.SlowKey()
-			return result, true
-		}
-		return nil, false
-	case "del":
-		proxylist := codisapi.GetProxy(cliquery.CodisUrl, cliquery.ClusterName)
-		for _, v := range proxylist {
-			if opredis.ConnectRedis(v, "") {
-				result := opredis.DeleteKey(cliquery.KeyName)
-				return result, true
-			}
-		}
-		return nil, false
-	case "big":
-		result := make(map[string]interface{})
-		serverip := codisapi.GetSlave(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
-		if opredis.ConnectRedis(cfg.Get_Info_String("REDIS"), cfg.Get_Info_String("redispw")) {
-			clickkeyname := "Click-Bigkey-" + cliquery.CacheType + "-" + cliquery.ClusterName + "-" + cliquery.GroupName
-			tips, ok := opredis.BigKeyClick(cliquery.ClusterName, cliquery.GroupName, clickkeyname)
-			result["友情提示"] = "大key分析执行出现了问题，请找sre服务台！！！"
-			switch ok {
-			case 0:
-				result["友情提示"] = tips
-			case 1:
-				result["友情提示"] = tips
-				opredis.ExpireKey(clickkeyname, cfg.Get_Info_Int("biglocktime"))
-				if opredis.ConnectRedis(serverip, "") {
-					opredis.RedisSave(serverip)
-				}
-			case 2:
-				result["友情提示"] = tips
-			case 3:
-				result["友情提示"] = tips
-				if opredis.ExistsKey("bigkey-" + serverip) {
-					keyvalue, ok := opredis.GetStringKey("bigkey-" + serverip)
-					if ok {
-						result["Top-Key"] = tools.JsonToMap(keyvalue)
-					}
-				}
-			}
-			return result, true
-		}
-		return nil, false
-	default:
-		return "没有找到这个查询key的方式: " + cliquery.CacheOp, false
-	}
-
-}
-
 func AnalysisRdb(c *gin.Context) {
 	var clirdb CliRdb
 	var result string

@@ -6,15 +6,14 @@ namespace RRegionlist {
     }
     export interface ListResData {
         data: {
-            region_list: {
-                TotalCount: number;
-                RequestId: string;
-                RegionSet: [{
-                    Region: string;
-                    RegionName: string;
-                    RegionState: string;
-                }]
-            }
+            region_list: [{
+                Region: string;
+                RegionName: string;
+                RegionState: string;
+                RegionId: string;
+                RegionEndpoint: string;
+                LocalName: string;
+            }]
         }
         errorCode: number;
         msg: string;

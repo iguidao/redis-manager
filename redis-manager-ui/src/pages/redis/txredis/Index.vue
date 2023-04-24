@@ -3,7 +3,7 @@
    <el-card shadow="never">
      <el-row>
        <el-col :span="3">
-         <span>腾讯Redis集群列表</span>
+         <span>腾讯Redis集群</span>
        </el-col>
        <el-col :span="2">
         <el-select v-model="txregion" placeholder="选择腾讯Region" @change="getTxRedisCluster()">
@@ -38,8 +38,8 @@
        <el-table-column prop="Password" label="密码" width="120">
         <template #default="scope">
           <div v-if="!scope.row.NoAuth">
-            <span v-if="scope.row.Password===''">未保存密码</span>
-            <span v-else>已保存密码</span>
+            <span v-if="scope.row.Password===''">未设置密码</span>
+            <span v-else>已设置密码</span>
           </div>
           <div v-else>
             <span v-if="scope.row.Password===''">免密登陆</span>
@@ -176,7 +176,7 @@ const getTxRedisCluster = async () => {
 const load = async () => {
   let result = (await listCloudRegion(fromtxredis)).data
   if (result.errorCode === 0 ) {
-    txredisregion.value = result.data.region_list.RegionSet
+    txredisregion.value = result.data.region_list
   } else {
     ElMessage.error(result.msg)
   }  

@@ -94,9 +94,10 @@ func NewServer() *gin.Engine {
 	cluster := r.Group("/redis-manager/cluster/v1")
 	cluster.Use(jwt.JWT())
 	{
-		cluster.GET("/list", v1.ClusterList) //列出所有集群
-		cluster.GET("/nodes", v1.NodeList)   // 列出集群的node
-		cluster.POST("/add", v1.ClusterAdd)  //添加集群
+		cluster.GET("/list", v1.ClusterList)   //列出所有集群
+		cluster.GET("/nodes", v1.NodeList)     // 列出集群的node
+		cluster.GET("/masters", v1.MasterList) //列出master地址
+		cluster.POST("/add", v1.ClusterAdd)    //添加集群
 	}
 	cli := r.Group("/redis-manager/cli/v1")
 	cli.Use(jwt.JWT())

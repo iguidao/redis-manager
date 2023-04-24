@@ -24,6 +24,8 @@ type CliQuery struct {
 	GroupName   string `json:"group_name"`
 	Region      string `json:"region"`
 	InstanceId  string `json:"instance_id"`
+	ClusterId   string `json:"cluster_id"`
+	NodeId      string `json:"node_id"`
 }
 
 // 分析大key
@@ -66,3 +68,5 @@ type TxShardCfg struct {
 	TxShardType  string `json:"txshardtype"`
 	TxShardValue string `json:"txshardvalue"`
 }
+
+// cluster nodes table

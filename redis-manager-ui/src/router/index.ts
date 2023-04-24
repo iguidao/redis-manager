@@ -53,7 +53,7 @@ const routes = [
             meta: {
               title: '自建cluster'
             },
-            component: () => import('../pages/redis/redis/Index.vue'),
+            component: () => import('../pages/redis/cluster/Index.vue'),
           },
           {
             path: '/codis/index',

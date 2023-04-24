@@ -1,6 +1,7 @@
 package opredis
 
 import (
+	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -9,6 +10,7 @@ import (
 func HotKey(serverip string) map[string]int {
 	keydic := make(map[string]int)
 	monitor, knowtime := TelnetCommond(serverip, "monitor")
+	log.Println("monitor, knowtime", monitor, knowtime)
 	re := regexp.MustCompile("(?m)[\r\n]+^.*\"PING\"|\"INFO\".*$")
 	monitor = re.ReplaceAllString(monitor, "")
 	str := "(?m)[\r\n]+^.*" + strconv.FormatInt(knowtime+1, 10) + ".*$"

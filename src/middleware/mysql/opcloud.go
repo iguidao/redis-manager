@@ -37,7 +37,7 @@ func (m *MySQL) ExistCloudredisId(cloud, instanceId string) bool {
 func (m *MySQL) UpdateCloudPassword(cloud, instanceid, password string) bool {
 	var cloudinfo *CloudInfo
 	if err := m.Model(cloudinfo).Where("cloud = ? AND instance_id = ?", cloud, instanceid).Update("password", password).Error; err != nil {
-		logger.Error("update cloud password error: ", err)
+		logger.Error("Mysql update cloud password error: ", err)
 		return false
 	}
 	return true
@@ -65,7 +65,7 @@ func (m *MySQL) UppdateTxCloudRedis(cloud string, redisinfo model.TxLResponseIns
 		"no_auth":            redisinfo.NoAuth,
 		"public_ip":          redisinfo.WanAddress,
 	}).Error; err != nil {
-		logger.Error("update cloud instanceid: ", redisinfo.InstanceId, "info error: ", err)
+		logger.Error("Mysql update cloud instanceid: ", redisinfo.InstanceId, "info error: ", err)
 		return false
 	}
 	return true
@@ -90,7 +90,7 @@ func (m *MySQL) AddTxCloudRedis(cloud string, redisinfo model.TxLResponseInstanc
 	}
 	result := m.Create(&addcluster)
 	if result.Error != nil {
-		logger.Error("add cloud redis error: ", result.Error)
+		logger.Error("Mysql add cloud redis error: ", result.Error)
 		return 0, false
 	}
 	return addcluster.ID, true
@@ -109,7 +109,7 @@ func (m *MySQL) UppdateAliCloudRedis(cloud string, redisinfo model.AliRedisInsta
 		"size":            redisinfo.Capacity,
 		"instance_status": redisinfo.InstanceStatus,
 	}).Error; err != nil {
-		logger.Error("update cloud instanceid: ", redisinfo.InstanceId, "info error: ", err)
+		logger.Error("Mysql update cloud instanceid: ", redisinfo.InstanceId, "info error: ", err)
 		return false
 	}
 	return true
@@ -129,7 +129,7 @@ func (m *MySQL) AddAliCloudRedis(cloud string, redisinfo model.AliRedisInstances
 	}
 	result := m.Create(&addcluster)
 	if result.Error != nil {
-		logger.Error("add cloud redis error: ", result.Error)
+		logger.Error("Mysql add cloud redis error: ", result.Error)
 		return 0, false
 	}
 	return addcluster.ID, true
@@ -138,7 +138,7 @@ func (m *MySQL) AddAliCloudRedis(cloud string, redisinfo model.AliRedisInstances
 func (m *MySQL) DelCloud(instanceid string) bool {
 	var cloudinfo *CloudInfo
 	if err := m.Model(cloudinfo).Where("instance_id = ?", instanceid).Delete(&cloudinfo).Error; err != nil {
-		logger.Error(err)
+		logger.Error("Mysql del cloud error:", err)
 		return false
 	}
 	return true

@@ -14,7 +14,7 @@ func (m *MySQL) UserInfo(username string) UserInfo {
 func (m *MySQL) FindUserPassword(ruser string) (user UserInfo, err error) {
 	err = m.Where("user_name = ?", ruser).Find(&user).Error
 	if err != nil && err == gorm.ErrRecordNotFound {
-		logger.Error("数据库查询错误", err)
+		logger.Error("Mysql Find user password error:", err)
 	}
 	return
 }
@@ -43,7 +43,7 @@ func (m *MySQL) CreatUser(nick_name, email, usertype, password string) bool {
 		UserType: usertype,
 		Enable:   true,
 	}); result.Error != nil {
-		logger.Error("create mysql user fails", result.Error)
+		logger.Error("Mysql create mysql user fails", result.Error)
 		return false
 	}
 	return true
