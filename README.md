@@ -2,13 +2,16 @@
 这是一个可以操作redis集群/codis的web管理平台
 #### 注：该功能代码还在开发中，目前只是支持codis的一些操作
 
-**Redis Manager** 是 Redis 缓存管理平台，支持Redis集群（cluster、codis、腾讯云redis、 阿里云redis）的管理以及基本的数据操作
-**Codis数据操作**：支持[string/list/hash/set/zset]类型的key的查询，以及查询[大key/热key/慢key/查询1万key]等功能
+## Redis Manager 是 Redis 缓存管理平台，支持Redis集群（cluster、codis、腾讯云redis、 阿里云redis）的管理以及基本的数据操作
+### Codis数据操作 支持[string/list/hash/set/zset]类型的key的查询，以及查询[大key/热key/慢key/查询1万key]等功能
 
 
+### 前端启动方式
+- 进入redis-manager-ui目录
+- 执行 pnpm install
+- 执行 pnpm run dev
 
-
-### 启动方式
+### 后端启动方式
 - mysql创建 `redis_manager` 数据库
 - 执行 go mod 初始化
 - 执行 go run main.go 运行代码
