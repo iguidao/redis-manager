@@ -2,6 +2,8 @@ package casbin
 
 import (
 	"log"
+
+	"github.com/iguidao/redis-manager/src/middleware/mysql"
 )
 
 func RuleCheck(identity, path, method string) bool {
@@ -16,7 +18,7 @@ func RuleCheck(identity, path, method string) bool {
 func RuleAdd(identity, path, method string) bool {
 	res, err := Enforcer.AddPolicy(identity, path, method)
 	if err != nil {
-		log.Println("create new article error ", err)
+		log.Println("create new rule error ", err)
 		return false
 	}
 	return res
@@ -31,6 +33,6 @@ func RuleDel(identity, path, method string) bool {
 }
 
 func RuleGet(page, size int) (casbinrule []CasbinRule) {
-	DB.Offset(page).Limit(size).Find(&casbinrule)
+	mysql.DB.DB.Offset(page).Limit(size).Find(&casbinrule)
 	return
 }

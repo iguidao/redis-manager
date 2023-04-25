@@ -152,6 +152,7 @@ func RegionList(c *gin.Context) {
 			}
 		}
 	default:
+		code = hsc.WARN_NOT_FOUND_CLOUD
 		result["WARN"] = "暂时不支持该云操作"
 	}
 	c.JSON(http.StatusOK, gin.H{

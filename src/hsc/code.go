@@ -24,4 +24,6 @@ const (
 	WARN_CLICK_REPEATEDLY          = 60000
 	WARN_NO_USE                    = 60002
 	WARN_BACKGROUND                = 60004
+	WARN_NOT_FOUND_CLOUD           = 60005
+	WARN_NOT_PROMISE_RULE          = 60006
 )

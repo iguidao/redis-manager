@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Register(c *gin.Context) {
+func AddUser(c *gin.Context) {
 	Result := make(map[string]interface{})
 	var code int
 	var rduser UserInfo
@@ -32,7 +32,7 @@ func Register(c *gin.Context) {
 		Result["result"] = "用户名已经注册"
 	} else {
 		scrypt_password := useride.Get_scrypt(rduser.Password)
-		result := mysql.DB.CreatUser(rduser.UserName, rduser.Mail, rduser.UserType, scrypt_password)
+		result := mysql.DB.CreatUser(rduser.UserName, rduser.Mail, scrypt_password)
 		if !result {
 			code = hsc.ERROR
 			Result["result"] = "创建用户失败"
@@ -48,17 +48,96 @@ func Register(c *gin.Context) {
 	})
 }
 
+func DelUser(c *gin.Context) {
+	Result := make(map[string]interface{})
+	var code int
+	var rduser UserInfo
+	err := c.BindJSON(&rduser)
+	if err != nil || rduser.UserId == 0 {
+		code = hsc.INVALID_PARAMS
+		Result["result"] = "参数错误"
+	} else {
+		result := mysql.DB.DelUser(rduser.UserId)
+		if !result {
+			code = hsc.ERROR
+			Result["result"] = "删除用户失败"
+		} else {
+			code = hsc.SUCCESS
+			Result["result"] = "删除用户成功"
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      Result,
+	})
+}
+
+func ChangUserPassword(c *gin.Context) {
+	Result := make(map[string]interface{})
+	var code int
+	var rduser UserInfo
+	err := c.BindJSON(&rduser)
+	if err != nil || rduser.UserId == 0 || rduser.Password != "" {
+		code = hsc.INVALID_PARAMS
+		Result["result"] = "参数错误"
+	} else {
+		result := false
+		if mysql.DB.ExistUserId(rduser.UserId) {
+			result = mysql.DB.UpdateUserPassword(rduser.UserId, rduser.Password)
+		}
+		if !result {
+			code = hsc.ERROR
+			Result["result"] = "变更用户失败"
+		} else {
+			code = hsc.SUCCESS
+			Result["result"] = "变更用户成功"
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      Result,
+	})
+}
+func ChangUserType(c *gin.Context) {
+	Result := make(map[string]interface{})
+	var code int
+	var rduser UserInfo
+	err := c.BindJSON(&rduser)
+	if err != nil || rduser.UserId == 0 || rduser.UserType != "" {
+		code = hsc.INVALID_PARAMS
+		Result["result"] = "参数错误"
+	} else {
+		result := false
+		if mysql.DB.ExistUserId(rduser.UserId) {
+			result = mysql.DB.UpdateUserType(rduser.UserId, rduser.UserType)
+		}
+		if !result {
+			code = hsc.ERROR
+			Result["result"] = "变更用户失败"
+		} else {
+			code = hsc.SUCCESS
+			Result["result"] = "变更用户成功"
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      Result,
+	})
+}
 func Login(c *gin.Context) {
 	Result := make(map[string]interface{})
 	var code int
 	var rduser UserInfo
 	err := c.BindJSON(&rduser)
-	if err != nil {
+	if err != nil || rduser.UserName == "" || rduser.Password == "" {
 		logger.Error("login error:", err)
 		code = hsc.INVALID_PARAMS
 		Result["result"] = "参数错误"
 	} else if useride.Gd_login(rduser.UserName, rduser.Password) {
-		token, err := util.GenerateToken(rduser.UserName, rduser.Password)
+		token, usertype, err := util.GenerateToken(rduser.UserName, rduser.Password)
 		if err != nil {
 			code = hsc.ERROR_AUTH_TOKEN
 			Result["result"] = "获取Token失败"
@@ -66,7 +145,7 @@ func Login(c *gin.Context) {
 			Result["token"] = "Bearer " + token
 			Result["result"] = "登录成功"
 			Result["username"] = rduser.UserName
-			Result["usertype"] = rduser.UserType
+			Result["usertype"] = usertype
 			code = hsc.SUCCESS
 			// go useride.CacheUserinfo(token, Phonenum)
 		}

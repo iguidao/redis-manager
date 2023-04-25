@@ -10,7 +10,7 @@
         </el-col>
       </el-row>
       <el-divider></el-divider>
-      <el-table :data="tableData" stripe style="width: 100%">
+      <el-table :data="tableData" v-loading="loading" stripe style="width: 100%">
         <el-table-column prop="Name" label="名称" width="180"/>
         <el-table-column prop="Key" label="key" width="180" />
         <el-table-column prop="Value" label="value" />
@@ -66,6 +66,7 @@ import moment from 'moment';
 import { ElMessage } from 'element-plus';
 
 // 配置列表
+const loading = ref(false)
 const tableData = ref<any[]>([])
 const dateFormat = (row:any, column:any) => {
   const date = row[column.property]
@@ -92,8 +93,10 @@ const load = async () => {
   // console.log(await list())
   let data = (await listCfg()).data
   if (data.errorCode === 0 ) {
+    loading.value = false
     tableData.value = data.data.lists
   } else {
+    loading.value = false
     ElMessage.error(data.msg)
   }
   let dcfg = (await listDefaultCfg()).data
@@ -148,6 +151,7 @@ const handleCancel = () => {
 }
 // 启动执行
 onMounted(async () => {
+  loading.value = true
   await load()
 })
 </script>

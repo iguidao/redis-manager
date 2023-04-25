@@ -22,7 +22,7 @@
       </el-card>
       <el-card class="info">
         <el-button type="warning" icon="el-icon-data-line" circle />
-        <h2 v-if="descdata.redis" class="num-info">{{ descdata.redis }}</h2>
+        <h2 v-if="descdata.cluster" class="num-info">{{ descdata.cluster }}</h2>
         <h2 v-else class="num-info">0</h2>
         <p class="desc">自建Cluster</p>
       </el-card>

@@ -46,6 +46,8 @@ const onLoginIn = async () => {
           console.log("res: ",res.data.data)
           if (res.data.errorCode === 0 ) {
               sessionStorage.setItem('Authorization', res.data.data.token);
+              sessionStorage.setItem('user_name',res.data.data.username);
+              sessionStorage.setItem('user_type',res.data.data.usertype);
               // console.log("res token: ",res.data.data.token);
               router.push("/home");
           } else {

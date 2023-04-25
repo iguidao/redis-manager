@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"github.com/iguidao/redis-manager/src/middleware/logger"
+	"github.com/iguidao/redis-manager/src/middleware/model"
 	"gorm.io/gorm"
 )
 
@@ -34,8 +35,49 @@ func (m *MySQL) FindUser(ruser string) bool {
 	}
 	return true
 }
-
-func (m *MySQL) CreatUser(nick_name, email, usertype, password string) bool {
+func (m *MySQL) UpdateUserPassword(userid int, password string) bool {
+	var user *UserInfo
+	if err := m.Model(user).Where("id = ?", userid).Update("password", password).Error; err != nil {
+		logger.Error("Mysql update user type error: ", err)
+		return false
+	}
+	return true
+}
+func (m *MySQL) UpdateUserType(userid int, usertype string) bool {
+	var user *UserInfo
+	if err := m.Model(user).Where("id = ?", userid).Update("user_type", usertype).Error; err != nil {
+		logger.Error("Mysql update user type error: ", err)
+		return false
+	}
+	return true
+}
+func (m *MySQL) ExistUserId(userid int) bool {
+	var user *UserInfo
+	if err := m.Model(user).Where("id = ", userid).First(&user).Error; err != nil {
+		return false
+	}
+	return true
+}
+func (m *MySQL) GetUserType(userid int) string {
+	var user *UserInfo
+	m.Where("id = ?", userid).First(&user)
+	return user.UserType
+}
+func (m *MySQL) DelUser(userid int) bool {
+	var user *UserInfo
+	if err := m.Model(user).Where("id = ?", userid).Delete(&user).Error; err != nil {
+		logger.Error("Mysql del user error:", err)
+		return false
+	}
+	return true
+}
+func (m *MySQL) CreatUser(nick_name, email, password string) bool {
+	var usertype string
+	if nick_name == "iguidao" {
+		usertype = model.USERTYPEADMIN
+	} else {
+		usertype = model.USERTYPEVISITOR
+	}
 	if result := m.Create(&UserInfo{
 		UserName: nick_name,
 		Email:    email,

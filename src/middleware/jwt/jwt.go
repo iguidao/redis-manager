@@ -6,10 +6,28 @@ import (
 	"time"
 
 	"github.com/iguidao/redis-manager/src/hsc"
+	"github.com/iguidao/redis-manager/src/middleware/casbin"
 	"github.com/iguidao/redis-manager/src/middleware/util"
 
 	"github.com/gin-gonic/gin"
 )
+
+// func CheckRule(c *gin.Context) {
+// 	code := hsc.SUCCESS
+// 	username, _ := c.Get("UserId")
+// 	urlinfo := c.Request.URL
+// 	jsonBody, _ := json.Marshal("Policy")
+// 	method := c.Request.Method
+// 	go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
+// 	usertype := mysql.DB.GetUserType(username.(int))
+// 	log.Println(usertype, urlinfo.Path, method)
+// 	result := casbin.RuleCheck(usertype, urlinfo.Path, method)
+// 	c.JSON(http.StatusOK, gin.H{
+// 		"errorCode": code,
+// 		"msg":       hsc.GetMsg(code),
+// 		"data":      result,
+// 	})
+// }
 
 func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -20,6 +38,8 @@ func JWT() gin.HandlerFunc {
 		var userid int
 		Result := make(map[string]interface{})
 		code = hsc.SUCCESS
+		urlpath := c.Request.URL.Path
+		method := c.Request.Method
 		auth := c.Request.Header.Get("Authorization")
 		if strings.Contains(auth, "Bearer ") {
 			token = strings.Split(auth, "Bearer ")[1]
@@ -36,10 +56,25 @@ func JWT() gin.HandlerFunc {
 				Result["result"] = "Token已超时"
 				code = hsc.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
 			} else {
-				username = claims.UserName
-				usertype = claims.UserType
-				userid = claims.UserId
+				result := casbin.RuleCheck(claims.UserType, urlpath, method)
+				if !result {
+					code = hsc.WARN_NOT_PROMISE_RULE
+					Result["result"] = "权限不够呀，找管理员开下权限！"
+				} else {
+					username = claims.UserName
+					usertype = claims.UserType
+					userid = claims.UserId
+				}
 			}
+		}
+		if code == hsc.WARN_NOT_PROMISE_RULE {
+			c.JSON(http.StatusOK, gin.H{
+				"errorCode": code,
+				"msg":       hsc.GetMsg(code),
+				"data":      Result,
+			})
+			c.Abort()
+			return
 		}
 		if code != hsc.SUCCESS {
 			c.JSON(http.StatusUnauthorized, gin.H{

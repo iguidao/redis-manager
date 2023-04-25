@@ -19,7 +19,7 @@
        </el-col> -->
      </el-row>
      <el-divider></el-divider>
-     <el-table :data="alirediscluster" stripe style="width: 100%">
+     <el-table :data="alirediscluster" v-loading="loading" stripe style="width: 100%">
        <el-table-column prop="InstanceId" label="ID" width="140"/>
        <el-table-column prop="InstanceName" label="名称" width="200" />
        <el-table-column prop="PrivateIp" label="内网IP" width="120" />
@@ -122,6 +122,7 @@ import moment from 'moment';
 import { ElMessage } from 'element-plus';
 
 // 配置列表
+const loading = ref(false)
 const dateFormat = (row:any, column:any) => {
  const date = row[column.property]
  if (date===undefined) {
@@ -165,11 +166,14 @@ const formshard = reactive({
 // 数据请求
 // 腾讯请求
 const getAliRedisCluster = async () => {
+  loading.value = true
   fromaliredis.region = aliregion.value
   let result = (await listCloudRedis(fromaliredis)).data
   if (result.errorCode === 0 ) {
+    loading.value = false
     alirediscluster.value = result.data.redis_list
   } else {
+    loading.value = false
     ElMessage.error(result.msg)
   }
 }

@@ -37,7 +37,7 @@ func CreateToken(claims Claims) (string, error) {
 	return token.SignedString(SigningKey)
 }
 
-func GenerateToken(Username string, Password string) (string, error) {
+func GenerateToken(Username string, Password string) (string, string, error) {
 
 	nowTime := time.Now()
 	expireTime := nowTime.Add(168 * time.Hour)
@@ -61,7 +61,7 @@ func GenerateToken(Username string, Password string) (string, error) {
 	token, err := CreateToken(claims)
 	// tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// token, err := tokenClaims.SignedString(jwtSecret)
-	return token, err
+	return token, usertype, err
 }
 
 func ParseToken(token string) (*Claims, error) {

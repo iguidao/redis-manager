@@ -1,16 +1,37 @@
 package opredis
 
 import (
-	"log"
+	"context"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/iguidao/redis-manager/src/middleware/logger"
 )
 
-func HotKey(serverip string) map[string]int {
+func HotKey(serverip, pw string) map[string]int {
 	keydic := make(map[string]int)
-	monitor, knowtime := TelnetCommond(serverip, "monitor")
-	log.Println("monitor, knowtime", monitor, knowtime)
+
+	var monitor string
+	var knowtime int64
+	ch := make(chan string)
+	timeout, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	go func() {
+		monitor, knowtime = TelnetCommond(serverip, "monitor", pw)
+		ch <- "done"
+	}()
+
+	select {
+	case res := <-ch:
+		logger.Info("Telnet success: ", res)
+	case <-timeout.Done():
+		logger.Error("Telnet timout: ", timeout.Err())
+	}
+
+	// monitor, knowtime := TelnetCommond(serverip, "monitor")
+	// log.Println("monitor, knowtime", monitor, knowtime)
 	re := regexp.MustCompile("(?m)[\r\n]+^.*\"PING\"|\"INFO\".*$")
 	monitor = re.ReplaceAllString(monitor, "")
 	str := "(?m)[\r\n]+^.*" + strconv.FormatInt(knowtime+1, 10) + ".*$"

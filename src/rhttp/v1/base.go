@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/iguidao/redis-manager/src/hsc"
-	"github.com/iguidao/redis-manager/src/middleware/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -75,14 +74,4 @@ func Cookie(c *gin.Context) {
 		c.SetCookie("gin_cookie", "test", 3600, "/", "localhost", false, true)
 	}
 	c.JSON(http.StatusOK, gin.H{"cookie": cookie})
-}
-func AuthCheck(c *gin.Context) {
-	// var result auth.Result
-	userinfo, ok := c.Get("UserInfo")
-	if ok {
-		logger.Info("===========")
-		logger.Info(userinfo.(string))
-		logger.Info("===========")
-	}
-	c.JSON(http.StatusOK, gin.H{"ok": true})
 }

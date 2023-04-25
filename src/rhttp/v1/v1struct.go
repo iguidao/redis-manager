@@ -43,6 +43,7 @@ type AddCluster struct {
 
 // user
 type UserInfo struct {
+	UserId   int    `json:"userid"`
 	UserName string `json:"username"`
 	Password string `json:"password"`
 	Mail     string `json:"mail"`

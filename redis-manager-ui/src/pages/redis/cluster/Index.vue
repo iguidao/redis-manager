@@ -11,7 +11,7 @@
           </el-col>
         </el-row>
       <el-divider></el-divider>
-     <el-table :data="clustertable" stripe style="width: 100%" lazy @expand-change="GetNodes">
+     <el-table :data="clustertable" stripe style="width: 100%" v-loading="loading" lazy @expand-change="GetNodes">
         <el-table-column  label="查看" type="expand" width="60">
           <template #default="scope">
             <el-table :data="nodetable" 
@@ -71,14 +71,14 @@
     <div>
       <el-dialog v-model="dialogFormVisible" title="添加集群" width="30%" align-center>
           <el-form :model="formcluster">
-            <el-form-item label="集群名称" :label-width="formLabelWidth">
-                <el-input v-model="formcluster.name" autocomplete="off" />
+            <el-form-item label="集群名称"  :label-width="formLabelWidth">
+                <el-input v-model="formcluster.name" placeholder="Cluster Name" autocomplete="off" />
             </el-form-item>      
             <el-form-item label="集群地址" :label-width="formLabelWidth">
-                <el-input v-model="formcluster.nodes" autocomplete="off" />
+                <el-input v-model="formcluster.nodes"  placeholder="127.0.0.1:6379,127.0.0.1:6380"  autocomplete="off" />
             </el-form-item>
-            <el-form-item label="集群密码" :label-width="formLabelWidth">
-                <el-input v-model="formcluster.password" autocomplete="off" />
+            <el-form-item label="集群密码"  :label-width="formLabelWidth">
+                <el-input v-model="formcluster.password" type="password" placeholder="Cluster Password" autocomplete="off" />
             </el-form-item>
           </el-form>
           <template #footer>
@@ -98,6 +98,8 @@ import { addClusterCfg, listClusterNodes, listCluster } from '../../../api/clust
 import { ElMessage, RowProps } from 'element-plus';
 import moment from 'moment';
 
+const loading = ref(false)
+const formLabelWidth = '100px'
 const clustertable = ref<any[]>([])
 const nodetable = ref<any[]>([])
 const dialogFormVisible = ref(false)
@@ -120,8 +122,10 @@ const load = async () => {
   let clusterlist = (await listCluster()).data
   // let codislist = (await listCodis()).data
   if (clusterlist.errorCode === 0 ) {
+    loading.value = false
     clustertable.value = clusterlist.data
   } else {
+    loading.value = false
     ElMessage.error(clusterlist.msg)
   }
 }
@@ -160,6 +164,7 @@ const handleChange = async () => {
 }
 // 启动执行
 onMounted(async () => {
+  loading.value = true
   await load()
 })
 </script>

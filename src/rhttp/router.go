@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/jwt"
+	"github.com/iguidao/redis-manager/src/middleware/model"
 	v1 "github.com/iguidao/redis-manager/src/rhttp/v1"
 )
 
@@ -37,33 +38,31 @@ func NewServer() *gin.Engine {
 	// {
 	// 	home.GET("/", v1.Home) //主页接口
 	// }
-
 	base := r.Group("/redis-manager/base/v1")
 	{
 		base.GET("/health", v1.HealthCheck) //自检接口
 	}
-	user := r.Group("/redis-manager/user/v1")
+	login := r.Group("/redis-manager/auth/v1")
 	{
-		user.POST("/sign-in", v1.Login) //登陆接口
+		login.POST("/sign-in", v1.Login) //登陆接口
 
 	}
 	auth := r.Group("/redis-manager/auth/v1")
-	// auth.Use(jwt.JWT())
+	auth.Use(jwt.JWT())
 	{
-		auth.POST("/sign-up", v1.Register) //注册接口
-		auth.POST("/refresh", v1.Refresh)  //刷新接口
+		auth.POST("/refresh", v1.Refresh) //刷新接口
 	}
-	board := r.Group("/redis-manager/board/v1")
+	board := r.Group(model.PATHBOARD)
 	board.Use(jwt.JWT())
 	{
 		board.GET("/desc", v1.BoardDesc) //board页面
 	}
-	history := r.Group("/redis-manager/ophistory/v1")
+	history := r.Group(model.PATHHISTORY)
 	history.Use(jwt.JWT())
 	{
 		history.GET("/list", v1.OpHistory) //查看历史操作记录
 	}
-	cfg := r.Group("/redis-manager/cfg/v1")
+	cfg := r.Group(model.PATHCFG)
 	cfg.Use(jwt.JWT())
 	{
 		cfg.POST("/update", v1.CfgUpdate)          // 添加配置信息
@@ -72,7 +71,7 @@ func NewServer() *gin.Engine {
 		cfg.POST("/adddefault", v1.CfgAddDefault)  //添加默认key
 		cfg.GET("/listdefault", v1.CfgListDefault) //返回默认配置key
 	}
-	codis := r.Group("/redis-manager/codis/v1")
+	codis := r.Group(model.PATHCODIS)
 	codis.Use(jwt.JWT())
 	{
 		codis.POST("/add", v1.CodisAdd)            //添加codis的平台地址
@@ -81,7 +80,7 @@ func NewServer() *gin.Engine {
 		codis.GET("/group", v1.CodisGroup)         //列出该集群有多少个group
 		codis.POST("/opnode", v1.CodisOpNode)      //针对codis的proxy和server节点进行操作
 	}
-	cloud := r.Group("/redis-manager/cloud/v1")
+	cloud := r.Group(model.PATHCLOUD)
 	cloud.Use(jwt.JWT())
 	{
 		cloud.GET("/region", v1.RegionList)             //列出云的地域
@@ -91,7 +90,7 @@ func NewServer() *gin.Engine {
 		cloud.POST("/add", v1.CloudAdd)                 // 添加集群
 		cloud.DELETE("/del", v1.CloudDel)               //删除集群
 	}
-	cluster := r.Group("/redis-manager/cluster/v1")
+	cluster := r.Group(model.PATHCLUSTER)
 	cluster.Use(jwt.JWT())
 	{
 		cluster.GET("/list", v1.ClusterList)   //列出所有集群
@@ -99,29 +98,29 @@ func NewServer() *gin.Engine {
 		cluster.GET("/masters", v1.MasterList) //列出master地址
 		cluster.POST("/add", v1.ClusterAdd)    //添加集群
 	}
-	cli := r.Group("/redis-manager/cli/v1")
+	cli := r.Group(model.PATHCLI)
 	cli.Use(jwt.JWT())
 	{
 		cli.POST("/opkey", v1.OpKey)             //对key进行操作
 		cli.POST("/analysisrdb", v1.AnalysisRdb) //分析dump文件
 	}
-	rootrule := r.Group("/permission-internal/v1")
-	rootrule.Use(jwt.JWT())
+	user := r.Group(model.PATHUSER)
+	user.Use(jwt.JWT())
 	{
-		rootrule.POST("/rule/add", v1.AddRule)
-		rootrule.DELETE("/rule/del", v1.DelRule)
-		rootrule.PUT("/rule/update", v1.UpdateRule)
-		rootrule.GET("/rule/all", v1.AllRule)
+		user.POST("/add", v1.AddUser)                //新增用户接口
+		user.DELETE("/del", v1.DelUser)              //删除用户
+		user.POST("/change", v1.ChangUserType)       //更改用户属性
+		user.POST("/password", v1.ChangUserPassword) //更改用户密码
 	}
-	checkrule := r.Group("/permission-internal/v1")
+	rule := r.Group(model.PATHRULE)
+	rule.Use(jwt.JWT())
 	{
-		checkrule.POST("/rule/check", v1.CheckRule)
+		rule.POST("/add", v1.AddRule)   //添加规则
+		rule.DELETE("/del", v1.DelRule) //删除规则
+		rule.GET("/all", v1.AllRule)    //查看所有规则
+		rule.GET("/cfg", v1.GetRuleCfg) //查看默认配置
 	}
-	authcheck := r.Group("/permission-internal/authcheck/v1")
-	authcheck.Use(jwt.JWT())
-	{
-		authcheck.GET("/test", v1.AuthCheck)
-	}
+
 	r.NoMethod(v1.MethodFails)
 	r.NoRoute(v1.RouterNotFound)
 	return r

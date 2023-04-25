@@ -8,24 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/iguidao/redis-manager/src/hsc"
 	"github.com/iguidao/redis-manager/src/middleware/casbin"
+	"github.com/iguidao/redis-manager/src/middleware/model"
 	"github.com/iguidao/redis-manager/src/middleware/mysql"
 	"github.com/iguidao/redis-manager/src/middleware/util"
 )
-
-func CheckRule(c *gin.Context) {
-	data := make(map[string]interface{})
-	code := hsc.SUCCESS
-	username, _ := c.Get("UserId")
-	urlinfo := c.Request.URL
-	jsonBody, _ := json.Marshal("Policy")
-	method := c.Request.Method
-	go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
-	c.JSON(http.StatusOK, gin.H{
-		"errorCode": code,
-		"msg":       hsc.GetMsg(code),
-		"data":      data,
-	})
-}
 
 func AllRule(c *gin.Context) {
 	data := make(map[string]interface{})
@@ -39,7 +25,31 @@ func AllRule(c *gin.Context) {
 		"data":      data,
 	})
 }
-
+func GetRuleCfg(c *gin.Context) {
+	code := hsc.SUCCESS
+	result := make(map[string]interface{})
+	var cfglist []map[string]string
+	for k, v := range model.DefaultPath {
+		cfg := make(map[string]string)
+		cfg["label"] = v
+		cfg["value"] = k
+		cfglist = append(cfglist, cfg)
+	}
+	var methodlist []map[string]string
+	for k, v := range model.DefaultMethod {
+		method := make(map[string]string)
+		method["label"] = v
+		method["value"] = k
+		methodlist = append(methodlist, method)
+	}
+	result["url"] = cfglist
+	result["method"] = methodlist
+	c.JSON(http.StatusOK, gin.H{
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      result,
+	})
+}
 func AddRule(c *gin.Context) {
 	data := make(map[string]interface{})
 	code := hsc.SUCCESS
@@ -83,21 +93,6 @@ func DelRule(c *gin.Context) {
 			code = hsc.ERROR
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"errorCode": code,
-		"msg":       hsc.GetMsg(code),
-		"data":      data,
-	})
-}
-
-func UpdateRule(c *gin.Context) {
-	data := make(map[string]interface{})
-	code := hsc.SUCCESS
-	username, _ := c.Get("UserId")
-	urlinfo := c.Request.URL
-	jsonBody, _ := json.Marshal("Policy")
-	method := c.Request.Method
-	go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,
 		"msg":       hsc.GetMsg(code),

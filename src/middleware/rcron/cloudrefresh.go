@@ -2,7 +2,6 @@ package rcron
 
 import (
 	"encoding/json"
-	"log"
 
 	"github.com/iguidao/redis-manager/src/middleware/logger"
 	"github.com/iguidao/redis-manager/src/middleware/model"
@@ -12,7 +11,6 @@ import (
 )
 
 func CloudRefresh() {
-	log.Println("qidong")
 	logger.Info("定时任务：刷新云redis任务启动")
 	cloudset := make(map[string]string)
 	cloudinfo := mysql.DB.GetCloudRegion()

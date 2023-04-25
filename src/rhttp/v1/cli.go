@@ -2,7 +2,6 @@ package v1
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -80,8 +79,8 @@ func ClusterOp(cliquery CliQuery) (interface{}, bool) {
 		return nil, false
 	case "hot":
 		serverip := mysql.DB.GetClusterNodeMasterAddress(cliquery.NodeId)
-		log.Println(serverip)
-		result := opredis.HotKey(serverip)
+		pw := mysql.DB.GetClusterPassword(cliquery.ClusterId)
+		result := opredis.HotKey(serverip, pw)
 		return result, true
 	case "all":
 		serverip := mysql.DB.GetClusterNodeSlaverAddress(cliquery.NodeId)
@@ -114,7 +113,7 @@ func ClusterOp(cliquery CliQuery) (interface{}, bool) {
 		if opredis.ConnectRedis(cfg.Get_Info_String("REDIS"), cfg.Get_Info_String("redispw")) {
 			clickkeyname := "Click-Bigkey-" + cliquery.CacheType + "-" + cliquery.ClusterId + "-" + cliquery.NodeId
 			tips, ok := opredis.BigKeyClick(cliquery.ClusterId, cliquery.NodeId, clickkeyname)
-			result["友情提示"] = "大key分析执行出现了问题，请找sre服务台！！！"
+			result["友情提示"] = "大key分析执行出现了问题，请找管理员！！！"
 			switch ok {
 			case 0:
 				result["友情提示"] = tips
@@ -156,8 +155,7 @@ func CodisOp(cliquery CliQuery) (interface{}, bool) {
 		return nil, false
 	case "hot":
 		serverip := codisapi.GetMaster(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
-		log.Println(serverip)
-		result := opredis.HotKey(serverip)
+		result := opredis.HotKey(serverip, "")
 		return result, true
 	case "all":
 		serverip := codisapi.GetSlave(cliquery.CodisUrl, cliquery.ClusterName, cliquery.GroupName)
@@ -188,7 +186,7 @@ func CodisOp(cliquery CliQuery) (interface{}, bool) {
 		if opredis.ConnectRedis(cfg.Get_Info_String("REDIS"), cfg.Get_Info_String("redispw")) {
 			clickkeyname := "Click-Bigkey-" + cliquery.CacheType + "-" + cliquery.ClusterName + "-" + cliquery.GroupName
 			tips, ok := opredis.BigKeyClick(cliquery.ClusterName, cliquery.GroupName, clickkeyname)
-			result["友情提示"] = "大key分析执行出现了问题，请找sre服务台！！！"
+			result["友情提示"] = "大key分析执行出现了问题，请找管理员！！！"
 			switch ok {
 			case 0:
 				result["友情提示"] = tips

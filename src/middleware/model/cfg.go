@@ -2,6 +2,7 @@ package model
 
 var (
 	DefaultName           = make(map[string]string)
+	DefaultUser           = make(map[string]string)
 	CC                    = "custom_config"                                                                                    // 自行配置的key
 	CN                    = "用户自定义默认key"                                                                                       // 自定义key备注note
 	TXSECRETID            = "tx_secretid"                                                                                      // 腾讯SECRETID，账号需要开启[QCloudFinanceFullAccess、QcloudRedisFullAccess、QcloudMonitorFullAccess、QcloudDBBRAINFullAccess]权限
@@ -20,6 +21,10 @@ var (
 	BOARDALIREDIS         = "board_aliredis"                                                                                   // 是否启动阿里redis
 	BOARDCLUSTER          = "board_cluster"                                                                                    // 是否启动自建redis
 	CfgDefault            = [...]string{TXSECRETID, TXSECRETKEY, TXAPIURL, TXCOSACCESSKEY, TXCOSACCESSKEYID, TXCOSENDPOINTPUB} // 默认key列表
+	USERTYPEADMIN         = "admin"                                                                                            //管理员身份
+	USERTYPEVISITOR       = "visitor"                                                                                          //访客身份
+	USERTYPEMEMBER        = "member"                                                                                           //会员身份
+	UserDefault           = [...]string{USERTYPEADMIN, USERTYPEVISITOR, USERTYPEMEMBER}                                        //列出员工身份
 )
 
 func init() {
@@ -34,4 +39,7 @@ func init() {
 	DefaultName[ALIAPIURL] = "阿里REDIS的APIURL"
 	DefaultName[ALIACCESSKEYID] = "阿里accessKeyId"
 	DefaultName[ALIALIACCESSKEYSECRET] = "阿里accessKeySecret"
+	DefaultUser[USERTYPEADMIN] = "管理员"
+	DefaultUser[USERTYPEVISITOR] = "访客"
+	DefaultUser[USERTYPEMEMBER] = "会员"
 }

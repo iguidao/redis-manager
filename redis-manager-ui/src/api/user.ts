@@ -12,6 +12,7 @@ namespace Rlogin {
             result: string;
             token: string;
             username: string;
+            usertype: string;
         }
         errorCode: number;
         msg: string;
@@ -20,6 +21,6 @@ namespace Rlogin {
   // 用户登录
   export const login = (params: Rlogin.LoginReqForm) => {
       // 返回的数据格式可以和服务端约定
-      return RequestHttp.post<Rlogin.LoginResData>('/user/v1/sign-in', params);
+      return RequestHttp.post<Rlogin.LoginResData>('/auth/v1/sign-in', params);
   }
   

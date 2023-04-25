@@ -101,7 +101,7 @@
       </el-row>
     </div>
       <el-divider></el-divider>
-      <div>
+      <div v-loading="loading">
         <JsonViewer :value="jsonData" expand-depth="2" copyable boxed sort/>
       </div>
   </div>
@@ -119,7 +119,7 @@ import { cliRedisOpkey } from '../../api/cli'
 import { ElMessage } from 'element-plus';
 
 // 配置列表
-
+const loading = ref(false)
 const redisname = ref("")
 const redisdic = [
   {
@@ -190,6 +190,7 @@ const jsonData = reactive(queryresult);
 // 数据请求
 // 操作key
 const operationkey = async () => {
+  loading.value = true
   queryfrom.cache_type = redisname.value
   queryfrom.cache_op = props.opkey
   queryfrom.cluster_name = codisname.value
@@ -202,8 +203,10 @@ const operationkey = async () => {
   queryfrom.node_id = masterid.value
   let result = (await cliRedisOpkey(queryfrom)).data
   if (result.errorCode === 0 ) {
+    loading.value = false
     queryresult.value = result.data
   } else {
+    loading.value = false
     ElMessage.error(result.msg)
   }
 

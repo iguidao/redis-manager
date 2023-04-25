@@ -15,7 +15,7 @@ func init() {
 	logger.SetupLogger()
 	mysql.Connect(cfg.Get_Info_String("MYSQL"))
 	mysql.Migrate()
-	casbin.Connect(cfg.Get_Info_String("MYSQL"))
+	casbin.Connect()
 }
 
 func main() {

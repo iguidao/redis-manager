@@ -8,7 +8,12 @@ func (m *MySQL) GetAllCluster() []ClusterInfo {
 	m.Find(&clusters)
 	return clusters
 }
-
+func (m *MySQL) GetClusterNumber() int64 {
+	var clusters []ClusterInfo
+	var count int64
+	m.Model(clusters).Find(&clusters).Count(&count)
+	return count
+}
 func (m *MySQL) GetClusterAddress(id string) (string, string) {
 	var clusterinfo *ClusterInfo
 	m.Where("id = ?", id).First(&clusterinfo)

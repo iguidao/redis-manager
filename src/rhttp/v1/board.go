@@ -10,10 +10,11 @@ import (
 
 func BoardDesc(c *gin.Context) {
 	code := hsc.SUCCESS
-	result := make(map[string]interface{})
+	result := make(map[string]int64)
 	result["aliredis"] = mysql.DB.GetCloudNumber("aliredis")
 	result["txredis"] = mysql.DB.GetCloudNumber("txredis")
 	result["codis"] = mysql.DB.GetCodisNumber()
+	result["cluster"] = mysql.DB.GetClusterNumber()
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,
 		"msg":       hsc.GetMsg(code),

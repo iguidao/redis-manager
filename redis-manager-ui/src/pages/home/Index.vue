@@ -15,7 +15,7 @@
           </el-col>
           <el-col :offset="14" :span="8" style="min-width: 150px">
               <el-dropdown style="float: right; margin: 20px 10px">
-                  <span class="system_name">iguidao</span>
+                  <span class="system_name">{{username}}</span>
                   <template #dropdown>
                       <el-dropdown-menu>
                           <el-dropdown-item @click.native="logout">退出系统</el-dropdown-item>
@@ -114,12 +114,13 @@ import Breadcrumb from '../../components/breadcrumb/Breadcrumb.vue'
 import { onBeforeMount, ref } from 'vue'
 import router from "../../router/index"
 
+const username = sessionStorage.getItem('user_name')
 // 挂载 DOM 之前
-onBeforeMount(() => {
-    activePath.value || null == sessionStorage.getItem("activePath")
-        ? sessionStorage.getItem("activePath")
-        : "/home"
-})
+// onBeforeMount(() => {
+//     activePath.value || null == sessionStorage.getItem("activePath")
+//         ? sessionStorage.getItem("activePath")
+//         : "/home"
+// })
 let isCollapse = ref(false);
 let activePath = ref("");
 // 保存链接的激活状态
