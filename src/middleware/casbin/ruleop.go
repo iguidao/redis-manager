@@ -8,7 +8,7 @@ import (
 
 func RuleCheck(identity, path, method string) bool {
 	// 简单认证
-	res, err := Enforcer.EnforceSafe(identity, path, method)
+	res, err := Enforcer.Enforce(identity, path, method)
 	log.Println("renzheng", identity, path, method, res, err)
 	if err != nil {
 		return false
