@@ -35,13 +35,6 @@ const routes = [
             component: () => import('../pages/user/Index.vue'),
           },
           {
-            path: '/user/permission',
-            meta: {
-              title: '权限管理'
-            },
-            component: () => import('../pages/user/Permission.vue'),
-          },
-          {
             path: '/aliredis/index',
             meta: {
               title: '阿里redis'
@@ -89,6 +82,13 @@ const routes = [
               title: '系统设置'
             },
             component: () => import('../pages/setting/Index.vue'),
+          },
+          {
+            path: '/setting/rule',
+            meta: {
+              title: '权限配置'
+            },
+            component: () => import('../pages/setting/Rule.vue'),
           },
         ]
     },

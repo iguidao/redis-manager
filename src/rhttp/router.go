@@ -50,7 +50,8 @@ func NewServer() *gin.Engine {
 	auth := r.Group("/redis-manager/auth/v1")
 	auth.Use(jwt.JWT())
 	{
-		auth.POST("/refresh", v1.Refresh) //刷新接口
+		auth.POST("/password", v1.ChangUserPassword) //更改用户密码
+		auth.POST("/refresh", v1.Refresh)            //刷新接口
 	}
 	board := r.Group(model.PATHBOARD)
 	board.Use(jwt.JWT())
@@ -107,17 +108,18 @@ func NewServer() *gin.Engine {
 	user := r.Group(model.PATHUSER)
 	user.Use(jwt.JWT())
 	{
-		user.POST("/add", v1.AddUser)                //新增用户接口
-		user.DELETE("/del", v1.DelUser)              //删除用户
-		user.POST("/change", v1.ChangUserType)       //更改用户属性
-		user.POST("/password", v1.ChangUserPassword) //更改用户密码
+		user.POST("/add", v1.AddUser)          //新增用户接口
+		user.GET("/list", v1.ListUser)         //列出所有用户
+		user.DELETE("/del", v1.DelUser)        //删除用户
+		user.POST("/change", v1.ChangUserType) //更改用户属性
+		user.GET("/utype", v1.ListUserType)    //获取用户身份列表
 	}
 	rule := r.Group(model.PATHRULE)
 	rule.Use(jwt.JWT())
 	{
 		rule.POST("/add", v1.AddRule)   //添加规则
 		rule.DELETE("/del", v1.DelRule) //删除规则
-		rule.GET("/all", v1.AllRule)    //查看所有规则
+		rule.GET("/list", v1.AllRule)   //查看所有规则
 		rule.GET("/cfg", v1.GetRuleCfg) //查看默认配置
 	}
 

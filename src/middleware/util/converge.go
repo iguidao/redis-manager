@@ -1,5 +1,18 @@
 package util
 
+import "log"
+
+func ReturnDefaultModel(val string, list map[string]string) string {
+	for i, v := range list {
+		log.Println(i, val, v)
+		if val == i {
+			log.Println(v)
+			return v
+		}
+	}
+	return "自定义配置"
+}
+
 // func UserConverge(muserinfo mysql.RdUser) UserInfo {
 // 	var userinfo UserInfo
 // 	userinfo.Uid = muserinfo.Base.ID

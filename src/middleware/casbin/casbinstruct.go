@@ -10,3 +10,7 @@ type CasbinRule struct {
 	V4    string `gorm:"size:32;uniqueIndex:unique_index"`
 	V5    string `gorm:"size:32;uniqueIndex:unique_index"`
 }
+
+func (CasbinRule) TableName() string {
+	return "casbin_rule"
+}

@@ -18,6 +18,9 @@
                   <span class="system_name">{{username}}</span>
                   <template #dropdown>
                       <el-dropdown-menu>
+                          <el-dropdown-item @click="dialogFormVisible = true">更改密码</el-dropdown-item>
+                      </el-dropdown-menu>
+                      <el-dropdown-menu>
                           <el-dropdown-item @click.native="logout">退出系统</el-dropdown-item>
                       </el-dropdown-menu>
                   </template>
@@ -66,21 +69,11 @@
               <el-icon><MagicStick /></el-icon>
               <span>数据查询</span>
             </el-menu-item>
-            <el-sub-menu index="2">
-              <template #title>
-                <el-icon><User /></el-icon>
+            <el-menu-item index="/user/index" @click="saveActiveNav('/user/index')">
+              <el-icon><User /></el-icon>
                 <span>用户管理</span>
-              </template>
-              <el-menu-item index="/user/index" @click="saveActiveNav('/user/index')">
-                <el-icon><CaretRight /></el-icon>
-                <span>用户列表</span>
               </el-menu-item>
-              <el-menu-item index="/user/permission" @click="saveActiveNav('/user/permission')">
-                <el-icon><CaretRight /></el-icon>
-                <span>权限管理</span>
-              </el-menu-item>
-            </el-sub-menu>
-            <el-sub-menu index="3">
+            <el-sub-menu index="2">
               <template #title>
                 <el-icon><Setting /></el-icon>
                 <span>系统设置</span>
@@ -88,6 +81,10 @@
               <el-menu-item index="/setting/index" @click="saveActiveNav('/setting/index')">
                 <el-icon><CaretRight /></el-icon>
                 <span>全局配置</span>
+              </el-menu-item>
+              <el-menu-item index="/setting/rule" @click="saveActiveNav('/setting/rule')">
+                <el-icon><CaretRight /></el-icon>
+                <span>权限配置</span>
               </el-menu-item>
             </el-sub-menu>
             <el-menu-item index="/history/index" @click="saveActiveNav('/history/index')">
@@ -106,21 +103,40 @@
         </el-container>
       </el-container>
     </el-container>
+    <el-dialog v-model="dialogFormVisible" title="修改密码" width="30%" align-center>
+       <el-form :model="formcfg">
+          <el-form-item label="老密码" :label-width="formLabelWidth">
+              <el-input v-model="formcfg.old" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="新密码" :label-width="formLabelWidth">
+              <el-input v-model="formcfg.new" type="password" autocomplete="off" />
+          </el-form-item>
+        </el-form>
+       <template #footer>
+       <span class="dialog-footer">
+           <el-button @click="handleCancel()">取消</el-button>
+           <el-button type="primary" @click="handleChange()">确定</el-button>
+       </span>
+       </template>
+   </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import Breadcrumb from '../../components/breadcrumb/Breadcrumb.vue'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, reactive, ref } from 'vue'
+import { userpassword } from '../../api/user';
 import router from "../../router/index"
+import { ElMessage } from 'element-plus';
 
+const dialogFormVisible = ref(false)
 const username = sessionStorage.getItem('user_name')
-// 挂载 DOM 之前
-// onBeforeMount(() => {
-//     activePath.value || null == sessionStorage.getItem("activePath")
-//         ? sessionStorage.getItem("activePath")
-//         : "/home"
-// })
+const formLabelWidth = '100px'
+const formcfg = reactive({
+  old: '',
+  new: '',
+})
+
 let isCollapse = ref(false);
 let activePath = ref("");
 // 保存链接的激活状态
@@ -132,6 +148,29 @@ const logout = () => {
     // 清除缓存
     sessionStorage.clear();
     router.push("/login");
+}
+const handleChange = async () => {
+ console.log(formcfg)
+ if (!formcfg.old) {
+   ElMessage.error("未获取到的旧密码")
+ } else if (!formcfg.new) {
+   ElMessage.error("未获取到的新密码")
+ } else {
+   const res = await userpassword(formcfg)
+   if (res.data.errorCode === 0) {
+      ElMessage.success("变更成功")
+      sessionStorage.clear();
+      router.push("/login");
+   } else {
+     ElMessage.error(res.data.msg)
+   }
+   dialogFormVisible.value = false
+ }
+}
+const handleCancel = () => {
+  dialogFormVisible.value = false
+  formcfg.old = ""
+  formcfg.new = ""
 }
 </script>
 

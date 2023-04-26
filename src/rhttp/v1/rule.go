@@ -14,15 +14,23 @@ import (
 )
 
 func AllRule(c *gin.Context) {
-	data := make(map[string]interface{})
 	code := hsc.SUCCESS
-	pages, size := util.GetPage(c)
-	casbinlist := casbin.RuleGet(pages, size)
-	data["result"] = casbinlist
+	var result []interface{}
+	casbinlist := casbin.RuleGet()
+	if len(casbinlist) != 0 {
+		for _, v := range casbinlist {
+			rinfo := make(map[string]string)
+			rinfo["identity"] = v.V0
+			rinfo["path"] = v.V1
+			rinfo["method"] = v.V2
+			rinfo["note"] = util.ReturnDefaultModel(v.V1, model.DefaultPath)
+			result = append(result, rinfo)
+		}
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,
 		"msg":       hsc.GetMsg(code),
-		"data":      data,
+		"data":      result,
 	})
 }
 func GetRuleCfg(c *gin.Context) {
@@ -78,18 +86,18 @@ func AddRule(c *gin.Context) {
 func DelRule(c *gin.Context) {
 	data := make(map[string]interface{})
 	code := hsc.SUCCESS
-	var Policy CasbinPolicyJson
-	err := c.BindJSON(&Policy)
-	if err != nil {
-		log.Println(err)
+	ppath := c.Query("path")
+	pmethod := c.Query("method")
+	pidentity := c.Query("identity")
+	if ppath == "" || pmethod == "" || pidentity == "" {
 		code = hsc.INVALID_PARAMS
 	} else {
 		username, _ := c.Get("UserId")
 		urlinfo := c.Request.URL
-		jsonBody, _ := json.Marshal(Policy)
+		jsonBody, _ := json.Marshal("Path:" + ppath + " method:" + pmethod + " identity:" + pidentity)
 		method := c.Request.Method
 		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
-		if !casbin.RuleDel(Policy.Identity, Policy.Path, Policy.Method) {
+		if !casbin.RuleDel(pidentity, ppath, pmethod) {
 			code = hsc.ERROR
 		}
 	}

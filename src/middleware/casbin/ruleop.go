@@ -8,7 +8,8 @@ import (
 
 func RuleCheck(identity, path, method string) bool {
 	// 简单认证
-	res, err := Enforcer.Enforce(identity, path, method)
+	res, err := Enforcer.EnforceSafe(identity, path, method)
+	log.Println("renzheng", identity, path, method, res, err)
 	if err != nil {
 		return false
 	}
@@ -32,7 +33,8 @@ func RuleDel(identity, path, method string) bool {
 	return res
 }
 
-func RuleGet(page, size int) (casbinrule []CasbinRule) {
-	mysql.DB.DB.Offset(page).Limit(size).Find(&casbinrule)
+func RuleGet() (casbinrule []CasbinRule) {
+	mysql.DB.DB.Find(&casbinrule)
+	// mysql.DB.DB.Offset(page).Limit(size).Find(&casbinrule)
 	return
 }

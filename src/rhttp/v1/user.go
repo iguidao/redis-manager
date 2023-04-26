@@ -1,11 +1,14 @@
 package v1
 
 import (
+	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/iguidao/redis-manager/src/hsc"
 	"github.com/iguidao/redis-manager/src/middleware/logger"
+	"github.com/iguidao/redis-manager/src/middleware/model"
 	"github.com/iguidao/redis-manager/src/middleware/mysql"
 	"github.com/iguidao/redis-manager/src/middleware/useride"
 	"github.com/iguidao/redis-manager/src/middleware/util"
@@ -13,6 +16,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func ListUser(c *gin.Context) {
+	code := hsc.SUCCESS
+	result := mysql.DB.GetAllUser()
+	c.JSON(http.StatusOK, gin.H{
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      result,
+	})
+}
+func ListUserType(c *gin.Context) {
+	code := hsc.SUCCESS
+	var typelist []map[string]string
+	for k, v := range model.DefaultUser {
+		t := make(map[string]string)
+		t["label"] = v
+		t["value"] = k
+		typelist = append(typelist, t)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"errorCode": code,
+		"msg":       hsc.GetMsg(code),
+		"data":      typelist,
+	})
+}
 func AddUser(c *gin.Context) {
 	Result := make(map[string]interface{})
 	var code int
@@ -25,12 +52,17 @@ func AddUser(c *gin.Context) {
 		code = hsc.INVALID_PARAMS
 		Result["result"] = "邮箱写错了"
 	} else if mysql.DB.FindEmail(rduser.Mail) {
-		code = hsc.INVALID_PARAMS
+		code = hsc.WARN_USER_MAIL_EXIST
 		Result["result"] = "邮箱已经注册"
 	} else if mysql.DB.FindUser(rduser.UserName) {
-		code = hsc.INVALID_PARAMS
+		code = hsc.WARN_USER_NAME_EXIST
 		Result["result"] = "用户名已经注册"
 	} else {
+		username, _ := c.Get("UserId")
+		urlinfo := c.Request.URL
+		jsonBody, _ := json.Marshal(rduser)
+		method := c.Request.Method
+		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 		scrypt_password := useride.Get_scrypt(rduser.Password)
 		result := mysql.DB.CreatUser(rduser.UserName, rduser.Mail, scrypt_password)
 		if !result {
@@ -51,13 +83,18 @@ func AddUser(c *gin.Context) {
 func DelUser(c *gin.Context) {
 	Result := make(map[string]interface{})
 	var code int
-	var rduser UserInfo
-	err := c.BindJSON(&rduser)
-	if err != nil || rduser.UserId == 0 {
+	userid := c.Query("userid")
+	id, err := strconv.Atoi(userid)
+	if userid == "" || err != nil {
 		code = hsc.INVALID_PARAMS
 		Result["result"] = "参数错误"
 	} else {
-		result := mysql.DB.DelUser(rduser.UserId)
+		username, _ := c.Get("UserId")
+		urlinfo := c.Request.URL
+		jsonBody, _ := json.Marshal(userid)
+		method := c.Request.Method
+		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
+		result := mysql.DB.DelUser(id)
 		if !result {
 			code = hsc.ERROR
 			Result["result"] = "删除用户失败"
@@ -76,23 +113,35 @@ func DelUser(c *gin.Context) {
 func ChangUserPassword(c *gin.Context) {
 	Result := make(map[string]interface{})
 	var code int
-	var rduser UserInfo
-	err := c.BindJSON(&rduser)
-	if err != nil || rduser.UserId == 0 || rduser.Password != "" {
+	var upasssword UserPassword
+	err := c.BindJSON(&upasssword)
+
+	if err != nil || upasssword.Old == "" || upasssword.New == "" {
 		code = hsc.INVALID_PARAMS
 		Result["result"] = "参数错误"
 	} else {
-		result := false
-		if mysql.DB.ExistUserId(rduser.UserId) {
-			result = mysql.DB.UpdateUserPassword(rduser.UserId, rduser.Password)
-		}
-		if !result {
-			code = hsc.ERROR
-			Result["result"] = "变更用户失败"
+		username, _ := c.Get("UserName")
+		userid, _ := c.Get("UserId")
+		urlinfo := c.Request.URL
+		jsonBody, _ := json.Marshal(upasssword)
+		method := c.Request.Method
+		go mysql.DB.AddHistory(userid.(int), method+":"+urlinfo.Path, string(jsonBody))
+
+		if useride.Gd_login(username.(string), upasssword.Old) {
+			scrypt_password := useride.Get_scrypt(upasssword.New)
+			result := mysql.DB.UpdateUserPassword(username.(string), scrypt_password)
+			if !result {
+				code = hsc.ERROR
+				Result["result"] = "更改密码失败"
+			} else {
+				code = hsc.SUCCESS
+				Result["result"] = "更改密码成功"
+			}
 		} else {
-			code = hsc.SUCCESS
-			Result["result"] = "变更用户成功"
+			code = hsc.WARN_USER_PASSWORD_CHECK
+			Result["result"] = "旧的账号密码不对"
 		}
+
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,
@@ -105,13 +154,18 @@ func ChangUserType(c *gin.Context) {
 	var code int
 	var rduser UserInfo
 	err := c.BindJSON(&rduser)
-	if err != nil || rduser.UserId == 0 || rduser.UserType != "" {
+	if err != nil || rduser.UserName == "" || rduser.UserType == "" {
 		code = hsc.INVALID_PARAMS
 		Result["result"] = "参数错误"
 	} else {
+		username, _ := c.Get("UserId")
+		urlinfo := c.Request.URL
+		jsonBody, _ := json.Marshal(rduser)
+		method := c.Request.Method
+		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 		result := false
-		if mysql.DB.ExistUserId(rduser.UserId) {
-			result = mysql.DB.UpdateUserType(rduser.UserId, rduser.UserType)
+		if mysql.DB.ExistUserName(rduser.UserName) {
+			result = mysql.DB.UpdateUserType(rduser.UserName, rduser.UserType)
 		}
 		if !result {
 			code = hsc.ERROR

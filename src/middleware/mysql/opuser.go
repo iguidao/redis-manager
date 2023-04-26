@@ -6,6 +6,12 @@ import (
 	"gorm.io/gorm"
 )
 
+func (m *MySQL) GetAllUser() []UserInfo {
+	var user []UserInfo
+	m.Find(&user)
+	return user
+}
+
 func (m *MySQL) UserInfo(username string) UserInfo {
 	var user UserInfo
 	m.Where("user_name = ?", username).First(&user)
@@ -35,25 +41,34 @@ func (m *MySQL) FindUser(ruser string) bool {
 	}
 	return true
 }
-func (m *MySQL) UpdateUserPassword(userid int, password string) bool {
+func (m *MySQL) UpdateUserPassword(username string, password string) bool {
 	var user *UserInfo
-	if err := m.Model(user).Where("id = ?", userid).Update("password", password).Error; err != nil {
+	if err := m.Model(user).Where("user_name = ?", username).Update("password", password).Error; err != nil {
+		logger.Error("Mysql update user password error: ", err)
+		return false
+	}
+	return true
+}
+func (m *MySQL) UpdateUserType(username string, usertype string) bool {
+	var user *UserInfo
+	if err := m.Model(user).Where("user_name = ?", username).Update("user_type", usertype).Error; err != nil {
 		logger.Error("Mysql update user type error: ", err)
 		return false
 	}
 	return true
 }
-func (m *MySQL) UpdateUserType(userid int, usertype string) bool {
+func (m *MySQL) ExistUserId(id int) bool {
 	var user *UserInfo
-	if err := m.Model(user).Where("id = ?", userid).Update("user_type", usertype).Error; err != nil {
-		logger.Error("Mysql update user type error: ", err)
+	if err := m.Model(user).Where("id = ?", id).First(&user).Error; err != nil {
+		logger.Error("Mysql exist user id error: ", err)
 		return false
 	}
 	return true
 }
-func (m *MySQL) ExistUserId(userid int) bool {
+func (m *MySQL) ExistUserName(username string) bool {
 	var user *UserInfo
-	if err := m.Model(user).Where("id = ", userid).First(&user).Error; err != nil {
+	if err := m.Model(user).Where("user_name = ?", username).First(&user).Error; err != nil {
+		logger.Error("Mysql exist user name error: ", err)
 		return false
 	}
 	return true
