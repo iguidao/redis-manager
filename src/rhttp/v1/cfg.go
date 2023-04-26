@@ -2,7 +2,6 @@ package v1
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -41,7 +40,7 @@ func CfgAddDefault(c *gin.Context) {
 			custom := mysql.DB.GetOneCfg(model.CC)
 			value := custom.Value + "," + cfg.Value
 			if !mysql.DB.UpdateCfg(model.CC, value) {
-				log.Println("update error")
+				logger.Error("update cfg error")
 				code = hsc.ERROR
 			}
 		} else {
@@ -52,7 +51,7 @@ func CfgAddDefault(c *gin.Context) {
 			go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 			_, ok := mysql.DB.AddCfg(model.CC, cfg.Value, model.CN)
 			if !ok {
-				log.Println("add error")
+				logger.Error("add cfg error")
 				code = hsc.ERROR
 			}
 		}

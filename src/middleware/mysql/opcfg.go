@@ -1,8 +1,6 @@
 package mysql
 
 import (
-	"log"
-
 	"github.com/iguidao/redis-manager/src/middleware/logger"
 )
 
@@ -34,7 +32,7 @@ func (m *MySQL) UpdateCfg(key, value string) bool {
 	var cfg Rconfig
 	result := m.Model(&cfg).Where("`key` = ?", key).Update("value", value)
 	if result.Error != nil {
-		log.Println("Mysql result.Error: ", result.Error)
+		logger.Error("Mysql result.Error: ", result.Error)
 	}
 	return result.Error == nil
 }

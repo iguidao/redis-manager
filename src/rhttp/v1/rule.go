@@ -2,7 +2,6 @@ package v1
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -64,7 +63,6 @@ func AddRule(c *gin.Context) {
 	var Policy CasbinPolicyJson
 	err := c.BindJSON(&Policy)
 	if err != nil {
-		log.Println(err)
 		code = hsc.INVALID_PARAMS
 	} else {
 		username, _ := c.Get("UserId")
@@ -111,7 +109,6 @@ func DelRule(c *gin.Context) {
 func RootCheck(c *gin.Context) {
 	// var result auth.Result
 	userinfo, ok := c.Get("UserName")
-	log.Println(userinfo.(string))
 	if !ok {
 		data := make(map[string]interface{})
 		code := hsc.NOT_PROMISE

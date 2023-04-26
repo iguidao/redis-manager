@@ -12,23 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// func CheckRule(c *gin.Context) {
-// 	code := hsc.SUCCESS
-// 	username, _ := c.Get("UserId")
-// 	urlinfo := c.Request.URL
-// 	jsonBody, _ := json.Marshal("Policy")
-// 	method := c.Request.Method
-// 	go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
-// 	usertype := mysql.DB.GetUserType(username.(int))
-// 	log.Println(usertype, urlinfo.Path, method)
-// 	result := casbin.RuleCheck(usertype, urlinfo.Path, method)
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"errorCode": code,
-// 		"msg":       hsc.GetMsg(code),
-// 		"data":      result,
-// 	})
-// }
-
 func JWT() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var code int

@@ -10,10 +10,9 @@ import (
 )
 
 var Enforcer *casbin.Enforcer
-var err error
 
 func Connect() {
-
+	var err error
 	a, _ := gormadapter.NewAdapterByDBWithCustomTable(rmysql.DB.DB, &CasbinRule{})
 	// a := gormadapter.NewAdapterByDB(db)
 	m, err := cmodel.NewModelFromString(`
@@ -27,7 +26,7 @@ func Connect() {
 	e = some(where (p.eft == allow))
 
 	[matchers]
-	m = r.sub == p.sub && r.obj == p.obj && r.act == p.act || r.sub == "admin"
+	m = r.sub == p.sub && keyMatch(r.obj, p.obj) && regexMatch(r.act, p.act) || r.sub == "admin"
 	`)
 	if err != nil {
 		logger.Error("error: model: ", err)
