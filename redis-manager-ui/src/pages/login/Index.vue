@@ -2,7 +2,7 @@
     <div class="login">
         <!-- 引入卡片 -->
         <el-card class="login_card" shadow="always">
-            <el-image class="logo_image" :src="`/src/assets/img/logo.png`" fit="cover"></el-image>
+            <el-image class="logo_image" :src=logoimg fit="cover"></el-image>
             <p class="login_title">登 录</p>
             <p class="login_desc">欢迎登录Redis-Manager平台</p>
             <el-form ref="ruleFormRef" :model="loginForm" :rules="rules">
@@ -18,13 +18,15 @@
             </el-form>
         </el-card>
         <div>
-            <el-image class="github_logo" :src="`/src/assets/img/github-mark.png`" fut="civer" @click="ToGithub()"></el-image>
+            <el-image class="github_logo" :src=githubimg fut="civer" @click="ToGithub()"></el-image>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { reactive, ref, getCurrentInstance } from "vue";
+import githubimg from "../../assets/img/github-mark.png";
+import logoimg from "../../assets/img/logo.png";
 import { ElMessage } from "element-plus";
 import router from "../../router/index";
 import {login} from '../../api/user';

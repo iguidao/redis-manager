@@ -6,5 +6,6 @@ ENV TZ Asia/Shanghai
 WORKDIR /data
 
 COPY  ./redis-manager .
+COPY ./website ./website
 COPY ./yaml ./yaml
 CMD ["/data/redis-manager"]

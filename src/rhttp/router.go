@@ -2,10 +2,14 @@ package rhttp
 
 import (
 	"io"
+	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/static"
+
 	"github.com/gin-gonic/gin"
 	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/jwt"
@@ -31,13 +35,30 @@ func NewServer() *gin.Engine {
 		MaxAge:           12 * time.Hour,
 	}))
 
+	r.Use(static.Serve("/", static.LocalFile("website", true)))
+	r.NoRoute(func(c *gin.Context) {
+		accept := c.Request.Header.Get("Accept")
+		flag := strings.Contains(accept, "text/html")
+		if flag {
+			content, err := ioutil.ReadFile("dist/index.html")
+			if (err) != nil {
+				c.Writer.WriteHeader(404)
+				c.Writer.WriteString("Not Found")
+				return
+			}
+			c.Writer.WriteHeader(200)
+			c.Writer.Header().Add("Accept", "text/html")
+			c.Writer.Write((content))
+			c.Writer.Flush()
+		}
+	})
 	// vue配置
 	// r.Static("/assets", "./website/assets")
 	// r.LoadHTMLFiles("./website/index.html")
-	// home := r.Group("")
-	// {
-	// 	home.GET("/", v1.Home) //主页接口
-	// }
+	home := r.Group("")
+	{
+		home.GET("/", v1.Home) //主页接口
+	}
 	base := r.Group("/redis-manager/base/v1")
 	{
 		base.GET("/health", v1.HealthCheck) //自检接口

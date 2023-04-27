@@ -11,12 +11,12 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.14.0
 	github.com/fsnotify/fsnotify v1.5.4
 	github.com/gin-contrib/cors v1.4.0
+	github.com/gin-contrib/static v0.0.1
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/reiver/go-telnet v0.0.0-20180421082511-9ff0b2ab096e
-	github.com/robfig/cron v1.2.0
 	github.com/spf13/viper v1.12.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.643
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.643

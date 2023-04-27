@@ -20,9 +20,6 @@ logs
 yaml/config.yaml
 redis-manager
 
-
-# fronend file
-/website
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # redis-manager-ui 

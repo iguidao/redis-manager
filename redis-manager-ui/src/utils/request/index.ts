@@ -8,7 +8,8 @@ interface AdaptAxiosRequestConfig extends AxiosRequestConfig {
 
 // config
 const axiosInstance = axios.create({
-    baseURL: "/api",
+    baseURL: import.meta.env.VITE_BASE_API,
+    // baseURL: "/api",
     timeout: 30000
 });
 
