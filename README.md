@@ -14,9 +14,11 @@ _________________
 
 
 ## 项目启动
+### 依赖语言
+- Golang1.19 + Vue3
 ### 环境依赖
 - mysql数据库 8.0版本以上
-- 云redis或者codis，非cluster，2.8版本以上
+- 云redis或者codis，或者单Redis，非cluster，2.8版本以上
 ### 启动
 - mysql需要创建 `redis_manager` 数据库
 - 复制 yaml/dev.yaml 到 yaml/config.yaml
@@ -73,6 +75,6 @@ _________________
 <img src="https://raw.githubusercontent.com/iguidao/img-folder/master/redis-manager/history.png"/>
 
 ## 联系方式
-要不要建群呢？要不还是Issues吧？
+暂无
 
 
