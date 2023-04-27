@@ -143,8 +143,8 @@ func CodisTopom(codisurl, cn string) (Topom, bool) {
 }
 
 // 添加proxy
-func CodisProxyUp(curl, cn, clusterAuth, proxyip, port string) bool {
-	url := curl + "/api/topom/proxy/create/" + clusterAuth + "/" + proxyip + ":" + port
+func CodisProxyUp(curl, cn, clusterAuth, proxyip string) bool {
+	url := curl + "/api/topom/proxy/create/" + clusterAuth + "/" + proxyip
 	geturi := map[string]string{
 		"forward": cn,
 	}
@@ -189,9 +189,9 @@ func CodisAddGroup(curl, cn, clusterAuth string, groupid int) bool {
 }
 
 // 添加group中的节点
-func CodisGroupUp(groupid int, curl, cn, clusterAuth, hostname, port string) bool {
+func CodisGroupUp(groupid int, curl, cn, clusterAuth, ip string) bool {
 	groupname := strconv.Itoa(groupid)
-	url := curl + "/api/topom/group/add/" + clusterAuth + "/" + groupname + "/" + hostname + ":" + port
+	url := curl + "/api/topom/group/add/" + clusterAuth + "/" + groupname + "/" + ip
 	geturi := map[string]string{
 		"forward": cn,
 	}
@@ -237,17 +237,17 @@ func CodisRmGroup(curl, cn, clusterAuth string, groupid int) bool {
 }
 
 // 执行 server sync
-func CodisServerSync(curl, cn, clusterAuth, hostname, port string) bool {
-	url := curl + "/api/topom/group/action/create/" + clusterAuth + "/" + hostname + ":" + port
+func CodisServerSync(curl, cn, clusterAuth, ip string) bool {
+	url := curl + "/api/topom/group/action/create/" + clusterAuth + "/" + ip
 	geturi := map[string]string{
 		"forward": cn,
 	}
 	httpCode, httpResult := httpapi.PutDefault(url, geturi, nil)
 	if !httpCode {
-		logger.Error("Codis机器"+hostname+"sync失败：", httpCode, httpResult)
+		logger.Error("Codis机器"+ip+"sync失败：", httpCode, httpResult)
 		return false
 	}
-	logger.Info("Codis机器"+hostname+"sync成功：", httpCode, httpResult)
+	logger.Info("Codis机器"+ip+"sync成功：", httpCode, httpResult)
 	return true
 }
 

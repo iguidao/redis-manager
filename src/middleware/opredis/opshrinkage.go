@@ -7,11 +7,11 @@ import (
 )
 
 // 缩容操作
-func Cshrinkage(codisnode model.CodisNode, auth string, topom codisapi.Topom) map[string]interface{} {
+func Cshrinkage(codisnode model.CodisChangeNode, auth string, topom codisapi.Topom) map[string]interface{} {
 	result := make(map[string]interface{})
 	ok, downlist := DownClusterHost(codisnode, auth, topom.Stats)
 	if !ok {
-		logger.Error("codis down host fails")
+		logger.Error("Codis Opnode shrinkage: codis down host fails")
 	}
 	result["status"] = ok
 	result["downlist"] = downlist

@@ -1,7 +1,7 @@
 package opredis
 
 import (
-	"strconv"
+	"log"
 	"time"
 
 	"github.com/iguidao/redis-manager/src/middleware/codisapi"
@@ -11,22 +11,24 @@ import (
 )
 
 // codis shrinkage ====================
-func DownClusterHost(codisnode model.CodisNode, auth string, topomstats codisapi.TopomStats) (bool, []string) {
-	var proxylist []string
+func DownClusterHost(codisnode model.CodisChangeNode, auth string, topomstats codisapi.TopomStats) (bool, []string) {
+	var proxylist []int
 	var grouplist []int
 	var downlist []string
-	for _, v := range codisnode.Group {
-		gid, _ := strconv.Atoi(v.Id)
-		grouplist = append(grouplist, gid)
+	delproxynum := codisnode.DelProxy
+	delgroupnum := codisnode.DelGroup
+	for i := 0; i < delgroupnum; i++ {
+		grouplist = append(grouplist, tools.CalculationGroup(grouplist, topomstats))
 	}
-	for _, v := range codisnode.Proxy.List {
-		proxylist = append(proxylist, v)
+	for i := 0; i < delproxynum; i++ {
+		proxylist = append(proxylist, tools.CalculationProxy(proxylist, topomstats))
 	}
-	logger.Info("将要下线的proxy节点：", proxylist, " 将要下线的group节点：", grouplist)
+	logger.Info("Codis Opnode shrinkage: 将要下线的proxy节点：", proxylist, " 将要下线的group节点：", grouplist)
+
 	for _, v := range proxylist {
 		for _, proxy := range topomstats.Proxy.Models {
-			if proxy.ProxyAddr == v+":"+codisnode.Proxy.Port {
-				logger.Info("开始下掉proxy节点：", proxy.ProxyAddr)
+			if proxy.Id == v {
+				logger.Info("Codis Opnode shrinkage: 开始下掉proxy节点：", proxy.ProxyAddr)
 				if codisapi.CodisProxyDown(codisnode.Curl, codisnode.ClusterName, auth, proxy.Token) {
 					downlist = append(downlist, proxy.ProxyAddr)
 				}
@@ -78,8 +80,8 @@ func DownClusterHost(codisnode model.CodisNode, auth string, topomstats codisapi
 			logger.Info("开始迁移分片：", mvslot, "到group节点:", newid)
 			if codisapi.CodisSlotMv(codisnode.Curl, codisnode.ClusterName, auth, v, newid, mvslot) {
 				for {
-					if checktime > 300 {
-						logger.Info("检查失败，已经超过20min了，还在迁移分片")
+					if checktime > 600 {
+						logger.Error("Codis Opnode shrinkage: 检查失败，已经超过40min了，还在迁移分片")
 						return false, downlist
 					}
 					if CheckSlotPending(codisnode.Curl, codisnode.ClusterName) {
@@ -109,20 +111,20 @@ func DownClusterHost(codisnode model.CodisNode, auth string, topomstats codisapi
 						break
 					}
 					if checktime > 120 {
-						logger.Info("下节点group失败，已经超过10min了，还没下完")
+						logger.Error("Codis Opnode shrinkage: 下节点group失败，已经超过10min了，还没下完")
 						return false, downlist
 					}
 
 					for host, rule := range grouphost {
 						if len(grouphost) == 1 {
-							logger.Info("开始下掉group ", group.Id, " 节点的机器：", host)
+							logger.Info("Codis Opnode shrinkage: 开始下掉group ", group.Id, " 节点的机器：", host)
 							if codisapi.CodisGroupDown(v, codisnode.Curl, codisnode.ClusterName, auth, host) {
 								delete(grouphost, host)
 								downlist = append(downlist, host)
 							}
 						}
 						if len(grouphost) > 1 && rule != "master" {
-							logger.Info("开始下掉group ", group.Id, " 节点的机器：", host)
+							logger.Info("Codis Opnode shrinkage: 开始下掉group ", group.Id, " 节点的机器：", host)
 							if codisapi.CodisGroupDown(v, codisnode.Curl, codisnode.ClusterName, auth, host) {
 								delete(grouphost, host)
 								downlist = append(downlist, host)
@@ -145,41 +147,61 @@ func DownClusterHost(codisnode model.CodisNode, auth string, topomstats codisapi
 //codis dilation ======================
 
 // codis集群添加某个机器
-func UpClusterHost(codisnode model.CodisNode, topom codisapi.Topom, auth string) (bool, []string) {
-	logger.Info("将要上限的proxy节点：", codisnode.Proxy.List, " 将要上限的group节点：", codisnode.Group)
+func UpClusterHost(codisnode model.CodisChangeNode, topom codisapi.Topom, auth string) (bool, []string) {
+	logger.Info("Codis Opnode dilatation: 将要上限的proxy节点：", codisnode.AddProxy, " 将要上限的group节点：", codisnode.AddServer)
 	var uplist []string
 	var grouplist []int
-	for _, v := range codisnode.Proxy.List {
-		logger.Info("开始上线proxy节点：", v, "ip: ", v)
-		if codisapi.CodisProxyUp(codisnode.Curl, codisnode.ClusterName, auth, v, codisnode.Proxy.Port) {
+	serverlist := codisnode.AddServer
+	proxylist := codisnode.AddProxy
+	for _, v := range proxylist {
+		logger.Info("Codis Opnode dilatation: 开始上线proxy节点：", v, "ip: ", v)
+		if codisapi.CodisProxyUp(codisnode.Curl, codisnode.ClusterName, auth, v) {
 			uplist = append(uplist, v)
 		}
 	}
 	groupid := GetNextGroupId(topom) + 1
-	logger.Info("max group id: ", groupid)
-	for i := 0; i < len(codisnode.Group)/2; i++ {
+	logger.Info("Codis Opnode dilatation: 最大 group id: ", groupid)
+	for i := 0; i < len(serverlist)/2; i++ {
 		codisapi.CodisAddGroup(codisnode.Curl, codisnode.ClusterName, auth, groupid)
 		grouplist = append(grouplist, groupid)
 		groupid++
 	}
-	logger.Info("group list:", grouplist)
+	logger.Info("Codis Opnode dilatation: group list:", grouplist)
 	// for i := 0; i < model.Gn; i++ {
-	for _, v := range codisnode.Group {
-		logger.Info("开始上线group节点：", v)
-		for _, gid := range grouplist {
-			grouplist = tools.DeleteListint(gid, grouplist)
-			for _, ip := range v.List {
-				if codisapi.CodisGroupUp(gid, codisnode.Curl, codisnode.ClusterName, auth, ip, v.Port) {
-					if codisapi.CodisServerSync(codisnode.Curl, codisnode.ClusterName, auth, ip, v.Port) {
-						uplist = append(uplist, ip)
-					}
+	for _, gid := range grouplist {
+		var count int = 1
+		for _, ip := range serverlist {
+			serverlist = tools.DeleteListString(ip, serverlist)
+			log.Println("Codis Opnode dilatation: 开始上线group节点ip:", ip)
+			if codisapi.CodisGroupUp(gid, codisnode.Curl, codisnode.ClusterName, auth, ip) {
+				if codisapi.CodisServerSync(codisnode.Curl, codisnode.ClusterName, auth, ip) {
+					uplist = append(uplist, ip)
 				}
 			}
+			if count == 2 {
+				break
+			} else {
+				count++
+			}
 			time.Sleep(time.Duration(1) * time.Second)
-			break
 		}
-
 	}
+	// for _, v := range codisnode.AddServer {
+	// 	logger.Info("Codis Opnode dilatation: 开始上线group节点：", v)
+	// 	for _, gid := range grouplist {
+	// 		grouplist = tools.DeleteListint(gid, grouplist)
+	// 		for _, ip := range v.List {
+	// 			if codisapi.CodisGroupUp(gid, codisnode.Curl, codisnode.ClusterName, auth, ip, v.Port) {
+	// 				if codisapi.CodisServerSync(codisnode.Curl, codisnode.ClusterName, auth, ip, v.Port) {
+	// 					uplist = append(uplist, ip)
+	// 				}
+	// 			}
+	// 		}
+	// 		time.Sleep(time.Duration(1) * time.Second)
+	// 		break
+	// 	}
+
+	// }
 
 	time.Sleep(time.Duration(5) * time.Second)
 	codisapi.CodisSync(codisnode.Curl, codisnode.ClusterName, auth)

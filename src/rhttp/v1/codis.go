@@ -90,7 +90,7 @@ func CodisGroup(c *gin.Context) {
 
 func CodisOpNode(c *gin.Context) {
 	code := hsc.SUCCESS
-	var codisnode model.CodisNode
+	var codisnode model.CodisChangeNode
 	var topom codisapi.Topom
 	var ok bool
 	var result interface{}
@@ -107,29 +107,40 @@ func CodisOpNode(c *gin.Context) {
 		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
 		topom, ok = codisapi.CodisTopom(codisnode.Curl, codisnode.ClusterName)
 		if !ok {
+			code = hsc.WARN_CODIS_NOT_CONNECT
 			result = "Codis Get topom stats fails."
 		}
 		for _, v := range topom.Stats.Slots {
 			if v.Action.State == "pending" || v.Action.State == "migrating" {
+				code = hsc.WARN_CODIS_IS_REBALANCE
 				result = "Codis Group Slot is mving!"
 			}
 		}
 		clusterauth = tools.NewXAuth(codisnode.ClusterName)
-		if clusterauth == "" {
-			result = "Codis Get ID fail."
-		}
 		if result == nil {
 			if codisnode.OpType == "dilatation" {
-				result = opredis.Cdilatationn(codisnode, clusterauth, topom)
+				result = opredis.Cdilatation(codisnode, clusterauth, topom)
 			} else if codisnode.OpType == "shrinkage" {
-				result = opredis.Cshrinkage(codisnode, clusterauth, topom)
+				if len(topom.Stats.Proxy.Models)-codisnode.DelProxy < 2 {
+					code = hsc.WARN_CODIS_PROXY_MIN_NUMBER
+					result = "Codis Proxy min number!"
+				} else if len(topom.Stats.Group.Models)-codisnode.DelGroup < 1 {
+					code = hsc.WARN_CODIS_GROUP_MIN_NUMBER
+					result = "Codis Group min number!"
+					// } else if !util.CapacityProxy(codisnode.DelProxy, topom) {
+					// 	panic("Codis proxy Insufficient capacity!")
+				} else if !tools.CapacityGroup(codisnode.DelGroup, topom) {
+					code = hsc.WARN_CODIS_GROUP_MIN_CAPACITY
+					result = "Codis group Insufficient capacity!"
+				} else {
+					result = opredis.Cshrinkage(codisnode, clusterauth, topom)
+				}
 			} else {
+				code = hsc.WARN_CODIS_NOT_OPTION
 				result = "Codis op type fails " + codisnode.OpType
 			}
 		}
-
 	}
-
 	c.JSON(http.StatusOK, gin.H{
 		"errorCode": code,
 		"msg":       hsc.GetMsg(code),
