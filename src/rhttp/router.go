@@ -9,7 +9,6 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
-
 	"github.com/gin-gonic/gin"
 	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/jwt"
@@ -68,6 +67,10 @@ func NewServer() *gin.Engine {
 		login.POST("/sign-in", v1.Login) //登陆接口
 
 	}
+	public := r.Group("/redis-manager/public/v1")
+	{
+		public.POST("/analysisrdb", v1.AnalysisRdb) //分析dump文件
+	}
 	auth := r.Group("/redis-manager/auth/v1")
 	auth.Use(jwt.JWT())
 	{
@@ -123,8 +126,7 @@ func NewServer() *gin.Engine {
 	cli := r.Group(model.PATHCLI)
 	cli.Use(jwt.JWT())
 	{
-		cli.POST("/opkey", v1.OpKey)             //对key进行操作
-		cli.POST("/analysisrdb", v1.AnalysisRdb) //分析dump文件
+		cli.POST("/opkey", v1.OpKey) //对key进行操作
 	}
 	user := r.Group(model.PATHUSER)
 	user.Use(jwt.JWT())
