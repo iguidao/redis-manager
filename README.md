@@ -31,7 +31,8 @@ _________________
 
 
 ## 主要功能界面介绍
-
+账号：iguidao <br>
+密码：123456
 ### 登陆
 > 账号密码登陆
 <img src="https://raw.githubusercontent.com/iguidao/img-folder/master/redis-manager/login.png"/>
