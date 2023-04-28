@@ -1,6 +1,6 @@
 import RequestHttp from '../utils/request'
 
-namespace Rlogin {
+namespace Ruser {
     // 用户登录表单
     export interface LoginReqForm {
       username: string;
@@ -17,32 +17,18 @@ namespace Rlogin {
         errorCode: number;
         msg: string;
     }
-  }
-  // 用户登录
-export const login = (params: Rlogin.LoginReqForm) => {
-    // 返回的数据格式可以和服务端约定
-    return RequestHttp.post<Rlogin.LoginResData>('/auth/v1/sign-in', params);
-}
-namespace RUserPassword {
-    export interface ReqForm {
+    export interface PasswordReqForm {
         old: string;
         new: string;
       }
-    export interface ResData {
+    export interface PasswordResData {
         data: {
             result: string;
         }
         errorCode: number;
         msg: string;
     }
-}
-export const userpassword = (params: RUserPassword.ReqForm) => {
-    // 返回的数据格式可以和服务端约定
-    return RequestHttp.post<RUserPassword.ResData>('/auth/v1/password', params);
-}
-
-namespace RUserList {
-    export interface ResData {
+    export interface listResData {
         data: [{
             ID: number;
             CreatedAt: string;
@@ -54,14 +40,7 @@ namespace RUserList {
         errorCode: number;
         msg: string;
     }
-}
-export const userlist = () => {
-    // 返回的数据格式可以和服务端约定
-    return RequestHttp.get<RUserList.ResData>('/user/v1/list');
-}
-
-namespace RUserType {
-    export interface ResData {
+    export interface typeResData {
         data: [{
             label: string;
             value: string;
@@ -69,55 +48,33 @@ namespace RUserType {
         errorCode: number;
         msg: string;
     }
-}
-export const usertypelist = () => {
-    // 返回的数据格式可以和服务端约定
-    return RequestHttp.get<RUserType.ResData>('/user/v1/utype');
-}
-
-namespace RUserCreate {
-    export interface ReqForm {
+    export interface createReqForm {
         username: string;
         password: string;
         mail: string;
       }
-    export interface ResData {
+    export interface createResData {
         data: {
             result: string;
         }
         errorCode: number;
         msg: string;
     }
-}
-export const useradd = (params: RUserCreate.ReqForm) => {
-    // 返回的数据格式可以和服务端约定
-    return RequestHttp.post<RUserCreate.ResData>('/user/v1/add', params);
-}
-
-namespace RUserChange {
-    export interface ReqForm {
+    export interface changeReqForm {
         username: string;
         usertype: string;
       }
-    export interface ResData {
+    export interface changeResData {
         data: {
             result: string;
         }
         errorCode: number;
         msg: string;
     }
-}
-export const userchange = (params: RUserChange.ReqForm) => {
-    // 返回的数据格式可以和服务端约定
-    return RequestHttp.post<RUserChange.ResData>('/user/v1/change', params);
-}
-
-
-namespace RUserChange {
-    export interface ReqForm {
+    export interface delReqForm {
         username: string;
       }
-    export interface ResData {
+    export interface delResData {
         data: {
             result: string;
         }
@@ -125,8 +82,39 @@ namespace RUserChange {
         msg: string;
     }
 }
-export const userdel = (params: RUserChange.ReqForm) => {
+  // 用户登录
+export const login = (params: Ruser.LoginReqForm) => {
     // 返回的数据格式可以和服务端约定
-    return RequestHttp.delete<RUserChange.ResData>('/user/v1/del', {params: params});
+    return RequestHttp.post<Ruser.LoginResData>('/auth/v1/sign-in', params);
+}
+
+export const userpassword = (params: Ruser.PasswordReqForm) => {
+    // 返回的数据格式可以和服务端约定
+    return RequestHttp.post<Ruser.PasswordResData>('/auth/v1/password', params);
+}
+
+export const userlist = () => {
+    // 返回的数据格式可以和服务端约定
+    return RequestHttp.get<Ruser.listResData>('/user/v1/list');
+}
+
+export const usertypelist = () => {
+    // 返回的数据格式可以和服务端约定
+    return RequestHttp.get<Ruser.typeResData>('/user/v1/utype');
+}
+
+export const useradd = (params: Ruser.createReqForm) => {
+    // 返回的数据格式可以和服务端约定
+    return RequestHttp.post<Ruser.createResData>('/user/v1/add', params);
+}
+
+export const userchange = (params: Ruser.changeReqForm) => {
+    // 返回的数据格式可以和服务端约定
+    return RequestHttp.post<Ruser.changeResData>('/user/v1/change', params);
+}
+
+export const userdel = (params: Ruser.delReqForm) => {
+    // 返回的数据格式可以和服务端约定
+    return RequestHttp.delete<Ruser.delResData>('/user/v1/del', {params: params});
 }
 

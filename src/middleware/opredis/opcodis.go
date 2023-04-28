@@ -2,6 +2,7 @@ package opredis
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/iguidao/redis-manager/src/middleware/codisapi"
@@ -151,8 +152,10 @@ func UpClusterHost(codisnode model.CodisChangeNode, topom codisapi.Topom, auth s
 	logger.Info("Codis Opnode dilatation: 将要上限的proxy节点：", codisnode.AddProxy, " 将要上限的group节点：", codisnode.AddServer)
 	var uplist []string
 	var grouplist []int
-	serverlist := codisnode.AddServer
-	proxylist := codisnode.AddProxy
+	serverlist := strings.Split(codisnode.AddServer, ",")
+	proxylist := strings.Split(codisnode.AddProxy, ",")
+	// serverlist := codisnode.AddServer
+	// proxylist := codisnode.AddProxy
 	for _, v := range proxylist {
 		logger.Info("Codis Opnode dilatation: 开始上线proxy节点：", v, "ip: ", v)
 		if codisapi.CodisProxyUp(codisnode.Curl, codisnode.ClusterName, auth, v) {

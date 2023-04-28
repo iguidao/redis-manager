@@ -4,9 +4,9 @@ _________________
 
 ## 功能简介
 1. **Cluster操作界面：** 支持Redis Cluster集群的添加，可以查看Redis Cluster的集群状态
-2. **Codis操作界面：** 支持嵌入Codis Dashboard平台，可以查看codis平台信息
-3. **云Redis操作界面：** 支持腾讯云Redis的导入，可以查看腾讯Redis的基本信息
-4. **云Redis操作界面：** 支持阿里云Redis的导入，可以查看阿里Redis的基本信息（开发中...）
+2. **Codis操作界面：** 支持嵌入Codis Dashboard平台，可以查看codis平台信息，并且支持codis的扩缩容操作
+3. **腾讯云Redis操作界面：** 支持腾讯云Redis的导入，可以查看腾讯Redis的基本信息
+4. **阿里云Redis操作界面：** 支持阿里云Redis的导入，可以查看阿里Redis的基本信息（开发中...）
 5. **数据查询界面：** 支持[string/list/hash/set/zset]类型的key的查询，以及查询[大key/热key/慢key/查询1万key]等功能，[阿里云redis暂时不支持]
 6. **用户界面：**  支持用户的添加删除，可以管理平台用户
 7. **系统设置界面：** 支持设置全局配置以及用户权限配置，可以管理平台系统配置

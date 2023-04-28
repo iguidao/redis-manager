@@ -2,7 +2,9 @@ package v1
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"strings"
 
 	"github.com/iguidao/redis-manager/src/hsc"
 	"github.com/iguidao/redis-manager/src/middleware/codisapi"
@@ -93,10 +95,10 @@ func CodisOpNode(c *gin.Context) {
 	var codisnode model.CodisChangeNode
 	var topom codisapi.Topom
 	var ok bool
-	var result interface{}
+	var result string
 	var clusterauth string
 	err := c.BindJSON(&codisnode)
-	if err != nil {
+	if err != nil || codisnode.Curl == "" || codisnode.ClusterName == "" {
 		code = hsc.INVALID_PARAMS
 		logger.Error("Codis op node error: ", err)
 	} else {
@@ -105,39 +107,66 @@ func CodisOpNode(c *gin.Context) {
 		jsonBody, _ := json.Marshal(codisnode)
 		method := c.Request.Method
 		go mysql.DB.AddHistory(username.(int), method+":"+urlinfo.Path, string(jsonBody))
+		log.Println(codisnode.Curl, codisnode.ClusterName)
 		topom, ok = codisapi.CodisTopom(codisnode.Curl, codisnode.ClusterName)
 		if !ok {
 			code = hsc.WARN_CODIS_NOT_CONNECT
-			result = "Codis Get topom stats fails."
+			result = "Codis 状态获取失败，平台和集群是不是有问题了？"
 		}
 		for _, v := range topom.Stats.Slots {
 			if v.Action.State == "pending" || v.Action.State == "migrating" {
 				code = hsc.WARN_CODIS_IS_REBALANCE
-				result = "Codis Group Slot is mving!"
+				result = "Codis group 的分片正在迁移，不能进行扩缩容操作!"
 			}
 		}
 		clusterauth = tools.NewXAuth(codisnode.ClusterName)
-		if result == nil {
+		if result == "" {
 			if codisnode.OpType == "dilatation" {
-				result = opredis.Cdilatation(codisnode, clusterauth, topom)
+				proxylist := strings.Split(codisnode.AddProxy, ",")
+				serverlist := strings.Split(codisnode.AddServer, ",")
+				var noconnect []string
+				for _, v := range proxylist {
+					if !tools.CheckIpPort(v, 300) {
+						noconnect = append(noconnect, v)
+					}
+				}
+				for _, v := range serverlist {
+					if !tools.CheckIpPort(v, 300) {
+						noconnect = append(noconnect, v)
+					}
+				}
+				if len(noconnect) == 0 {
+					// result = opredis.Cdilatation(codisnode, clusterauth, topom)
+					go opredis.Cdilatation(codisnode, clusterauth, topom)
+					result = "Codis 扩容在执行中，请关注codis平台界面情况."
+				} else {
+					var address string
+					for _, v := range noconnect {
+						address = address + "," + v
+					}
+					code = hsc.WARN_CHECK_IPPORT_FAIL
+					result = "Codis 这些地址通信是不是有问题：" + address
+				}
 			} else if codisnode.OpType == "shrinkage" {
 				if len(topom.Stats.Proxy.Models)-codisnode.DelProxy < 2 {
 					code = hsc.WARN_CODIS_PROXY_MIN_NUMBER
-					result = "Codis Proxy min number!"
+					result = "Codis proxy 就剩下俩了，你还缩容啊，不行，不行!"
 				} else if len(topom.Stats.Group.Models)-codisnode.DelGroup < 1 {
 					code = hsc.WARN_CODIS_GROUP_MIN_NUMBER
-					result = "Codis Group min number!"
+					result = "Codis group 就剩下一组了，你还缩容啊，不行，不行!"
 					// } else if !util.CapacityProxy(codisnode.DelProxy, topom) {
 					// 	panic("Codis proxy Insufficient capacity!")
 				} else if !tools.CapacityGroup(codisnode.DelGroup, topom) {
 					code = hsc.WARN_CODIS_GROUP_MIN_CAPACITY
-					result = "Codis group Insufficient capacity!"
+					result = "Codis 缩容后的 group 的容量不足，不能缩容!"
 				} else {
-					result = opredis.Cshrinkage(codisnode, clusterauth, topom)
+					go opredis.Cshrinkage(codisnode, clusterauth, topom)
+					// result = opredis.Cshrinkage(codisnode, clusterauth, topom)
+					result = "Codis 缩容在执行中，请关注codis平台界面情况."
 				}
 			} else {
 				code = hsc.WARN_CODIS_NOT_OPTION
-				result = "Codis op type fails " + codisnode.OpType
+				result = "Codis 这个操作类型不存在： " + codisnode.OpType
 			}
 		}
 	}

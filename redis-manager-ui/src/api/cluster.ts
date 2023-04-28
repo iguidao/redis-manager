@@ -1,32 +1,18 @@
 import RequestHttp from '../utils/request'
 
 // 新增codis平台
-namespace RClusterupdate  {
-    export interface ReqForm {
+namespace RCluster  {
+    export interface updateReqForm {
         name: string;
         nodes: string;
         password: string;
     }
-    export interface ResData {
+    export interface updateResData {
         data: {}
         errorCode: number;
         msg: string;
     }
-}
-// 删除
-export const delClusterCfg = (params: RClusterupdate.ReqForm) => {
-    return RequestHttp.delete<RClusterupdate.ResData>('/cluster/v1/del', {params: params});
-}
-
-//新增
-export const addClusterCfg = (params: RClusterupdate.ReqForm) => {
-    return RequestHttp.post<RClusterupdate.ResData>('/cluster/v1/add', params);
-}
-
-
-namespace RClusterlist {
-    // 拿到配置数据
-    export interface ResData {
+    export interface listResData {
         data: [{
             ID: number;
             CreatedAt: string;
@@ -39,15 +25,7 @@ namespace RClusterlist {
         errorCode: number;
         msg: string;
     }
-  }
-// 配置获取
-export const listCluster = () => {
-    // 返回的数据格式可以和服务端约定
-    return RequestHttp.get<RClusterlist.ResData>('/cluster/v1/list');
-}
-namespace RClusternodes {
-
-    export interface ReqForm {
+    export interface nodeReqForm {
         cluster_id: string;
     }
     export interface Node {
@@ -63,7 +41,7 @@ namespace RClusternodes {
         Children: Node[]; 
     }
     // 拿到配置数据
-    export interface ResData {
+    export interface nodeResData {
         data: [{
             CreateTime: string;
             CluserId: string;
@@ -79,18 +57,10 @@ namespace RClusternodes {
         errorCode: number;
         msg: string;
     }
-  }
-// 配置获取
-export const listClusterNodes = (params: RClusternodes.ReqForm) => {
-    // 返回的数据格式可以和服务端约定
-    return RequestHttp.get<RClusternodes.ResData>('/cluster/v1/nodes', { params: params});
-}
-
-namespace RClustermaster {
-    export interface ReqForm {
+    export interface masterReqForm {
         cluster_id: string;
     }
-    export interface ResData {
+    export interface masterResData {
         data: [{
             CreatedAt: string;
             CluserId: string;
@@ -103,6 +73,29 @@ namespace RClustermaster {
         msg: string;
     }
 }
-export const listClusterMaster = (params: RClusternodes.ReqForm) => {
-    return RequestHttp.get<RClusternodes.ResData>('/cluster/v1/masters', { params: params});
+// 删除
+export const delClusterCfg = (params: RCluster.updateReqForm) => {
+    return RequestHttp.delete<RCluster.updateResData>('/cluster/v1/del', {params: params});
+}
+
+//新增
+export const addClusterCfg = (params: RCluster.updateReqForm) => {
+    return RequestHttp.post<RCluster.updateResData>('/cluster/v1/add', params);
+}
+
+// 配置获取
+export const listCluster = () => {
+    // 返回的数据格式可以和服务端约定
+    return RequestHttp.get<RCluster.listResData>('/cluster/v1/list');
+}
+
+// 配置获取
+export const listClusterNodes = (params: RCluster.nodeReqForm) => {
+    // 返回的数据格式可以和服务端约定
+    return RequestHttp.get<RCluster.nodeResData>('/cluster/v1/nodes', { params: params});
+}
+
+//获取master信息
+export const listClusterMaster = (params: RCluster.masterReqForm) => {
+    return RequestHttp.get<RCluster.masterResData>('/cluster/v1/masters', { params: params});
 }

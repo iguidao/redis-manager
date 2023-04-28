@@ -32,6 +32,7 @@ var MsgFlags = map[int]string{
 	WARN_CODIS_PROXY_MIN_NUMBER:   "codis的proxy最小是2个，不能再少了",
 	WARN_CODIS_GROUP_MIN_NUMBER:   "codis的group最小是1个，不能再少了",
 	WARN_CODIS_GROUP_MIN_CAPACITY: "剩余codis的group容量不足80%了",
+	WARN_CHECK_IPPORT_FAIL:        "IP和端口健康检查失败",
 }
 
 func GetMsg(code int) string {
