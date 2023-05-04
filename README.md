@@ -76,6 +76,6 @@ _________________
 <img src="https://raw.githubusercontent.com/iguidao/img-folder/master/redis-manager/history.png"/>
 
 ## 联系方式
-暂无
+mail: xiaohui920@sina.cn
 
 
