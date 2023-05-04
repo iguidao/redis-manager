@@ -4,8 +4,11 @@ import (
 	"github.com/iguidao/redis-manager/src/cfg"
 	"github.com/iguidao/redis-manager/src/middleware/casbin"
 	"github.com/iguidao/redis-manager/src/middleware/logger"
+	"github.com/iguidao/redis-manager/src/middleware/model"
 	"github.com/iguidao/redis-manager/src/middleware/mysql"
+	"github.com/iguidao/redis-manager/src/middleware/rcron"
 	"github.com/iguidao/redis-manager/src/rhttp"
+	"github.com/robfig/cron"
 )
 
 func init() {
@@ -19,16 +22,16 @@ func init() {
 }
 
 func main() {
-	// c := cron.New()
-	// var calendarcrontime string
-	// calendarcrontime = mysql.DB.GetOneCfgValue(model.CLOUDREFRESH)
-	// if calendarcrontime == "" {
-	// 	calendarcrontime = "@every 10m"
-	// }
-	// c.AddFunc(calendarcrontime, func() {
-	// 	rcron.CloudRefresh()
-	// })
-	// c.Start()
+	c := cron.New()
+	var calendarcrontime string
+	calendarcrontime = mysql.DB.GetOneCfgValue(model.CLOUDREFRESH)
+	if calendarcrontime == "" {
+		calendarcrontime = "@every 10m"
+	}
+	c.AddFunc(calendarcrontime, func() {
+		rcron.CloudRefresh()
+	})
+	c.Start()
 	listen := cfg.Get_Info_String("addr")
 	if listen == "" {
 		listen = ":8000"
