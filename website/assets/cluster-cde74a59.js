@@ -1,1 +1,0 @@
-import{a as t}from"./index-1d9b39de.js";const r=s=>t.post("/cluster/v1/add",s),a=()=>t.get("/cluster/v1/list"),l=s=>t.get("/cluster/v1/nodes",{params:s}),u=s=>t.get("/cluster/v1/masters",{params:s});export{l as a,r as b,u as c,a as l};

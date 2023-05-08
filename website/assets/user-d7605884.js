@@ -1,0 +1,1 @@
+import{a as e}from"./index-04cccabd.js";const r=s=>e.post("/auth/v1/sign-in",s),u=s=>e.post("/auth/v1/password",s),n=()=>e.get("/user/v1/list"),a=()=>e.get("/user/v1/utype"),o=s=>e.post("/user/v1/add",s),c=s=>e.post("/user/v1/change",s),d=s=>e.delete("/user/v1/del",{params:s});export{n as a,a as b,d as c,c as d,o as e,r as l,u};

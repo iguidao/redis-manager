@@ -1,0 +1,1 @@
+import{a as o}from"./index-04cccabd.js";const r=s=>o.post("/codis/v1/add",s),d=()=>o.get("/codis/v1/list"),i=s=>o.get("/codis/v1/cluster",{params:s}),e=s=>o.get("/codis/v1/group",{params:s}),c=s=>o.post("/codis/v1/opnode",s);export{i as a,r as b,e as c,d as l,c as o};

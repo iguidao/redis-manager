@@ -1,1 +1,0 @@
-import{a as t}from"./index-1d9b39de.js";const a=()=>t.get("/cfg/v1/list"),f=()=>t.get("/cfg/v1/listdefault"),r=e=>t.delete("/cfg/v1/del",{params:e}),g=e=>t.post("/cfg/v1/update",e);export{f as a,r as d,a as l,g as u};
