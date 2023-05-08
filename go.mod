@@ -12,7 +12,7 @@ require (
 	github.com/fsnotify/fsnotify v1.5.4
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/static v0.0.1
-	github.com/gin-gonic/gin v1.8.1
+	github.com/gin-gonic/gin v1.9.0
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang-jwt/jwt/v4 v4.4.3
