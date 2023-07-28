@@ -25,6 +25,7 @@ _________________
 - 编辑 yaml/config.yaml文件的[mysql、redis]配置
 - 命令行：`go run main.go`
 - docker模式启动： `sh start-docker.sh`
+- 浏览器访问：`http://127.0.0.1:8000`
 
 ## 项目依赖
 ### 大key查询依赖
