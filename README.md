@@ -20,10 +20,11 @@ _________________
 - mysql数据库 8.0版本以上
 - 云redis或者codis，或者单Redis，非cluster，2.8版本以上
 ### 启动
-- mysql需要创建 `redis_manager` 数据库
+- mysql需要创建 `redis_manager` 数据库：`create database redis_manager;`
 - 复制 yaml/dev.yaml 到 yaml/config.yaml
 - 编辑 yaml/config.yaml文件的[mysql、redis]配置
-- 执行 sh start-docker.sh
+- 命令行：`go run main.go`
+- docker模式启动： `sh start-docker.sh`
 
 ## 项目依赖
 ### 大key查询依赖

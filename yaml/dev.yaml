@@ -12,7 +12,7 @@ rediscfg:
     checksize: 4000
 
 mysql:
-    name: dev_redis_manager
+    name: redis_manager
     addr: 127.0.0.1:3308
     username: root
     password: 123456
